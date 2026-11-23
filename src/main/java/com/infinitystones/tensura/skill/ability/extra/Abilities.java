@@ -62,6 +62,10 @@ public final class Abilities {
         r("infinity:alternate_timeline", com.infinitystones.tensura.skill.ability.extra.time.AlternateTimeline.INSTANCE);
         r("infinity:creation_chest", com.infinitystones.tensura.skill.ability.extra.reality.CreationChest.INSTANCE);
         r("infinity:spiritual_gathering", com.infinitystones.tensura.skill.ability.extra.space.SpiritualGathering.INSTANCE);
+        com.infinitystones.tensura.skill.ability.extra.v2a.V2A.register(Abilities::r);
+        com.infinitystones.tensura.skill.ability.extra.v2b.V2B.register(Abilities::r);
+        com.infinitystones.tensura.skill.ability.extra.v2c.V2C.register(Abilities::r);
+        com.infinitystones.tensura.skill.ability.extra.v2d.V2D.register(Abilities::r);
     }
 
     private static void r(String type, Ability a) { ALL.put(type, a); }
