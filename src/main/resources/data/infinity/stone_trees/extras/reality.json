@@ -64,6 +64,7 @@
     },
     {
       "id": "local_decree",
+      "stats": { "damage": "None", "range": "48 m", "duration": "45 s", "area": "r 6–16 m", "players": true },
       "original_type": "infinity:local_decree",
       "title": "@ability.infinity.reality_stone.local_decree.title",
       "description": "@ability.infinity.reality_stone.local_decree.description",
@@ -84,6 +85,7 @@
     },
     {
       "id": "mirage",
+      "stats": { "damage": "None", "range": "48 m", "duration": "2 min", "area": "1–5 m square", "players": true },
       "original_type": "infinity:mirage",
       "title": "@ability.infinity.reality_stone.mirage.title",
       "description": "@ability.infinity.reality_stone.mirage.description",

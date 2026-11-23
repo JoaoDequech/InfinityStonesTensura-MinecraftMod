@@ -42,6 +42,7 @@
     },
     {
       "id": "fold_distance",
+      "stats": { "damage": "None", "range": "8–96 m", "duration": "Instant", "area": "1 target", "players": true },
       "original_type": "infinity:fold_distance",
       "title": "@ability.infinity.space_stone.fold_distance.title",
       "description": "@ability.infinity.space_stone.fold_distance.description",
@@ -62,6 +63,7 @@
     },
     {
       "id": "event_horizon",
+      "stats": { "damage": "None", "range": "32 m", "duration": "10 s", "area": "1 target", "players": true },
       "original_type": "infinity:containment_cube",
       "title": "@ability.infinity.space_stone.containment_cube.title",
       "description": "@ability.infinity.space_stone.containment_cube.description",
@@ -81,6 +83,7 @@
     },
     {
       "id": "space_mirror",
+      "stats": { "damage": "Reflects projectiles", "range": "32 m", "duration": "20 s", "area": "4×4 m panel", "players": true },
       "original_type": "infinity:space_mirror",
       "title": "@ability.infinity.space_stone.space_mirror.title",
       "description": "@ability.infinity.space_stone.space_mirror.description",
@@ -188,6 +191,7 @@
     },
     {
       "id": "portal_gun",
+      "stats": { "damage": "None", "range": "64 m", "duration": "5 min", "area": "2 portals", "players": true },
       "original_type": "infinity:portal_gun",
       "title": "@ability.infinity.space_stone.portal_gun.title",
       "description": "@ability.infinity.space_stone.portal_gun.description",

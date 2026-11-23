@@ -1,0 +1,14 @@
+{
+  "infinity.wheel.page.hint": "Scroll: switch page",
+  "infinity.wheel.hint.stats": "[Shift] stats",
+  "infinity.wheel.stats.title": "Stats",
+  "infinity.wheel.stats.damage": "Damage",
+  "infinity.wheel.stats.range": "Range",
+  "infinity.wheel.stats.duration": "Duration",
+  "infinity.wheel.stats.area": "Area",
+  "infinity.wheel.stats.players": "Hits players",
+  "infinity.wheel.stats.yes": "Yes",
+  "infinity.wheel.stats.no": "No",
+  "infinity.wheel.stats.cooldown": "Cooldown: none",
+  "infinity.wheel.stats.cost": "Magicule cost: 0.001 per use"
+}

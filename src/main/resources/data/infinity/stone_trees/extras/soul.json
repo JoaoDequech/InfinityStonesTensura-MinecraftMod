@@ -222,6 +222,7 @@
                   },
                   {
                     "id": "reaper",
+                    "stats": { "damage": "8 ❤ (sweep)", "range": "7 m", "duration": "Instant", "area": "180° arc · harvest r 6–20 m", "players": true },
                     "original_type": "infinity:reaper",
                     "title": "@ability.infinity.soul_stone.reaper.title",
                     "description": "@ability.infinity.soul_stone.reaper.description",
@@ -257,6 +258,7 @@
                   },
                   {
                     "id": "soul_link",
+                    "stats": { "damage": "70% shared · 3 ❤ on break", "range": "40 m", "duration": "15 s", "area": "r 12 m · up to 6", "players": true },
                     "original_type": "infinity:soul_link",
                     "title": "@ability.infinity.soul_stone.soul_link.title",
                     "description": "@ability.infinity.soul_stone.soul_link.description",
@@ -347,6 +349,7 @@
     },
     {
       "id": "lost_lantern",
+      "stats": { "damage": "~1.8 ❤ per soul", "duration": "Until used", "area": "Up to 24 souls", "players": true },
       "original_type": "infinity:lost_lantern",
       "title": "@ability.infinity.soul_stone.lost_lantern.title",
       "description": "@ability.infinity.soul_stone.lost_lantern.description",

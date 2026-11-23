@@ -1,0 +1,14 @@
+{
+  "infinity.wheel.page.hint": "Scroll: trocar de página",
+  "infinity.wheel.hint.stats": "[Shift] atributos",
+  "infinity.wheel.stats.title": "Atributos",
+  "infinity.wheel.stats.damage": "Dano",
+  "infinity.wheel.stats.range": "Alcance",
+  "infinity.wheel.stats.duration": "Duração",
+  "infinity.wheel.stats.area": "Área",
+  "infinity.wheel.stats.players": "Atinge jogadores",
+  "infinity.wheel.stats.yes": "Sim",
+  "infinity.wheel.stats.no": "Não",
+  "infinity.wheel.stats.cooldown": "Recarga: nenhuma",
+  "infinity.wheel.stats.cost": "Custo de magícula: 0,001 por uso"
+}
