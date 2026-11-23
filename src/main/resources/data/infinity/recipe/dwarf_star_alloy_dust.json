@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "infinity:hammer"
+    },
+    {
+      "item": "infinity:dwarf_star_alloy_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "infinity:dwarf_star_alloy_dust"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "replace":  false,
+    "values":  [
+                   "infinity:titanium_ore",
+                   "infinity:deepslate_titanium_ore",
+                   "infinity:raw_titanium_block"
+               ]
+}

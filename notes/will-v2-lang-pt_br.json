@@ -1,0 +1,16 @@
+{
+  "ability.infinity.reality_stone.will.title": "Manipulação da Matéria",
+  "ability.infinity.reality_stone.will.description": "Luz sólida da realidade. Esq. na roda: Agarrar (segure Esq. para pegar qualquer mob, jogador, item ou contraption do Create Aeronautics; solte para arremessar com o embalo; Dir. trava no ar; Alt + mouse gira). Meio: roda de construções. Dir.: gerenciar construções. Sem recarga, sem limite de peso.",
+  "infinity.will.on": "Manipulação da Matéria: Agarrar LIGADO",
+  "infinity.will.off": "Manipulação da Matéria: Agarrar desligado",
+  "infinity.will.hud.title": "✦ MANIPULAÇÃO DA MATÉRIA ✦",
+  "infinity.will.hud.idle": "Segure Esq.: agarrar  ·  Dir. (mirando algo travado): destravar  ·  Meio: destravar tudo",
+  "infinity.will.hud.holding": "Solte Esq.: soltar (voa com o embalo)  ·  Dir.: travar no ar  ·  Scroll: distância  ·  Alt + mouse: girar",
+  "infinity.will.hud.design": "CONSTRUINDO: %s blocos de luz sólida (grátis)  ·  Dir. no poder: salvar ou cancelar",
+  "infinity.construct.legend": "Esq.: invocar  ·  Dir.: dispensar cópias  ·  Meio: subir  ·  ⚒ editar blocos  ·  ✎ renomear",
+  "infinity.construct.editing": "Editando \"%s\" — mude os blocos e clique em SALVAR (Dir. no poder)",
+  "infinity.construct.edit_blocks": "Editar blocos: ela aparece na sua frente para editar",
+  "infinity.construct.rename": "Renomear",
+  "infinity.construct.rename_confirm": "Confirmar o novo nome (ou Enter)",
+  "infinity.construct.delete": "Apagar esta construção"
+}

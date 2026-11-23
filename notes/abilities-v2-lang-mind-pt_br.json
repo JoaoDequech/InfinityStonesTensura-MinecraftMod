@@ -1,0 +1,55 @@
+{
+  "ability.infinity.mind_stone.psychic_avatar.title": "Avatar Psíquico",
+  "ability.infinity.mind_stone.psychic_avatar.description": "Liga/desliga. Sua mente sai do corpo: o corpo fica ajoelhado como uma casca dourada e você voa como uma projeção dourada invisível. Mobs não te veem, você não quebra/coloca blocos nem ataca, e vê os seres vivos próximos através das paredes. Alt+scroll: coleira de 32 a 96 blocos. Se o corpo apanhar, a projeção sofrer dano ou você passar da coleira, a mente volta num estalo e o dano chega.",
+  "ability.infinity.mind_stone.phantasm.title": "Fantasma",
+  "ability.infinity.mind_stone.phantasm.description": "Esq.: solta um duplo seu que corre para onde você olha; os mobs passam a mirar o duplo e você fica invisível (armadura inclusa) por 8 s. Quem bate no duplo faz ele estilhaçar em cacos dourados que cegam e dão náusea. Dir.: detona o duplo (cegueira e náusea em 5 blocos).",
+  "ability.infinity.mind_stone.suggestion.title": "Sugestão",
+  "ability.infinity.mind_stone.suggestion.description": "Mire e dê uma ordem mental. Esq.: aplica a ordem escolhida. Dir.: menu de ordens — Dormir, Fugir, Lutar por mim, Ficar parado, Persuadir. Chefes são imunes.",
+  "ability.infinity.mind_stone.hive_mind.title": "Mente Coletiva",
+  "ability.infinity.mind_stone.hive_mind.description": "Esq. (mirando): fios dourados dominam até 8 mobs no cone à sua frente por 20 s e eles atacam o alvo mirado — até vacas dão dano. Use de novo em outro alvo para trocar o alvo. Dir.: libera todos. Alt+scroll: raio de 6 a 16.",
+  "ability.infinity.mind_stone.nightmare.title": "Pesadelo",
+  "ability.infinity.mind_stone.nightmare.description": "Conjunção Mente + Alma. O alvo mirado entra num pesadelo por 10 s. Jogador: escuridão, sons de creeper, passos e sussurros só para ele vindos de todos os lados, tela tremendo, coração acelerado e câmera vagando. Mob: entra em pânico e foge de você, e o bando dele se espalha.",
+
+  "infinity.extra.mind.setting.leash": "Coleira",
+  "infinity.extra.mind.setting.hive_radius": "Raio",
+
+  "infinity.extra.mind.no_target": "Nenhum alvo na mira",
+  "infinity.extra.mind.boss": "A mente deste chefe é forte demais",
+
+  "infinity.extra.mind.avatar.cant": "Sua mente não consegue sair do corpo agora",
+  "infinity.extra.mind.avatar.on": "Mente projetada — coleira de %s blocos",
+  "infinity.extra.mind.avatar.far": "Coleira esticando: %s / %s blocos",
+  "infinity.extra.mind.avatar.leash": "A coleira arrebentou — de volta ao corpo!",
+  "infinity.extra.mind.avatar.hit": "Seu corpo foi atingido — de volta!",
+
+  "infinity.extra.mind.phantasm.out": "Seu duplo corre — você sumiu",
+  "infinity.extra.mind.phantasm.none": "Nenhum duplo ativo",
+
+  "infinity.extra.mind.suggestion.sleep": "Dormir",
+  "infinity.extra.mind.suggestion.sleep.desc": "O mob para e dorme por 15 s (acorda se apanhar). Jogador: sonolência pesada.",
+  "infinity.extra.mind.suggestion.flee": "Fugir",
+  "infinity.extra.mind.suggestion.flee.desc": "O alvo foge de você por 10 s. Jogador: empurrado para longe.",
+  "infinity.extra.mind.suggestion.fight": "Lutar por mim",
+  "infinity.extra.mind.suggestion.fight.desc": "O mob ataca os seus inimigos por 20 s (o que você bater primeiro).",
+  "infinity.extra.mind.suggestion.freeze": "Ficar parado",
+  "infinity.extra.mind.suggestion.freeze.desc": "Imóvel por 6 s. Jogador: preso no lugar, olhar livre.",
+  "infinity.extra.mind.suggestion.persuade": "Persuadir",
+  "infinity.extra.mind.suggestion.persuade.desc": "Aldeão: fofoca positiva (preços melhores). Piglin: acalma e faz uma troca (1 a cada 5 min). Jogador: olha para você por 3 s. Outros mobs: ficam calmos com você.",
+  "infinity.extra.mind.suggestion.chosen": "Ordem: %s",
+  "infinity.extra.mind.suggestion.done": "%s → %s",
+  "infinity.extra.mind.suggestion.fight_player": "Jogadores não obedecem a esta ordem",
+  "infinity.extra.mind.suggestion.barter_wait": "Este piglin já negociou há pouco",
+  "infinity.extra.mind.suggestion.victim.sleep": "%s sussurra na sua mente: durma...",
+  "infinity.extra.mind.suggestion.victim.flee": "%s ordena: fuja!",
+  "infinity.extra.mind.suggestion.victim.fight": "%s tenta te comandar",
+  "infinity.extra.mind.suggestion.victim.freeze": "%s ordena: não se mexa!",
+  "infinity.extra.mind.suggestion.victim.persuade": "%s atrai o seu olhar",
+
+  "infinity.extra.mind.hive.attack": "Matilha de %s ataca %s",
+  "infinity.extra.mind.hive.guard": "Matilha de %s te protege",
+  "infinity.extra.mind.hive.nobody": "Nenhum mob para dominar no cone",
+  "infinity.extra.mind.hive.none": "Você não tem matilha",
+  "infinity.extra.mind.hive.released": "%s mentes libertadas",
+
+  "infinity.extra.mind.nightmare.cast": "%s mergulha num pesadelo"
+}

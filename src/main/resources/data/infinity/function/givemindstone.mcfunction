@@ -1,0 +1,1 @@
+execute as @s run give @s infinity:mind_stone[minecraft:custom_name='{"text":"Mind Stone","color":"yellow","bold":true,"italic":false}',minecraft:enchantment_glint_override=true] 1

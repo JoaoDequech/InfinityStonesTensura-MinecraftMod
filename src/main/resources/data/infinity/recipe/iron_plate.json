@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HG ",
+    "G  ",
+    "   "
+  ],
+  "key": {
+    "H": {
+      "item": "infinity:hammer"
+    },
+    "G": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:iron_plate"
+  }
+}

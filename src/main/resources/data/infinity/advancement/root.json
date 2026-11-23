@@ -1,0 +1,31 @@
+{
+  "display": {
+    "title": {
+      "text": "Pugmeowla's Infinity Stone Core",
+      "color": "dark_purple",
+      "bold": true
+    },
+    "description": {
+      "text": "The start of infinite posibilities...",
+      "color": "dark_purple"
+    },
+    "icon": {
+      "id": "infinity:infinity_gauntlet"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "infinity:textures/block/gold_titanium_alloy_block.png"
+  },
+  "criteria": {
+    "Tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "Tick"
+    ]
+  ]
+}

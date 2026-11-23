@@ -1,0 +1,1981 @@
+{
+    "stone":  "power",
+    "original_power":  "infinity:power_stone_passive",
+    "nodes":  [
+                  {
+                      "id":  "radiation_texture_toggle",
+                      "original_type":  "palladium:command",
+                      "title":  "Radiation Texture Toggle",
+                      "description":  "@ability.infinity.power_stone.radiation_texture_toggle.description",
+                      "icon":  "minecraft:command_block",
+                      "cost":  {
+                                   "type":  "xp_levels",
+                                   "amount":  0
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           0
+                                       ],
+                      "list_index":  1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "scoreboard objectives add radiationTextureToggle dummy",
+                                                  "execute if score @s radiationTextureToggle matches 0 run tag @s add no_radiation_texture",
+                                                  "execute if score @s radiationTextureToggle matches 1 run tag @s remove no_radiation_texture",
+                                                  "scoreboard players add @s radiationTextureToggle 1",
+                                                  "execute if score @s radiationTextureToggle matches 2 run scoreboard players set @s radiationTextureToggle 0",
+                                                  "ability lock @s infinity:power_stone_passive radiation_texture_toggle"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  false,
+                                  "first_tick_commands":  [
+                                                              "scoreboard objectives add radiationTextureToggle dummy",
+                                                              "execute if score @s radiationTextureToggle matches 0 run tag @s add no_radiation_texture",
+                                                              "execute if score @s radiationTextureToggle matches 1 run tag @s remove no_radiation_texture",
+                                                              "scoreboard players add @s radiationTextureToggle 1",
+                                                              "execute if score @s radiationTextureToggle matches 2 run scoreboard players set @s radiationTextureToggle 0",
+                                                              "ability lock @s infinity:power_stone_passive radiation_texture_toggle"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:experience_level_buyable",
+                                                                           "xp_level":  0,
+                                                                           "flat_levels":  true
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Radiation Texture Toggle",
+                                                     "icon":  "minecraft:command_block",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.radiation_texture_toggle.description"
+                                                                     },
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "size_toggle",
+                      "original_type":  "palladium:command",
+                      "title":  "Damage Control",
+                      "description": "@ability.infinity.power_stone.size_toggle.description",
+                      "icon":  "infinity:power_stone",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "toggle",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  4,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "commands":  [
+
+                                               ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:toggle",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Damage Control",
+                                                     "icon":  "infinity:power_stone",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.time_stone.reset_time_speed.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  4
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock1_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 2 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  2
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  2
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 2 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock2_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 4 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  4
+                               },
+                      "parents":  [
+                                      "unlock1_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.0,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  4
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock1_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 4 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1.0,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock3_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 8 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  8
+                               },
+                      "parents":  [
+                                      "unlock2_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  8
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock2_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 8 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock4_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 16 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  12
+                               },
+                      "parents":  [
+                                      "unlock3_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2.0,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  12
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock3_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 16 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2.0,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock5_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 32 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  18
+                               },
+                      "parents":  [
+                                      "unlock4_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2.0,
+                                           -1.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  18
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock4_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 32 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2.0,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock6_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 64 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  26
+                               },
+                      "parents":  [
+                                      "unlock5_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2.0,
+                                           -2
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  26
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock5_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 64 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2.0,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock7_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 128 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  36
+                               },
+                      "parents":  [
+                                      "unlock6_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2.0,
+                                           -2.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  36
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock6_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 128 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2.0,
+                                                                          -2.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock8_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 256 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  48
+                               },
+                      "parents":  [
+                                      "unlock7_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           -2.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  48
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock7_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 256 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          -2.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock9_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 512 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  64
+                               },
+                      "parents":  [
+                                      "unlock8_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1,
+                                           -2.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  64
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock8_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 512 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -2.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock10_dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 1024 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  88
+                               },
+                      "parents":  [
+                                      "unlock9_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           -2.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  88
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock9_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 1024 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -2.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "unlock11_dummy", "tier": 2,
+                      "original_type":  "palladium:dummy",
+                      "title":  "Unlock 2048 attack damage",
+                      "description":  "",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "unlock10_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           -2.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  128
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock10_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Unlock 2048 attack damage",
+                                                     "icon":  "infinity:power_stone",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -2.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           -2
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "power_blast_aim",
+                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "original_type":  "palladium:aim",
+                      "title":  "Power Blast",
+                      "description":  "@ability.infinity.power_stone.power_blast_aim.description",
+                      "icon":  "infinity:textures/icon/power_blast.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "impower"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -0.5
+                                       ],
+                      "list_index":  1,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:aim",
+                                  "persistent_data":  true,
+                                  "arm":  "off_arm",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "impower"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Power Blast",
+                                                     "icon":  "infinity:textures/icon/power_blast.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.power_blast_aim.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -0.5
+                                                                      ],
+                                                     "animation_timer":  {
+                                                                             "min":  0,
+                                                                             "max":  1
+                                                                         }
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "impower",
+                      "original_type":  "palladium:command",
+                      "title":  "Impower",
+                      "description":  "@ability.infinity.power_stone.impower.description",
+                      "icon":  "infinity:textures/icon/impower.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  2400,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0.5,
+                                           -0.5
+                                       ],
+                      "list_index":  0,
+                      "color":  "purple",
+                      "commands":  [
+                                       "effect give @s minecraft:health_boost 90 5 true",
+                                       "effect give @s minecraft:resistance 90 3 true"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "playsound infinity:reality_stone block @s ~ ~ ~ 0.6",
+                                                  "particle minecraft:dust{color:[0.6,0.0,1.0],scale:1.5} ~ ~1 ~ 0.3 0.5 0.3 0 200 force"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "playsound infinity:reality_stone block @s ~ ~ ~ 0.6",
+                                                              "particle minecraft:dust{color:[0.6,0.0,1.0],scale:1.5} ~ ~1 ~ 0.3 0.5 0.3 0 200 force"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "effect give @s minecraft:health_boost 90 5 true",
+                                                   "effect give @s minecraft:resistance 90 3 true"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Impower",
+                                                     "icon":  "infinity:textures/icon/impower.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.impower.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "knockback",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "Knockback Resistance",
+                      "description":  "@ability.infinity.power_stone.knockback.description",
+                      "icon":  "infinity:power_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "impower"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           0
+                                       ],
+                      "list_index":  -1,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.knockback_resistance",
+                                  "amount":  2147483647,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "impower"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Knockback Resistance",
+                                                     "icon":  "infinity:power_stone",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.knockback.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          0
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:power_stone_passive/knockback"
+                              }
+                  },
+                  {
+                      "id":  "explosion2",
+                      "original_type":  "palladium:command",
+                      "title":  "Cosmic Explosion",
+                      "description":  "@ability.infinity.power_stone.explosion2.description",
+                      "icon":  "infinity:textures/icon/rocket_burst.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "power_blast_aim"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -1
+                                       ],
+                      "list_index":  2,
+                      "color":  "purple",
+                      "commands":  [
+                                       "/summon tnt ~8 ~ ~ {Fuse:0}",
+                                       "/summon tnt ~-8 ~ ~ {Fuse:0}",
+                                       "/summon tnt ~ ~ ~8 {Fuse:0}",
+                                       "/summon tnt ~ ~ ~-8 {Fuse:0}",
+                                       "/summon tnt ~8 ~ ~8 {Fuse:0}",
+                                       "/summon tnt ~-8 ~ ~-8 {Fuse:0}",
+                                       "/summon tnt ~8 ~ ~-8 {Fuse:0}",
+                                       "/summon tnt ~-8 ~ ~8 {Fuse:0}"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "playsound infinity:power_stone_explode block @s ~ ~ ~ 0.6"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "playsound infinity:power_stone_explode block @s ~ ~ ~ 0.6"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "/summon tnt ~8 ~ ~ {Fuse:0}",
+                                                   "/summon tnt ~-8 ~ ~ {Fuse:0}",
+                                                   "/summon tnt ~ ~ ~8 {Fuse:0}",
+                                                   "/summon tnt ~ ~ ~-8 {Fuse:0}",
+                                                   "/summon tnt ~8 ~ ~8 {Fuse:0}",
+                                                   "/summon tnt ~-8 ~ ~-8 {Fuse:0}",
+                                                   "/summon tnt ~8 ~ ~-8 {Fuse:0}",
+                                                   "/summon tnt ~-8 ~ ~8 {Fuse:0}"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:or",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_power",
+                                                                                                  "power":  "infinity:infinity_gauntlet"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:power_stone"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_power"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_power"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:power_stone"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_power"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "power_blast_aim"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Cosmic Explosion",
+                                                     "icon":  "infinity:textures/icon/rocket_burst.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.explosion2.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  2,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "meteor_storm",
+                      "original_type":  "palladium:command",
+                      "title":  "Meteor Storm",
+                      "description":  "@ability.infinity.power_stone.meteor_storm.description",
+                      "icon":  "infinity:textures/icon/meteor.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "explosion2"
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:space_stone",
+                                              "infinity:power_stone_passive"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -1.5
+                                       ],
+                      "list_index":  3,
+                      "color":  "purple",
+                      "commands":  [
+                                       "function infinity:meteor"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "function infinity:meteor"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "explosion2"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:space_stone"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:power_stone_passive"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:or",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_power",
+                                                                                                  "power":  "infinity:infinity_gauntlet"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:tesseract"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:tesseract"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:space_stone"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:space_stone"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_space"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_space"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              }
+                                                                                          ]
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Meteor Storm",
+                                                     "icon":  "infinity:textures/icon/meteor.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.meteor_storm.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  3,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "titanic_charge",
+                      "original_type":  "palladium:titanic_charge",
+                      "title":  "@ability.infinity.power_stone.titanic_charge.title",
+                      "description":  "@ability.infinity.power_stone.titanic_charge.description",
+                      "icon":  "infinity:textures/icon/premium/titanic_charge.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  18
+                               },
+                      "parents":  [
+                                      "celestial_annihilation_aim"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  120,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           1,
+                                           -4.5
+                                       ],
+                      "list_index":  5,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:titanic_charge",
+                                  "distance":  16.0,
+                                  "damage":  160.0,
+                                  "step_size":  0.4,
+                                  "impact_knockback":  1.4,
+                                  "sound":  "infinity:power_stone_beam1",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  18
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "celestial_annihilation_aim"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.titanic_charge.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/titanic_charge.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.titanic_charge.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  5,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "tectonic_rend",
+                      "original_type":  "palladium:tectonic_rend",
+                      "title":  "@ability.infinity.power_stone.tectonic_rend.title",
+                      "description":  "@ability.infinity.power_stone.tectonic_rend.description",
+                      "icon":  "infinity:textures/icon/premium/tectonic_rend.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "titanic_charge"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  180,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           2,
+                                           -4.5
+                                       ],
+                      "list_index":  7,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:tectonic_rend",
+                                  "damage":  120.0,
+                                  "range":  24,
+                                  "hit_radius":  2.2,
+                                  "launch_strength":  1.05,
+                                  "sound":  "infinity:power_stone_beam1",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  24,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  20
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "titanic_charge"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.tectonic_rend.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/tectonic_rend.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.tectonic_rend.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  7,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "kinetic_reservoir",
+                      "original_type":  "palladium:kinetic_reservoir",
+                      "title":  "@ability.infinity.power_stone.kinetic_reservoir.title",
+                      "description":  "@ability.infinity.power_stone.kinetic_reservoir.description",
+                      "icon":  "infinity:textures/icon/premium/kinetic_reservoir.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  22
+                               },
+                      "parents":  [
+                                      "tectonic_rend"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  300,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           -4.5
+                                       ],
+                      "list_index":  8,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:kinetic_reservoir",
+                                  "damage_reduction":  0.75,
+                                  "energy_conversion":  8.0,
+                                  "max_reserve":  240.0,
+                                  "reserve_lifetime":  200,
+                                  "sound":  "infinity:power_stone_beam1",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  100,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  22
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "tectonic_rend"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.kinetic_reservoir.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/kinetic_reservoir.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.kinetic_reservoir.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  8,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "cosmic_arsenal",
+                      "original_type":  "palladium:cosmic_arsenal",
+                      "title":  "@ability.infinity.power_stone.cosmic_arsenal.title",
+                      "description":  "@ability.infinity.power_stone.cosmic_arsenal.description",
+                      "icon":  "infinity:textures/icon/premium/cosmic_arsenal.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  24
+                               },
+                      "parents":  [
+                                      "kinetic_reservoir"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  240,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           -4.5
+                                       ],
+                      "list_index":  9,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:cosmic_arsenal",
+                                  "fragments":  5,
+                                  "damage":  90.0,
+                                  "target_range":  48.0,
+                                  "velocity":  2.6,
+                                  "shot_interval":  12,
+                                  "sound":  "infinity:power_stone_beam1",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  160,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  24
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "kinetic_reservoir"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.cosmic_arsenal.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/cosmic_arsenal.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.cosmic_arsenal.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  9,
+                                                     "gui_position":  [
+                                                                          4,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "cosmic_resonance",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "@ability.infinity.power_stone.cosmic_resonance.title",
+                      "description":  "@ability.infinity.power_stone.cosmic_resonance.description",
+                      "icon":  "infinity:textures/icon/premium/celestial_annihilation.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  16
+                               },
+                      "parents":  [
+                                      "unlock11_dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           -3.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.attack_damage",
+                                  "amount":  100.0,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  16
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "unlock11_dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.cosmic_resonance.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/celestial_annihilation.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.cosmic_resonance.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -3.5
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:power_stone_passive/cosmic_resonance"
+                              }
+                  },
+                  {
+                      "id":  "celestial_annihilation_aim",
+                      "settings": {"min": 0, "max": 3, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "original_type":  "palladium:aim",
+                      "title":  "@ability.infinity.power_stone.celestial_annihilation.title",
+                      "description":  "@ability.infinity.power_stone.celestial_annihilation.description",
+                      "icon":  "infinity:textures/icon/premium/celestial_annihilation.png",
+                      "cost":  null,
+                      "parents":  [
+                                      "cosmic_resonance"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -4.5
+                                       ],
+                      "list_index":  6,
+                      "color":  "purple",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:aim",
+                                  "persistent_data":  true,
+                                  "arm":  "main_arm",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "cosmic_resonance"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.power_stone.celestial_annihilation.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/celestial_annihilation.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.power_stone.celestial_annihilation.description"
+                                                                     },
+                                                     "color":  "purple",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  6,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -4.5
+                                                                      ],
+                                                     "animation_timer":  {
+                                                                             "min":  0,
+                                                                             "max":  1
+                                                                         }
+                                                 }
+                              }
+                  }
+              ]
+}

@@ -1,0 +1,1879 @@
+{
+    "stone":  "mind",
+    "original_power":  "infinity:mind_stone",
+    "nodes":  [
+                  {
+                      "id":  "dummy1",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy2",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy3",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           1.5
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy4",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           1
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy5",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           0.5
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy6",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           0
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "flight-dummy",
+                      "original_type":  "palladium:command",
+                      "title":  "Flight",
+                      "description":  "@ability.infinity.mind_stone.flight.description",
+                      "icon":  "infinity:textures/icon/fly.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           1,
+                                           1
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:or",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_power",
+                                                                                                  "power":  "infinity:infinity_gauntlet"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:mind_stone"
+                                                                                                           },
+                                                                                                  "slot":  "curios:head"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:scepter"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:scepter"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:mind_stone"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:mind_stone"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_mind"
+                                                                                                           },
+                                                                                                  "slot":  "mainhand"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:cosmi-rod_mind"
+                                                                                                           },
+                                                                                                  "slot":  "offhand"
+                                                                                              }
+                                                                                          ]
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Flight",
+                                                     "icon":  "infinity:textures/icon/fly.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.flight.description"
+                                                                     },
+                                                     "hidden_in_gui":  false,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "flight_toggle",
+                      "original_type":  "palladium:command",
+                      "title":  "Flight Toggle",
+                      "description":  "@ability.infinity.mind_stone.flight_toggle.description",
+                      "icon":  "minecraft:command_block",
+                      "cost":  {
+                                   "type":  "xp_levels",
+                                   "amount":  0
+                               },
+                      "parents":  [
+                                      "flight-dummy"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           0.5
+                                       ],
+                      "list_index":  1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "scoreboard objectives add flightToggle dummy",
+                                                  "execute if score @s flightToggle matches 0 run tag @s add no_fly",
+                                                  "execute if score @s flightToggle matches 1 run tag @s remove no_fly",
+                                                  "scoreboard players add @s flightToggle 1",
+                                                  "execute if score @s flightToggle matches 2 run scoreboard players set @s flightToggle 0",
+                                                  "ability lock @s infinity:mind_stone flight_toggle"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  false,
+                                  "first_tick_commands":  [
+                                                              "scoreboard objectives add flightToggle dummy",
+                                                              "execute if score @s flightToggle matches 0 run tag @s add no_fly",
+                                                              "execute if score @s flightToggle matches 1 run tag @s remove no_fly",
+                                                              "scoreboard players add @s flightToggle 1",
+                                                              "execute if score @s flightToggle matches 2 run scoreboard players set @s flightToggle 0",
+                                                              "ability lock @s infinity:mind_stone flight_toggle"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:experience_level_buyable",
+                                                                           "xp_level":  0,
+                                                                           "flat_levels":  true
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "flight-dummy"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Flight Toggle",
+                                                     "icon":  "minecraft:command_block",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.flight_toggle.description"
+                                                                     },
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "intangibility",
+                      "original_type":  "palladium:intangibility",
+                      "title":  "Intangibility",
+                      "description":  "@ability.infinity.mind_stone.intangibility.description",
+                      "icon":  "infinity:mind_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "toggle",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           0.5
+                                       ],
+                      "list_index":  1,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:intangibility",
+                                  "persistent_data":  true,
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:toggle",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Intangibility",
+                                                     "icon":  "infinity:mind_stone",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.intangibility.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "intangibility_effects",
+                      "original_type":  "palladium:command",
+                      "title":  "intangibility_effects",
+                      "description":  "",
+                      "icon":  null,
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  4,
+                      "color":  "black",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "scale set pehkui:reach -1",
+                                                  "scale set pehkui:hitbox_height 1",
+                                                  "scale set pehkui:hitbox_width 1"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "scale set pehkui:reach 1",
+                                                 "scale set pehkui:hitbox_height 1",
+                                                 "scale set pehkui:hitbox_width 1"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "first_tick_commands":  [
+                                                              "scale set pehkui:reach -1",
+                                                              "scale set pehkui:hitbox_height 1",
+                                                              "scale set pehkui:hitbox_width 1"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "scale set pehkui:reach 1",
+                                                             "scale set pehkui:hitbox_height 1",
+                                                             "scale set pehkui:hitbox_width 1"
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:ability_enabled",
+                                                                          "ability":  "intangibility"
+                                                                      }
+                                                                  ]
+                                                 },
+                                  "properties":  {
+                                                     "color":  "black",
+                                                     "hidden_in_gui":  true,
+                                                     "list_index":  4
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "intangibility_flight",
+                      "original_type":  "palladium:intangibility",
+                      "title":  "intangibility_flight",
+                      "description":  "",
+                      "icon":  null,
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:intangibility",
+                                  "vertical":  true,
+                                  "whitelist":  "null",
+                                  "blacklist":  "palladium:prevents_intangibility",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:ability_enabled",
+                                                                          "ability":  "intangibility"
+                                                                      },
+                                                                      {
+                                                                          "type":  "palladium:is_hovering_or_flying"
+                                                                      }
+                                                                  ]
+                                                 },
+                                  "properties":  {
+                                                     "hidden_in_gui":  true
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "intangibility_ground",
+                      "original_type":  "palladium:intangibility",
+                      "title":  "intangibility_ground",
+                      "description":  "",
+                      "icon":  null,
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:intangibility",
+                                  "vertical":  false,
+                                  "whitelist":  "null",
+                                  "blacklist":  "palladium:prevents_intangibility",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:ability_enabled",
+                                                                          "ability":  "intangibility"
+                                                                      }
+                                                                  ]
+                                                 },
+                                  "properties":  {
+                                                     "hidden_in_gui":  true
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "passive",
+                      "original_type":  "palladium:command",
+                      "title":  "Passive",
+                      "description":  "@ability.infinity.mind_stone.passive.description",
+                      "icon":  "minecraft:player_head",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "intangibility"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           1
+                                       ],
+                      "list_index":  0,
+                      "color":  "yellow",
+                      "commands":  [
+                                       "team join peaceful",
+                                       "execute as @e[distance=..5] run team join peaceful"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "playsound infinity:mind_stone_phase block @s ~ ~ ~ 0.6",
+                                                  "execute at @e[distance=..5] run particle minecraft:dust{color:[1.0,0.9,0.1],scale:2.0} ~ ~1 ~ 0.5 1.0 0.5 0 15 force"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "playsound infinity:mind_stone_phase block @s ~ ~ ~ 0.6",
+                                                              "execute at @e[distance=..5] run particle minecraft:dust{color:[1.0,0.9,0.1],scale:2.0} ~ ~1 ~ 0.5 1.0 0.5 0 15 force"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "team join peaceful",
+                                                   "execute as @e[distance=..5] run team join peaceful"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "intangibility"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:crouching"
+                                                                                              }
+                                                                                          ]
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Passive",
+                                                     "icon":  "minecraft:player_head",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.passive.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "un-passive",
+                      "original_type":  "palladium:command",
+                      "title":  "Un-Passive",
+                      "description":  "@ability.infinity.mind_stone.un_passive.description",
+                      "icon":  "minecraft:zombie_head",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  0,
+                      "color":  "yellow",
+                      "commands":  [
+                                       "team leave peaceful",
+                                       "execute as @e[distance=..5] run team leave @s"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "playsound infinity:mind_stone_phase block @s ~ ~ ~ 0.6",
+                                                  "execute at @e[distance=..5] run particle minecraft:dust{color:[1.0,0.9,0.1],scale:2.0} ~ ~1 ~ 0.5 1.0 0.5 0 15 force"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "playsound infinity:mind_stone_phase block @s ~ ~ ~ 0.6",
+                                                              "execute at @e[distance=..5] run particle minecraft:dust{color:[1.0,0.9,0.1],scale:2.0} ~ ~1 ~ 0.5 1.0 0.5 0 15 force"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "team leave peaceful",
+                                                   "execute as @e[distance=..5] run team leave @s"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:crouching"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Un-Passive",
+                                                     "icon":  "minecraft:zombie_head",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.un_passive.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "power_blast",
+                      "original_type":  "palladium:energy_beam",
+                      "title":  "Power Blast",
+                      "description":  "@ability.infinity.mind_stone.power_blast.description",
+                      "icon":  "infinity:textures/icon/power_blast_blue.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:energy_beam",
+                                  "persistent_data":  true,
+                                  "energy_beam":  "infinity:scepter_beam",
+                                  "damage":  20,
+                                  "max_distance":  50,
+                                  "speed":  0.5,
+                                  "set_on_fire_seconds":  1,
+                                  "cause_fire":  true,
+                                  "smelt_blocks":  false,
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:ability_enabled",
+                                                                          "ability":  "aim"
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_in_slot",
+                                                                           "item":  {
+                                                                                        "item":  "infinity:scepter"
+                                                                                    },
+                                                                           "slot":  "mainhand"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Power Blast",
+                                                     "icon":  "infinity:textures/icon/power_blast_blue.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.power_blast.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  -1
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "aim",
+                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "original_type":  "palladium:aim",
+                      "title":  "Power Blast",
+                      "description":  "@ability.infinity.mind_stone.power_blast.description",
+                      "icon":  "infinity:textures/icon/power_blast_blue.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  -1,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:aim",
+                                  "persistent_data":  true,
+                                  "arm":  "main_arm",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_in_slot",
+                                                                           "item":  {
+                                                                                        "item":  "infinity:scepter"
+                                                                                    },
+                                                                           "slot":  "mainhand"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Power Blast",
+                                                     "icon":  "infinity:textures/icon/power_blast_blue.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.power_blast.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  -1,
+                                                     "animation_timer":  {
+                                                                             "min":  0,
+                                                                             "max":  1
+                                                                         }
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "power_blast_head",
+                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "original_type":  "palladium:energy_beam",
+                      "title":  "Power Blast",
+                      "description":  "@ability.infinity.mind_stone.power_blast.description",
+                      "icon":  "infinity:textures/icon/power_blast_blue.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  2,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:energy_beam",
+                                  "persistent_data":  true,
+                                  "energy_beam":  "infinity:mind_beam",
+                                  "damage":  20,
+                                  "max_distance":  50,
+                                  "speed":  0.5,
+                                  "set_on_fire_seconds":  1,
+                                  "cause_fire":  true,
+                                  "smelt_blocks":  false,
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:or",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "InfinityUltron"
+                                                                                              },
+                                                                                              {
+                                                                                                  "type":  "palladium:item_in_slot",
+                                                                                                  "item":  {
+                                                                                                               "item":  "infinity:mind_stone"
+                                                                                                           },
+                                                                                                  "slot":  "curios:head"
+                                                                                              }
+                                                                                          ]
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Power Blast",
+                                                     "icon":  "infinity:textures/icon/power_blast_blue.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.power_blast.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  2
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "recipe",
+                      "original_type":  "palladium:command",
+                      "title":  "Recipes",
+                      "description":  "@ability.infinity.mind_stone.recipe.description",
+                      "icon":  "minecraft:crafting_table",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0.5,
+                                           0.5
+                                       ],
+                      "list_index":  0,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "recipe give @s *"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "recipe give @s *"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Recipes",
+                                                     "icon":  "minecraft:crafting_table",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.recipe.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "hero",
+                      "original_type":  "palladium:command",
+                      "title":  "Hero of the People",
+                      "description":  "@ability.infinity.mind_stone.hero.description",
+                      "icon":  "minecraft:textures/mob_effect/hero_of_the_village.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "passive"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           1.5
+                                       ],
+                      "list_index":  0,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:hero_of_the_village infinite 5 true"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "effect clear @s minecraft:hero_of_the_village"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:hero_of_the_village infinite 5 true"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "effect clear @s minecraft:hero_of_the_village"
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "passive"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Hero of the People",
+                                                     "icon":  "minecraft:textures/mob_effect/hero_of_the_village.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.hero.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "night_vision",
+                      "original_type":  "palladium:command",
+                      "title":  "Night Vision",
+                      "description":  "@ability.infinity.mind_stone.night_vision.description",
+                      "icon":  "minecraft:textures/mob_effect/night_vision.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "intangibility"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           0
+                                       ],
+                      "list_index":  0,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:night_vision infinite 5 true"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "effect clear @s minecraft:night_vision"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:night_vision infinite 5 true"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "effect clear @s minecraft:night_vision"
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "intangibility"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Night Vision",
+                                                     "icon":  "minecraft:textures/mob_effect/night_vision.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.night_vision.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "psionic_mastery",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "@ability.infinity.mind_stone.psionic_mastery.title",
+                      "description":  "@ability.infinity.mind_stone.psionic_mastery.description",
+                      "icon":  "infinity:textures/icon/premium/psionic_overload.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  12
+                               },
+                      "parents":  [
+                                      "intangibility"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           2
+                                       ],
+                      "list_index":  -1,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.armor_toughness",
+                                  "amount":  20.0,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  12
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "intangibility"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.psionic_mastery.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/psionic_overload.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.psionic_mastery.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          2
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:mind_stone/psionic_mastery"
+                              }
+                  },
+                  {
+                      "id":  "psionic_overload_aim",
+                      "settings": {"min": 0, "max": 3, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "original_type":  "palladium:aim",
+                      "title":  "@ability.infinity.mind_stone.psionic_overload.title",
+                      "description":  "@ability.infinity.mind_stone.psionic_overload.description",
+                      "icon":  "infinity:textures/icon/premium/psionic_overload.png",
+                      "cost":  null,
+                      "parents":  [
+                                      "psionic_mastery"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           2
+                                       ],
+                      "list_index":  6,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:aim",
+                                  "persistent_data":  true,
+                                  "arm":  "main_arm",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "psionic_mastery"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.psionic_overload.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/psionic_overload.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.psionic_overload.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  6,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          2
+                                                                      ],
+                                                     "animation_timer":  {
+                                                                             "min":  0,
+                                                                             "max":  1
+                                                                         }
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "synaptic_cascade",
+                      "original_type":  "palladium:synaptic_cascade",
+                      "title":  "@ability.infinity.mind_stone.synaptic_cascade.title",
+                      "description":  "@ability.infinity.mind_stone.synaptic_cascade.description",
+                      "icon":  "infinity:textures/icon/premium/synaptic_cascade.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  12
+                               },
+                      "parents":  [
+                                      "psionic_mastery"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  120,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           2
+                                       ],
+                      "list_index":  5,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:synaptic_cascade",
+                                  "damage":  80.0,
+                                  "max_distance":  48.0,
+                                  "jump_distance":  8.0,
+                                  "max_targets":  6,
+                                  "interrupt_ticks":  20,
+                                  "sound":  "infinity:mind_stone_phase",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  12
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "psionic_mastery"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.synaptic_cascade.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/synaptic_cascade.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.synaptic_cascade.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  5,
+                                                     "gui_position":  [
+                                                                          4,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "psychic_dominion",
+                      "original_type":  "palladium:psychic_dominion",
+                      "title":  "@ability.infinity.mind_stone.psychic_dominion.title",
+                      "description":  "@ability.infinity.mind_stone.psychic_dominion.description",
+                      "icon":  "infinity:textures/icon/premium/psychic_dominion.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  14
+                               },
+                      "parents":  [
+                                      "synaptic_cascade"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  300,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           5,
+                                           2
+                                       ],
+                      "list_index":  7,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:psychic_dominion",
+                                  "max_distance":  32.0,
+                                  "cluster_radius":  10.0,
+                                  "target_radius":  18.0,
+                                  "max_targets":  3,
+                                  "duration_ticks":  240,
+                                  "boss_weakness_amplifier":  3,
+                                  "sound":  "infinity:mind_stone_phase",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  240,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  14
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "synaptic_cascade"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.psychic_dominion.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/psychic_dominion.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.psychic_dominion.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  7,
+                                                     "gui_position":  [
+                                                                          5,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "terror_projection",
+                      "original_type":  "palladium:terror_projection",
+                      "title":  "@ability.infinity.mind_stone.terror_projection.title",
+                      "description":  "@ability.infinity.mind_stone.terror_projection.description",
+                      "icon":  "infinity:textures/icon/premium/terror_projection.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  16
+                               },
+                      "parents":  [
+                                      "psychic_dominion"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  160,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           6,
+                                           2
+                                       ],
+                      "list_index":  8,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:terror_projection",
+                                  "damage":  60.0,
+                                  "range":  20.0,
+                                  "half_angle":  50.0,
+                                  "max_targets":  8,
+                                  "fear_ticks":  100,
+                                  "flee_speed":  1.35,
+                                  "boss_weakness_amplifier":  4,
+                                  "sound":  "infinity:mind_stone_phase",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  16
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "psychic_dominion"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.terror_projection.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/terror_projection.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.terror_projection.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  8,
+                                                     "gui_position":  [
+                                                                          6,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "mental_bastion",
+                      "original_type":  "palladium:mental_bastion",
+                      "title":  "@ability.infinity.mind_stone.mental_bastion.title",
+                      "description":  "@ability.infinity.mind_stone.mental_bastion.description",
+                      "icon":  "infinity:textures/icon/premium/mental_bastion.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  18
+                               },
+                      "parents":  [
+                                      "terror_projection"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  320,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           7,
+                                           2
+                                       ],
+                      "list_index":  9,
+                      "color":  "yellow",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:mental_bastion",
+                                  "radius":  8.0,
+                                  "duration_ticks":  160,
+                                  "damage_reduction":  0.75,
+                                  "repel_strength":  2.2,
+                                  "sound":  "infinity:mind_stone_phase",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  160,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  18
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "terror_projection"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.mind_stone.mental_bastion.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/mental_bastion.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.mind_stone.mental_bastion.description"
+                                                                     },
+                                                     "color":  "yellow",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  9,
+                                                     "gui_position":  [
+                                                                          7,
+                                                                          2
+                                                                      ]
+                                                 }
+                              }
+                  }
+              ]
+}

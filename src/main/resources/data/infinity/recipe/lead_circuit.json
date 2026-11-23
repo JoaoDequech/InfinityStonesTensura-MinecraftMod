@@ -1,0 +1,28 @@
+{
+    "key":  {
+                "G":  {
+                          "item":  "minecraft:green_dye"
+                      },
+                "L":  [
+                          {
+                              "tag":  "c:ingots/lead"
+                          },
+                          {
+                              "tag":  "c:ingots/copper"
+                          }
+                      ],
+                "R":  {
+                          "item":  "minecraft:redstone"
+                      }
+            },
+    "pattern":  [
+                    " R ",
+                    "LGL",
+                    " R "
+                ],
+    "result":  {
+                   "id":  "infinity:lead_circuit",
+                   "count":  2
+               },
+    "type":  "minecraft:crafting_shaped"
+}

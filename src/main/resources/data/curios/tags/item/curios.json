@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "infinity_tracker:infinity_tracker",
+      "required": false
+    }
+  ]
+}

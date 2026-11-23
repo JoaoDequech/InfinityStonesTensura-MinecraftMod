@@ -1,0 +1,23 @@
+{
+  "key.infinity.wheel": "Infinity Wheel (tap: repeat last)",
+  "infinity.aim.target": "Target: %s (%s m)",
+  "infinity.aim.point": "Point: %s m ahead",
+  "infinity.aim.keys": "[LMB] confirm  ·  [RMB] / Esc cancel",
+  "infinity.aim.channel_keys": "Channelling · [RMB] or tap %s: stop",
+  "infinity.wheel.setting": "Setting",
+  "infinity.wheel.hint.scroll": "[Scroll] over it here: change level / mode  (Alt + scroll while aiming)",
+  "infinity.setting.flight_speed": "Flight speed",
+  "infinity.wheel.hint.alt_scroll": "[Alt + scroll]",
+  "infinity.wheel.hint.switch": "[LMB] turn on / off (the wheel stays open)",
+  "infinity.wheel.hint.channel": "[LMB] start / stop channelling (no holding)",
+  "infinity.wheel.hint.press": "[LMB] use",
+  "infinity.wheel.hint.aim": "Then aim freely (you can move): [LMB] confirm · [RMB]/Esc cancel",
+  "infinity.wheel.hint.channel_stop": "Stop: [RMB], tap %s or choose it again",
+  "infinity.wheel.hint.destination_aim": "[MMB] pick the destination, then aim at the target and [LMB]",
+  "infinity.wheel.hint.favorite": "[1-4] pin as favourite (%s + 1..4)",
+  "infinity.wheel.kind.passive": "Passive",
+  "infinity.wheel.kind.channel": "Channel (on/off)",
+  "infinity.wheel.kind.channelling": "Channelling — click to stop",
+  "infinity.wheel.kind.aim": "Aimed power",
+  "infinity.wheel.hint": "LMB: use  ·  RMB: 2nd option  ·  MMB: destination  ·  1-4: favourites  ·  Alt+scroll: setting"
+}

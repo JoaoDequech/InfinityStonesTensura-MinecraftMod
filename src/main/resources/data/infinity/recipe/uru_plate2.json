@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "fsang:uru_ingot"
+    }
+  ],
+  "pattern": [
+    "HG ",
+    "G  ",
+    "   "
+  ],
+  "key": {
+    "H": {
+      "item": "infinity:hammer"
+    },
+    "G": {
+      "item": "fsang:uru_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:uru_plate"
+  }
+}

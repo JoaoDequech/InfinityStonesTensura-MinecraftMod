@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GHG",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "item": "infinity:gold_titanium_alloy_plate"
+    },
+    "H": {
+      "item": "infinity:hammer"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:gold_titanium_alloy_handle"
+  }
+}

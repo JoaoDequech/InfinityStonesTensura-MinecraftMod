@@ -1,0 +1,39 @@
+{
+  "display": {
+    "title": {
+      "text": "Six Stones, One Gauntlet",
+      "color": "dark_purple",
+      "bold": true
+    },
+    "description": {
+      "text": "Collect all 6 stones"
+    },
+    "icon": {
+      "id": "infinity:infinity_gauntlet"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "power": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "infinity:pugmeowla"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "power"
+    ]
+  ],
+  "parent": "infinity:gauntlet"
+}

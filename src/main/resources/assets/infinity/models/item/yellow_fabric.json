@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "infinity:item/yellow_fabric"
+                 },
+    "parent":  "minecraft:item/generated"
+}

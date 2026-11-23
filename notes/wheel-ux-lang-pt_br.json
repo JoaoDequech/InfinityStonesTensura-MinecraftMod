@@ -1,0 +1,23 @@
+{
+  "key.infinity.wheel": "Roda do Infinito (toque: repetir último)",
+  "infinity.aim.target": "Alvo: %s (%s m)",
+  "infinity.aim.point": "Ponto: %s m à frente",
+  "infinity.aim.keys": "[Esq.] confirmar  ·  [Dir.] / Esc cancelar",
+  "infinity.aim.channel_keys": "Canalizando · [Dir.] ou toque em %s: parar",
+  "infinity.wheel.setting": "Ajuste",
+  "infinity.wheel.hint.scroll": "[Scroll] em cima dele aqui: muda nível / modo  (Alt + scroll durante a mira)",
+  "infinity.setting.flight_speed": "Velocidade do voo",
+  "infinity.wheel.hint.alt_scroll": "[Alt + scroll]",
+  "infinity.wheel.hint.switch": "[Esq.] liga / desliga (a roda continua aberta)",
+  "infinity.wheel.hint.channel": "[Esq.] começa / para de canalizar (sem segurar)",
+  "infinity.wheel.hint.press": "[Esq.] usar",
+  "infinity.wheel.hint.aim": "Depois mire à vontade (andando): [Esq.] confirma · [Dir.]/Esc cancela",
+  "infinity.wheel.hint.channel_stop": "Parar: [Dir.], toque em %s ou escolha de novo",
+  "infinity.wheel.hint.destination_aim": "[Meio] escolhe o destino; depois mire no alvo e [Esq.]",
+  "infinity.wheel.hint.favorite": "[1-4] fixar como favorito (%s + 1..4)",
+  "infinity.wheel.kind.passive": "Passiva",
+  "infinity.wheel.kind.channel": "Canalizar (liga/desliga)",
+  "infinity.wheel.kind.channelling": "Canalizando — clique para parar",
+  "infinity.wheel.kind.aim": "Poder de mira",
+  "infinity.wheel.hint": "Esq.: usar  ·  Dir.: 2ª opção  ·  Meio: destino  ·  1-4: favoritos  ·  Alt+scroll: ajuste"
+}

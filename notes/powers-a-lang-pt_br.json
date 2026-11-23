@@ -1,0 +1,46 @@
+{
+  "ability.infinity.mind_stone.mind_palace.title": "Palácio Mental",
+  "ability.infinity.mind_stone.mind_palace.description": "Liga/desliga. O tempo se estica ao seu redor: você se move e ataca bem mais rápido, enquanto todas as criaturas próximas ficam lentas e os projéteis se arrastam (bullet time). Só você vê, através das paredes, um contorno dourado em cada criatura, uma linha pontilhada mostrando para onde ela vai e um fio vermelho até quem ela vai atacar. Alt + scroll: raio do palácio 12-32.",
+  "infinity.extra.mind.setting.palace": "Raio do palácio",
+  "infinity.extra.mind.palace.on": "O Palácio Mental se abre",
+  "infinity.extra.mind.palace.off": "O Palácio Mental se fecha",
+
+  "ability.infinity.mind_stone.puppet_strings.title": "Fios de Marionete",
+  "ability.infinity.mind_stone.puppet_strings.description": "Esq.: fios dourados prendem até 3 criaturas à sua frente (chefes são imunes). Elas flutuam para onde você olha até você soltar (esquerdo de novo), passarem 20 s ou você largar a joia. Dir.: arremessa todas as marionetes na direção do olhar; cada uma se espatifa no impacto e o choque machuca tudo ao redor.",
+  "infinity.wheel.dual.puppet_strings": "Esq.: prender / soltar  ·  Dir.: arremessar as marionetes",
+  "infinity.extra.mind.puppet.none": "Nenhuma criatura presa nos seus fios",
+  "infinity.extra.mind.puppet.grab": "%s marionete(s) presa(s)",
+  "infinity.extra.mind.puppet.release": "Os fios se afrouxam",
+  "infinity.extra.mind.puppet.fling": "Arremessadas!",
+
+  "ability.infinity.mind_stone.astral_swap.title": "Troca de Projeção Astral",
+  "ability.infinity.mind_stone.astral_swap.description": "Conjunção Mente + Espaço. Esq. (mira): você e a criatura mirada trocam de lugar por uma fenda dourada e azul; ela fica atordoada e todo monstro que caçava você passa a caçá-la por 8 s. Dir.: deixa um duplo astral brilhante onde você está (30 s); de novo com o direito, você troca de lugar com ele de qualquer ponto da mesma dimensão.",
+  "infinity.wheel.dual.astral_swap": "Esq.: trocar com a criatura mirada  ·  Dir.: deixar / trocar com o duplo astral",
+  "infinity.extra.mind.astral.blocked": "Sem espaço para a troca",
+  "infinity.extra.mind.astral.left": "Duplo astral deixado para trás. Clique direito de novo para trocar com ele",
+  "infinity.extra.mind.astral.swapped": "Você trocou de lugar com o duplo astral",
+
+  "ability.infinity.power_stone.gravity_hammer.title": "Martelo da Gravidade",
+  "ability.infinity.power_stone.gravity_hammer.description": "Esq.: um salto roxo; no ápice a gravidade se multiplica e você despenca como um cometa. Dir.: mergulho imediato no ar, ou pulinho e mergulho no chão. O impacto racha o chão numa estrela de fissuras, lança terra e fere e arremessa tudo ao redor (10-30 de dano, mais quanto maior a queda). Sem dano de queda. Alt + scroll: raio do impacto 5-12.",
+  "infinity.wheel.dual.gravity_hammer": "Esq.: saltar e esmagar  ·  Dir.: mergulho imediato",
+  "infinity.extra.power.setting.radius": "Raio do impacto",
+
+  "ability.infinity.power_stone.prism_barrage.title": "Rajada de Prisma",
+  "ability.infinity.power_stone.prism_barrage.description": "Um prisma giratório se abre acima da sua cabeça dentro de círculos em camadas e dispara lanças roxas em ondas. Esq.: um leque plano que acompanha para onde você olha enquanto dispara (varra uma multidão). Dir.: as lanças explodem para todos os lados e depois curvam até a criatura mirada (ou o ponto mirado). Alt + scroll: 6-18 lanças.",
+  "infinity.wheel.dual.prism_barrage": "Esq.: leque varredor  ·  Dir.: rajada teleguiada",
+  "infinity.extra.power.setting.lances": "Lanças",
+  "infinity.extra.power.prism.busy": "Lanças demais no ar",
+
+  "ability.infinity.space_stone.portal_gun.title": "Arma de Portais",
+  "ability.infinity.space_stone.portal_gun.description": "Esq.: um portal azul na face do bloco que você mira (até 64 blocos). Dir.: um portal laranja. Ande, caia, jogue itens ou atire flechas em um e saem pelo outro mantendo a velocidade, em paredes, chãos e tetos. Um novo tiro substitui aquela cor; os dois precisam estar na mesma dimensão; fecham após 5 minutos, se a parede atrás sumir ou quando você sair do jogo.",
+  "infinity.wheel.dual.portal_gun": "Esq.: portal azul  ·  Dir.: portal laranja",
+  "infinity.extra.space.portal.nowall": "Mire numa superfície sólida com espaço livre na frente",
+  "infinity.extra.space.portal.blue": "Portal azul aberto",
+  "infinity.extra.space.portal.orange": "Portal laranja aberto",
+
+  "ability.infinity.space_stone.pocket_orbit.title": "Órbita de Bolso",
+  "ability.infinity.space_stone.pocket_orbit.description": "Liga/desliga. Você vira um pequeno planeta azul: anéis de luz e três luas giram ao seu redor, você flutua suave ao cair e tudo ao alcance é capturado em órbita (até 8 criaturas, exceto chefes, e 14 itens ou projéteis). Inimigos em órbita não conseguem lutar e levam 2 de dano por segundo. Agache para arremessar tudo para fora (6 de dano nas criaturas). Alt + scroll: raio de captura 4-10.",
+  "infinity.extra.space.setting.reach": "Raio de captura",
+  "infinity.extra.space.orbit.on": "Você vira um planeta",
+  "infinity.extra.space.orbit.off": "A órbita se desfaz"
+}

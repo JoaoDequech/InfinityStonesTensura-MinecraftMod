@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.infinitystones.tensura.mixin.port",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockStateBaseMixin",
+    "PuppetPacketMixin",
+    "GhostTrackingMixin",
+    "ChunkMapMixin",
+    "TrackedEntityMixin",
+    "PlayerSoundMixin"
+  ],
+  "client": [
+    "HumanoidModelMixin",
+    "GlowMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "infinity_tracker:infinity_tracker"
+    }
+  ],
+  "pattern": [
+    "ANA",
+    "CRC",
+    "AEA"
+  ],
+  "key": {
+    "A": {
+      "item": "infinity:aspects_of_existance"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "R": {
+      "item": "minecraft:recovery_compass"
+    },
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "C": {
+      "item": "infinity:vibranium_circuit"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity_tracker:infinity_tracker"
+  }
+}

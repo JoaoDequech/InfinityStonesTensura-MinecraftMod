@@ -1,0 +1,6 @@
+{
+    "step":  "underground_ores",
+    "features":  "infinity:ore_titanium",
+    "type":  "neoforge:add_features",
+    "biomes":  "#minecraft:is_overworld"
+}

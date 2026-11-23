@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "infinity:gold_titanium_alloy_ingot"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:gold_titanium_alloy_block"
+  }
+}

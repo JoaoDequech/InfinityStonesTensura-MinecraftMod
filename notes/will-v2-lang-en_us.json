@@ -1,0 +1,16 @@
+{
+  "ability.infinity.reality_stone.will.title": "Matter Manipulation",
+  "ability.infinity.reality_stone.will.description": "Hard light of reality. Left on the wheel: Grip (hold Left to take any mob, player, item or Create Aeronautics contraption; release to fling it; Right locks it in the air; Alt + mouse turns it). Middle: construct wheel. Right: manage constructs. No cooldown, no weight limit.",
+  "infinity.will.on": "Matter Manipulation: Grip ON",
+  "infinity.will.off": "Matter Manipulation: Grip off",
+  "infinity.will.hud.title": "✦ MATTER MANIPULATION ✦",
+  "infinity.will.hud.idle": "Hold Left: grab  ·  Right (aiming at something locked): unlock  ·  Middle: unlock all",
+  "infinity.will.hud.holding": "Release Left: let go (keeps momentum)  ·  Right: lock in the air  ·  Scroll: distance  ·  Alt + mouse: turn",
+  "infinity.will.hud.design": "DESIGNING: %s hard-light blocks (free)  ·  Right on the power: save or cancel",
+  "infinity.construct.legend": "Left: summon  ·  Right: dismiss copies  ·  Middle: move up  ·  ⚒ edit blocks  ·  ✎ rename",
+  "infinity.construct.editing": "Editing \"%s\" — change the blocks, then SAVE (Right on the power)",
+  "infinity.construct.edit_blocks": "Edit blocks: it appears in front of you as a design",
+  "infinity.construct.rename": "Rename",
+  "infinity.construct.rename_confirm": "Confirm the new name (or press Enter)",
+  "infinity.construct.delete": "Delete this construct"
+}

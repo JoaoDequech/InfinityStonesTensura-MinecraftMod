@@ -1,0 +1,16 @@
+{
+    "structures": [
+      {
+        "structure": "infinity:infinity_temple",
+        "weight": 1
+      }
+    ],
+    "placement": {
+      "salt": 42067,
+      "frequency": 0.69,
+      "spacing": 67,
+      "separation": 42,
+      "type": "minecraft:random_spread"
+    }
+  }
+  

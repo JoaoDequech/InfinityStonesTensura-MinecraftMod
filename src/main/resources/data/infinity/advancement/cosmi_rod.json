@@ -1,0 +1,39 @@
+{
+  "display": {
+    "title": {
+      "text": "It's called the Universal Weapon. Oh, really?",
+      "color": "dark_purple",
+      "bold": true
+    },
+    "description": {
+      "text": "Obtain the Cosmi-Rod"
+    },
+    "icon": {
+      "id": "infinity:cosmi-rod"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "power": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "infinity:cosmi-rod"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "power"
+    ]
+  ],
+  "parent": "infinity:root"
+}

@@ -1,0 +1,16 @@
+{
+  "ability.infinity.port.needs_scepter": "Hold the Scepter to fire the Power Blast",
+  "ability.infinity.port.no_target": "No valid target",
+  "ability.infinity.port.weather.clear": "Weather: clear",
+  "ability.infinity.port.weather.rain": "Weather: rain",
+  "ability.infinity.port.weather.thunder": "Weather: thunderstorm",
+  "ability.infinity.port.toggle.flight.on": "Mind Stone flight: OFF",
+  "ability.infinity.port.toggle.flight.off": "Mind Stone flight: ON",
+  "ability.infinity.port.toggle.radiation.on": "Radiation overlay: hidden",
+  "ability.infinity.port.toggle.radiation.off": "Radiation overlay: shown",
+  "ability.infinity.port.toggle.screen.on": "Time Stone screen overlay: hidden",
+  "ability.infinity.port.toggle.screen.off": "Time Stone screen overlay: shown",
+  "ability.infinity.port.time_speed": "World speed: %s ticks/s",
+  "ability.infinity.port.size": "Size: x%s",
+  "ability.infinity.port.damage_cycle": "Power Stone damage: %s"
+}

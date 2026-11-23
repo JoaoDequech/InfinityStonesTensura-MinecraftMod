@@ -1,0 +1,18 @@
+{
+    "key":  {
+                "W":  {
+                          "item":  "minecraft:blue_wool"
+                      },
+                "S":  {
+                          "item":  "minecraft:string"
+                      }
+            },
+    "pattern":  [
+                    "SWS"
+                ],
+    "result":  {
+                   "id":  "infinity:blue_fabric",
+                   "count":  2
+               },
+    "type":  "minecraft:crafting_shaped"
+}

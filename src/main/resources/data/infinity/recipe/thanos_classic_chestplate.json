@@ -1,0 +1,25 @@
+{
+    "key":  {
+                "Y":  {
+                          "item":  "infinity:yellow_fabric"
+                      },
+                "H":  {
+                          "item":  "infinity:hammer"
+                      },
+                "F":  {
+                          "item":  "infinity:blue_fabric"
+                      },
+                "U":  {
+                          "item":  "infinity:uru_plate"
+                      }
+            },
+    "pattern":  [
+                    "UHU",
+                    "YFY",
+                    "UUU"
+                ],
+    "result":  {
+                   "id":  "infinity:thanos_classic_chestplate"
+               },
+    "type":  "minecraft:crafting_shaped"
+}

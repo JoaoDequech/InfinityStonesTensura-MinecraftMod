@@ -1,0 +1,17 @@
+{
+    "key":  {
+                "R":  {
+                          "item":  "infinity:raw_titanium"
+                      }
+            },
+    "pattern":  [
+                    "RRR",
+                    "RRR",
+                    "RRR"
+                ],
+    "result":  {
+                   "id":  "infinity:raw_titanium_block",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shaped"
+}

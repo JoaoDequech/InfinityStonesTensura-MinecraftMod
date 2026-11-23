@@ -1,0 +1,12 @@
+{
+    "ingredients":  [
+                        {
+                            "item":  "infinity:raw_titanium_block"
+                        }
+                    ],
+    "result":  {
+                   "id":  "infinity:raw_titanium",
+                   "count":  9
+               },
+    "type":  "minecraft:crafting_shapeless"
+}

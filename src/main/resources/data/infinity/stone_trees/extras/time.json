@@ -1,0 +1,217 @@
+{
+  "nodes": [
+    {
+      "id": "climate_zone", "original_type": "infinity:climate_zone",
+      "title": "@ability.infinity.time_stone.climate_zone.title", "description": "@ability.infinity.time_stone.climate_zone.description",
+      "icon": "minecraft:lightning_rod", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
+      "parents": ["season_in_a_moment"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [7, -1.5], "aim": true,
+      "settings": { "min": 6, "max": 24, "step": 1, "default": 12, "label": "infinity.setting.time.climate_radius" },
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+      "id": "stasis_bubble", "original_type": "infinity:stasis_bubble",
+      "title": "@ability.infinity.time_stone.stasis_bubble.title", "description": "@ability.infinity.time_stone.stasis_bubble.description",
+      "icon": "minecraft:clock", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 22 },
+      "parents": ["time_freeze"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [2, 3.5], "aim": true,
+      "settings": { "min": 3, "max": 8, "step": 1, "default": 5, "label": "infinity.setting.time.bubble_radius" },
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+      "id": "time_mark", "original_type": "infinity:time_mark",
+      "title": "@ability.infinity.time_stone.time_mark.title", "description": "@ability.infinity.time_stone.time_mark.description",
+      "icon": "minecraft:recovery_compass", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["personal_rewind"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [3, -3], "aim": true,
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+      "id": "lapse_field", "original_type": "infinity:lapse_field",
+      "title": "@ability.infinity.time_stone.lapse_field.title", "description": "@ability.infinity.time_stone.lapse_field.description",
+      "icon": "minecraft:repeater", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["fast_forward"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [-0.5, -1.5], "aim": true,
+      "settings": { "min": 2, "max": 10, "step": 1, "default": 4, "label": "infinity.setting.time.lapse_speed" },
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+      "id": "eras", "original_type": "infinity:eras",
+      "title": "@ability.infinity.time_stone.eras.title", "description": "@ability.infinity.time_stone.eras.description",
+      "icon": "minecraft:mossy_stone_bricks", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 14 },
+      "parents": ["season_in_a_moment"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [6, -3], "aim": true,
+      "settings": { "min": 2, "max": 6, "step": 1, "default": 3, "label": "infinity.setting.time.eras_radius" },
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+      "id": "restoration", "original_type": "infinity:restoration",
+      "title": "@ability.infinity.time_stone.restoration.title", "description": "@ability.infinity.time_stone.restoration.description",
+      "icon": "minecraft:end_crystal", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 20 },
+      "parents": ["closed_time_loop"], "requires_stones": ["infinity:reality_stone"], "activation": "press", "cooldown_ticks": 0,
+      "in_tree": true, "in_bar": true, "gui_position": [5, -3],
+      "settings": { "min": 8, "max": 32, "step": 1, "default": 16, "label": "infinity.setting.time.restore_radius" },
+      "commands": [], "first_tick_commands": [], "last_tick_commands": []
+    },
+    {
+        "id":  "gauntlet_stop",
+        "tier":  2,
+        "original_type":  "infinity:gauntlet_stop",
+        "title":  "@ability.infinity.time_stone.gauntlet_stop.title",
+        "description":  "@ability.infinity.time_stone.gauntlet_stop.description",
+        "icon":  "minecraft:packed_ice",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  20
+                 },
+        "parents":  [
+    
+                    ],
+        "requires_stones":  [
+                                "infinity:mind_stone",
+                                "infinity:power_stone_passive",
+                                "infinity:reality_stone",
+                                "infinity:soul_stone",
+                                "infinity:space_stone"
+                            ],
+        "activation":  "press",
+        "cooldown_ticks":  1800,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             4,
+                             3
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+      "id": "past_echo",
+      "original_type": "infinity:past_echo",
+      "title": "@ability.infinity.time_stone.past_echo.title",
+      "description": "@ability.infinity.time_stone.past_echo.description",
+      "icon": "minecraft:echo_shard",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 26
+      },
+      "parents": [
+        "temporal_echo"
+      ],
+      "requires_stones": [
+        "infinity:soul_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        4,
+        -3
+      ],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "rewind_me",
+      "original_type": "infinity:rewind_me",
+      "title": "@ability.infinity.time_stone.rewind_me.title",
+      "description": "@ability.infinity.time_stone.rewind_me.description",
+      "icon": "minecraft:clock",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [
+        "personal_rewind"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        2,
+        -3
+      ],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "time_clones",
+      "original_type": "infinity:time_clones",
+      "title": "@ability.infinity.time_stone.time_clones.title",
+      "description": "@ability.infinity.time_stone.time_clones.description",
+      "icon": "minecraft:armor_stand",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [
+        "personal_rewind"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        3,
+        -4.5
+      ],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "alternate_timeline", "tier": 2,
+      "original_type": "infinity:alternate_timeline",
+      "title": "@ability.infinity.time_stone.alternate_timeline.title",
+      "description": "@ability.infinity.time_stone.alternate_timeline.description",
+      "icon": "minecraft:amethyst_cluster",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 15
+      },
+      "parents": [
+        "closed_time_loop"
+      ],
+      "requires_stones": [
+        "infinity:reality_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        5,
+        -4.5
+      ],
+      "settings": {
+        "min": 8,
+        "max": 20,
+        "step": 1,
+        "default": 14,
+        "label": "infinity.setting.time.timeline_radius"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

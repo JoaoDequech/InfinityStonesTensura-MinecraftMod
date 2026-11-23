@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SQS",
+    "LVL",
+    "GRG"
+  ],
+  "key": {
+    "S": {
+      "item": "infinity:steel_plate"
+    },
+    "Q": {
+      "item": "infinity:quartz_circuit"
+    },
+    "L": {
+      "item": "infinity:lead_circuit"
+    },
+    "V": {
+      "item": "infinity:vibranium_ingot"
+    },
+    "G": {
+      "item": "infinity:gold_plate"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:52-d_unit"
+  }
+}

@@ -1,0 +1,86 @@
+{
+    "parent":  "minecraft:block/block",
+    "elements":  [
+                     {
+                         "faces":  {
+                                       "north":  {
+                                                     "cullface":  "north",
+                                                     "texture":  "#base"
+                                                 },
+                                       "up":  {
+                                                  "cullface":  "up",
+                                                  "texture":  "#base"
+                                              },
+                                       "west":  {
+                                                    "cullface":  "west",
+                                                    "texture":  "#base"
+                                                },
+                                       "south":  {
+                                                     "cullface":  "south",
+                                                     "texture":  "#base"
+                                                 },
+                                       "east":  {
+                                                    "cullface":  "east",
+                                                    "texture":  "#base"
+                                                },
+                                       "down":  {
+                                                    "cullface":  "down",
+                                                    "texture":  "#base"
+                                                }
+                                   },
+                         "from":  [
+                                      0,
+                                      0,
+                                      0
+                                  ],
+                         "to":  [
+                                    16,
+                                    16,
+                                    16
+                                ]
+                     },
+                     {
+                         "faces":  {
+                                       "north":  {
+                                                     "cullface":  "north",
+                                                     "texture":  "#overlay"
+                                                 },
+                                       "up":  {
+                                                  "cullface":  "up",
+                                                  "texture":  "#overlay"
+                                              },
+                                       "west":  {
+                                                    "cullface":  "west",
+                                                    "texture":  "#overlay"
+                                                },
+                                       "south":  {
+                                                     "cullface":  "south",
+                                                     "texture":  "#overlay"
+                                                 },
+                                       "east":  {
+                                                    "cullface":  "east",
+                                                    "texture":  "#overlay"
+                                                },
+                                       "down":  {
+                                                    "cullface":  "down",
+                                                    "texture":  "#overlay"
+                                                }
+                                   },
+                         "from":  [
+                                      0,
+                                      0,
+                                      0
+                                  ],
+                         "to":  [
+                                    16,
+                                    16,
+                                    16
+                                ]
+                     }
+                 ],
+    "textures":  {
+                     "base":  "minecraft:block/deepslate",
+                     "overlay":  "infinity:block/vibranium_ore_overlay",
+                     "particle":  "minecraft:block/deepslate"
+                 }
+}

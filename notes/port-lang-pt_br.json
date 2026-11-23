@@ -1,0 +1,16 @@
+{
+  "ability.infinity.port.needs_scepter": "Segure o Cetro para disparar a Rajada de Poder",
+  "ability.infinity.port.no_target": "Nenhum alvo válido",
+  "ability.infinity.port.weather.clear": "Clima: limpo",
+  "ability.infinity.port.weather.rain": "Clima: chuva",
+  "ability.infinity.port.weather.thunder": "Clima: tempestade",
+  "ability.infinity.port.toggle.flight.on": "Voo da Joia da Mente: DESLIGADO",
+  "ability.infinity.port.toggle.flight.off": "Voo da Joia da Mente: LIGADO",
+  "ability.infinity.port.toggle.radiation.on": "Textura de radiação: oculta",
+  "ability.infinity.port.toggle.radiation.off": "Textura de radiação: visível",
+  "ability.infinity.port.toggle.screen.on": "Tela verde da Joia do Tempo: oculta",
+  "ability.infinity.port.toggle.screen.off": "Tela verde da Joia do Tempo: visível",
+  "ability.infinity.port.time_speed": "Velocidade do mundo: %s ticks/s",
+  "ability.infinity.port.size": "Tamanho: x%s",
+  "ability.infinity.port.damage_cycle": "Dano da Joia do Poder: %s"
+}

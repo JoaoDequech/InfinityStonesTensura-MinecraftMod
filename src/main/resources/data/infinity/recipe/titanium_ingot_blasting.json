@@ -1,0 +1,11 @@
+{
+    "ingredient":  {
+                       "item":  "infinity:raw_titanium"
+                   },
+    "result":  {
+                   "id":  "infinity:titanium_ingot"
+               },
+    "cookingtime":  50,
+    "experience":  1,
+    "type":  "minecraft:blasting"
+}

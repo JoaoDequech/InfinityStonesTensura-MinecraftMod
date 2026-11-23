@@ -1,0 +1,52 @@
+{
+    "pools":  [
+                  {
+                      "bonus_rolls":  0,
+                      "rolls":  1,
+                      "entries":  [
+                                      {
+                                          "type":  "minecraft:alternatives",
+                                          "children":  [
+                                                           {
+                                                               "conditions":  [
+                                                                                  {
+                                                                                      "condition":  "minecraft:match_tool",
+                                                                                      "predicate":  {
+                                                                                                        "predicates":  {
+                                                                                                                           "minecraft:enchantments":  [
+                                                                                                                                                          {
+                                                                                                                                                              "enchantments":  "minecraft:silk_touch",
+                                                                                                                                                              "levels":  {
+                                                                                                                                                                             "min":  1
+                                                                                                                                                                         }
+                                                                                                                                                          }
+                                                                                                                                                      ]
+                                                                                                                       }
+                                                                                                    }
+                                                                                  }
+                                                                              ],
+                                                               "name":  "infinity:titanium_ore",
+                                                               "type":  "minecraft:item"
+                                                           },
+                                                           {
+                                                               "functions":  [
+                                                                                 {
+                                                                                     "function":  "minecraft:apply_bonus",
+                                                                                     "formula":  "minecraft:ore_drops",
+                                                                                     "enchantment":  "minecraft:fortune"
+                                                                                 },
+                                                                                 {
+                                                                                     "function":  "minecraft:explosion_decay"
+                                                                                 }
+                                                                             ],
+                                                               "name":  "infinity:raw_titanium",
+                                                               "type":  "minecraft:item"
+                                                           }
+                                                       ]
+                                      }
+                                  ]
+                  }
+              ],
+    "type":  "minecraft:block",
+    "random_sequence":  "infinity:blocks/titanium_ore"
+}

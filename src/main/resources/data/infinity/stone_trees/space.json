@@ -1,0 +1,1595 @@
+{
+    "stone":  "space",
+    "original_power":  "infinity:space_stone",
+    "nodes":  [
+                  {
+                      "id":  "dummy1",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           -1,
+                                           -0.5
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          -1,
+                                                                          -0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy2",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           -0.5,
+                                           0
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          -0.5,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy3",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1,
+                                           -1
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "teleport",
+                      "original_type":  "palladium:command",
+                      "title":  "Teleport",
+                      "description":  "@ability.infinity.space_stone.teleport.description",
+                      "icon":  "infinity:textures/icon/teleport.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "grab_entity2"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           0
+                                       ],
+                      "list_index":  1,
+                      "color":  "light_blue",
+                      "commands":  [
+                                       "tag @s add teleport_tag",
+                                       "function infinity:space_tp_start"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "tag @s add teleport_tag",
+                                                   "function infinity:space_tp_start"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "grab_entity2"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Teleport",
+                                                     "icon":  "infinity:textures/icon/teleport.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.teleport.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "water_breathing",
+                      "original_type":  "palladium:command",
+                      "title":  "Water Breathing",
+                      "description":  "@ability.infinity.space_stone.water_breathing.description",
+                      "icon":  "minecraft:textures/mob_effect/water_breathing.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "force_field"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           1,
+                                           0.5
+                                       ],
+                      "list_index":  1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:water_breathing infinite 0 true"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "effect clear @s minecraft:water_breathing"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:water_breathing infinite 0 true"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "effect clear @s minecraft:water_breathing"
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "force_field"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Water Breathing",
+                                                     "icon":  "minecraft:textures/mob_effect/water_breathing.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.water_breathing.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "teleport_command",
+                      "tier":  2,
+                      "original_type":  "palladium:dummy",
+                      "title":  "Teleport Command",
+                      "description":  "@ability.infinity.space_stone.teleport_command.description",
+                      "icon":  "infinity:textures/icon/teleport.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  10
+                               },
+                      "parents":  [
+                                      "teleport"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           -0.5,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  10
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "teleport"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Teleport Command",
+                                                     "icon":  "infinity:textures/icon/teleport.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.teleport_command.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          -0.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "grab_entity2",
+                      "settings": {"min": 2, "max": 30, "default": 6, "label": "ability.infinity.port.grab.label"},
+                      "original_type":  "corewithstuff:telekinesis",
+                      "title":  "Telekinesis",
+                      "description":  "@ability.infinity.space_stone.telekinesis.description",
+                      "icon":  "infinity:space_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "force_field"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0.5,
+                                           0
+                                       ],
+                      "list_index":  2,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "corewithstuff:telekinesis",
+                                  "persistent_data":  true,
+                                  "range":  20,
+                                  "strength":  1,
+                                  "damage":  0,
+                                  "reset":  true,
+                                  "affect_players":  true,
+                                  "affect_blocks":  false,
+                                  "whitelist_enabled":  false,
+                                  "whitelist":  "",
+                                  "blacklist_enabled":  true,
+                                  "blacklist":  "minecraft:bedrock,minecraft:barrier,minecraft:obsidian",
+                                  "other_rgbs":  "null",
+                                  "other_count":  1,
+                                  "other_speed":  1,
+                                  "dust":  true,
+                                  "dust_rgbs":  "0.345 0.714 0.89 1",
+                                  "dust_count":  5,
+                                  "dust_speed":  1,
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "force_field"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Telekinesis",
+                                                     "icon":  "infinity:space_stone",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.telekinesis.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  2,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "force_field",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "Force Field",
+                      "description":  "@ability.infinity.space_stone.force_field.description",
+                      "icon":  "infinity:textures/icon/force_field.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "fall_immunity"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "toggle",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0.5,
+                                           1
+                                       ],
+                      "list_index":  0,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.armor",
+                                  "amount":  2147483647,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:toggle",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "fall_immunity"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Force Field",
+                                                     "icon":  "infinity:textures/icon/force_field.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.force_field.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          1
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:space_stone/force_field"
+                              }
+                  },
+                  {
+                      "id":  "black_hole_on",
+                      "tier":  2,
+                      "original_type":  "palladium:command",
+                      "title":  "Black Hole",
+                      "description":  "@ability.infinity.space_stone.black_hole_on.description",
+                      "icon":  "infinity:textures/icon/black_hole.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "grab_entity2"
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:power_stone_passive"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0.5,
+                                           -1
+                                       ],
+                      "list_index":  3,
+                      "color":  "light_blue",
+                      "commands":  [
+                                       "tag @a add blackholeon",
+                                       "function infinity:blackholeon"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "playsound infinity:black_hole player @a[distance=..48] ~ ~ ~ 0.6"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "playsound infinity:black_hole player @a[distance=..48] ~ ~ ~ 0.6"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "tag @a add blackholeon",
+                                                   "function infinity:blackholeon"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "grab_entity2"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "blackholeon"
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:power_stone_passive"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Black Hole",
+                                                     "icon":  "infinity:textures/icon/black_hole.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.black_hole_on.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  3,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "black_hole_off",
+                      "tier":  2,
+                      "original_type":  "palladium:command",
+                      "title":  "Black Hole Off",
+                      "description":  "@ability.infinity.space_stone.black_hole_off.description",
+                      "icon":  "minecraft:barrier",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:power_stone_passive"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  null,
+                      "list_index":  3,
+                      "color":  "light_blue",
+                      "commands":  [
+                                       "function infinity:blackholeoff",
+                                       "tag @a remove blackholeon"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "function infinity:blackholeoff",
+                                                   "tag @a remove blackholeon"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:has_tag",
+                                                                           "tag":  "blackholeon"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:power_stone_passive"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Black Hole Off",
+                                                     "icon":  "minecraft:barrier",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.black_hole_off.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  3
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "fall_immunity",
+                      "original_type":  "palladium:damage_immunity",
+                      "title":  "Fall Damage Immunity",
+                      "description":  "@ability.infinity.space_stone.fall_immunity.description",
+                      "icon":  "minecraft:diamond_boots",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "step_assist"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0,
+                                           1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:damage_immunity",
+                                  "persistent_data":  true,
+                                  "damage_sources":  [
+                                                         "minecraft:is_fall"
+                                                     ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "step_assist"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Fall Damage Immunity",
+                                                     "icon":  "minecraft:diamond_boots",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.fall_immunity.description"
+                                                                     },
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "step_assist",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "Step Assist",
+                      "description":  "@ability.infinity.space_stone.step_assist.description",
+                      "icon":  "infinity:textures/icon/step.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "speed"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           -0.5,
+                                           1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.step_height",
+                                  "amount":  0.5,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "speed"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Step Assist",
+                                                     "icon":  "infinity:textures/icon/step.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.step_assist.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          -0.5,
+                                                                          1
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:space_stone/step_assist"
+                              }
+                  },
+                  {
+                      "id":  "speed",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "Speed",
+                      "description":  "@ability.infinity.space_stone.speed.description",
+                      "icon":  "minecraft:textures/mob_effect/speed.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           -1,
+                                           1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.movement_speed",
+                                  "amount":  0.05,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Speed",
+                                                     "icon":  "minecraft:textures/mob_effect/speed.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.speed.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          -1,
+                                                                          1
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:space_stone/speed"
+                              }
+                  },
+                  {
+                      "id":  "teleport_gui",
+                      "tier":  2,
+                      "original_type":  "corewithstuff:wormhole_gui",
+                      "title":  "Teleport GUI",
+                      "description":  "@ability.infinity.space_stone.portal_gui.description",
+                      "icon":  "infinity:textures/icon/teleport.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "teleport"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -1
+                                       ],
+                      "list_index":  4,
+                      "color":  "light_blue",
+                      "commands":  [
+                                       "superpower add infinity:space_stone_gui @s"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "corewithstuff:wormhole_gui",
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "superpower add infinity:space_stone_gui @s"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "teleport"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Teleport GUI",
+                                                     "icon":  "infinity:textures/icon/teleport.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.portal_gui.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  4,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "spatial_exchange",
+                      "original_type":  "palladium:spatial_exchange",
+                      "title":  "@ability.infinity.space_stone.spatial_exchange.title",
+                      "description":  "@ability.infinity.space_stone.spatial_exchange.description",
+                      "icon":  "infinity:textures/icon/premium/spatial_exchange.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  14
+                               },
+                      "parents":  [
+                                      "spatial_sovereignty"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  100,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           1,
+                                           -4.5
+                                       ],
+                      "list_index":  5,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:spatial_exchange",
+                                  "max_distance":  32.0,
+                                  "disorientation_ticks":  60,
+                                  "sound":  "infinity:space_stone_portal",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  14
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "spatial_sovereignty"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.spatial_exchange.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/spatial_exchange.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.spatial_exchange.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  5,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "orbital_judgement",
+                      "original_type":  "palladium:orbital_judgement",
+                      "title":  "@ability.infinity.space_stone.orbital_judgement.title",
+                      "description":  "@ability.infinity.space_stone.orbital_judgement.description",
+                      "icon":  "infinity:textures/icon/premium/orbital_judgement.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  16
+                               },
+                      "parents":  [
+                                      "spatial_exchange"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  220,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           2,
+                                           -4.5
+                                       ],
+                      "list_index":  7,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:orbital_judgement",
+                                  "damage":  180.0,
+                                  "max_distance":  48.0,
+                                  "cluster_radius":  10.0,
+                                  "max_targets":  5,
+                                  "orbit_ticks":  60,
+                                  "lift_height":  5.5,
+                                  "orbit_radius":  3.25,
+                                  "sound":  "infinity:space_stone_portal",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  68,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  16
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "spatial_exchange"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.orbital_judgement.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/orbital_judgement.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.orbital_judgement.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  7,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "spatial_reflection",
+                      "original_type":  "palladium:spatial_reflection",
+                      "title":  "@ability.infinity.space_stone.spatial_reflection.title",
+                      "description":  "@ability.infinity.space_stone.spatial_reflection.description",
+                      "icon":  "infinity:textures/icon/premium/spatial_reflection.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  18
+                               },
+                      "parents":  [
+                                      "orbital_judgement"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  240,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           -4.5
+                                       ],
+                      "list_index":  8,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:spatial_reflection",
+                                  "radius":  8.0,
+                                  "max_speed":  2.2,
+                                  "max_reflections":  32,
+                                  "sound":  "infinity:space_stone_portal",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  100,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  18
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "orbital_judgement"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.spatial_reflection.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/spatial_reflection.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.spatial_reflection.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  8,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "spatial_banishment",
+                      "tier":  2,
+                      "original_type":  "palladium:spatial_banishment",
+                      "title":  "@ability.infinity.space_stone.spatial_banishment.title",
+                      "description":  "@ability.infinity.space_stone.spatial_banishment.description",
+                      "icon":  "infinity:textures/icon/premium/spatial_banishment.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "spatial_reflection"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  300,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           -4.5
+                                       ],
+                      "list_index":  9,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:spatial_banishment",
+                                  "max_distance":  48.0,
+                                  "sound":  "infinity:space_stone_portal",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  20
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "spatial_reflection"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.spatial_banishment.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/spatial_banishment.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.spatial_banishment.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  9,
+                                                     "gui_position":  [
+                                                                          4,
+                                                                          -4.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "spatial_sovereignty",
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "@ability.infinity.space_stone.spatial_sovereignty.title",
+                      "description":  "@ability.infinity.space_stone.spatial_sovereignty.description",
+                      "icon":  "infinity:textures/icon/premium/event_horizon.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  12
+                               },
+                      "parents":  [
+                                      "teleport"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.max_health",
+                                  "amount":  60.0,
+                                  "operation":  "add_value",
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  12
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "teleport"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.spatial_sovereignty.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/event_horizon.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.spatial_sovereignty.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -1
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:space_stone/spatial_sovereignty"
+                              }
+                  },
+                  {
+                      "id":  "event_horizon",
+                      "original_type":  "palladium:projectile",
+                      "title":  "@ability.infinity.space_stone.event_horizon.title",
+                      "description":  "@ability.infinity.space_stone.event_horizon.description",
+                      "icon":  "infinity:textures/icon/premium/event_horizon.png",
+                      "cost":  null,
+                      "parents":  [
+                                      "spatial_sovereignty"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  100,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           -1
+                                       ],
+                      "list_index":  6,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:projectile",
+                                  "persistent_data":  true,
+                                  "entity_type":  "palladium:custom_projectile",
+                                  "velocity":  2.7,
+                                  "inaccuracy":  0.0,
+                                  "entity_data":  {
+                                                      "Damage":  220,
+                                                      "Gravity":  0.0,
+                                                      "Size":  1.75,
+                                                      "Lifetime":  240,
+                                                      "DieOnEntityHit":  false,
+                                                      "DieOnBlockHit":  true,
+                                                      "ExplosionRadius":  12,
+                                                      "ExplosionCausesFire":  false,
+                                                      "ExplosionBlockInteraction":  "destroy",
+                                                      "Appearances":  [
+                                                                          {
+                                                                              "Type":  "laser",
+                                                                              "Thickness":  1.18,
+                                                                              "Color":  "#071F66"
+                                                                          },
+                                                                          {
+                                                                              "Type":  "laser",
+                                                                              "Thickness":  0.54,
+                                                                              "Color":  "#70EBFF"
+                                                                          },
+                                                                          {
+                                                                              "Type":  "trail",
+                                                                              "Trail":  "infinity:event_horizon"
+                                                                          }
+                                                                      ]
+                                                  },
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "spatial_sovereignty"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.space_stone.event_horizon.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/event_horizon.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.space_stone.event_horizon.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  6,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  }
+              ]
+}

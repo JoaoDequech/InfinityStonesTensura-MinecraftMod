@@ -1,0 +1,377 @@
+{
+    "nodes":  [
+                  {
+                      "id":  "gauntlet_snap",
+                      "tier":  2,
+                      "original_type":  "infinity:gauntlet_snap",
+                      "title":  "@ability.infinity.soul_stone.gauntlet_snap.title",
+                      "description":  "@ability.infinity.soul_stone.gauntlet_snap.description",
+                      "icon":  "infinity:infinity_gauntlet",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:mind_stone",
+                                              "infinity:power_stone_passive",
+                                              "infinity:reality_stone",
+                                              "infinity:space_stone",
+                                              "infinity:time_stone"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           2
+                                       ],
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ]
+                  },
+                  {
+                      "id":  "gauntlet_return",
+                      "tier":  2,
+                      "original_type":  "infinity:gauntlet_return",
+                      "title":  "@ability.infinity.soul_stone.gauntlet_return.title",
+                      "description":  "@ability.infinity.soul_stone.gauntlet_return.description",
+                      "icon":  "minecraft:heart_of_the_sea",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "gauntlet_snap"
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:mind_stone",
+                                              "infinity:power_stone_passive",
+                                              "infinity:reality_stone",
+                                              "infinity:space_stone",
+                                              "infinity:time_stone"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           5,
+                                           2
+                                       ],
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ]
+                  },
+                  {
+                      "id":  "gauntlet_undo_death", "tier": 2,
+                      "original_type":  "infinity:gauntlet_undo_death",
+                      "title":  "@ability.infinity.soul_stone.gauntlet_undo_death.title",
+                      "description":  "@ability.infinity.soul_stone.gauntlet_undo_death.description",
+                      "icon":  "minecraft:enchanted_golden_apple",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "gauntlet_snap"
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:mind_stone",
+                                              "infinity:power_stone_passive",
+                                              "infinity:reality_stone",
+                                              "infinity:space_stone",
+                                              "infinity:time_stone"
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  1200,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           3
+                                       ],
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ]
+                  },
+                  {
+                      "id":  "soul_capture", "tier": 2,
+                      "original_type":  "infinity:soul_capture",
+                      "title":  "@ability.infinity.soul_stone.soul_capture.title",
+                      "description":  "@ability.infinity.soul_stone.soul_capture.description",
+                      "icon":  "minecraft:soul_lantern",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "soul_severance"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "aim":  true,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           0
+                                       ],
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ]
+                  },
+                  {
+                      "id":  "soul_possession",
+                      "tier":  2,
+                      "original_type":  "infinity:soul_possession",
+                      "title":  "@ability.infinity.soul_stone.soul_possession.title",
+                      "description":  "@ability.infinity.soul_stone.soul_possession.description",
+                      "icon":  "minecraft:wither_skeleton_skull",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  15
+                               },
+                      "parents":  [
+                                      "soul_sovereignty"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "aim":  true,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           1
+                                       ],
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ]
+                  },
+                  {
+                    "id": "spectral_army",
+                    "original_type": "infinity:spectral_army",
+                    "title": "@ability.infinity.soul_stone.spectral_army.title",
+                    "description": "@ability.infinity.soul_stone.spectral_army.description",
+                    "icon": "minecraft:soul_lantern",
+                    "cost": {
+                      "type": "item",
+                      "item": "infinity:aspects_of_existance",
+                      "amount": 24
+                    },
+                    "parents": [
+                      "spirit_legion"
+                    ],
+                    "requires_stones": [],
+                    "activation": "press",
+                    "cooldown_ticks": 0,
+                    "in_tree": true,
+                    "in_bar": true,
+                    "gui_position": [
+                      3,
+                      -2.5
+                    ],
+                    "aim": false,
+                    "commands": [],
+                    "first_tick_commands": [],
+                    "last_tick_commands": []
+                  },
+                  {
+                    "id": "reaper",
+                    "original_type": "infinity:reaper",
+                    "title": "@ability.infinity.soul_stone.reaper.title",
+                    "description": "@ability.infinity.soul_stone.reaper.description",
+                    "icon": "minecraft:netherite_hoe",
+                    "cost": {
+                      "type": "item",
+                      "item": "infinity:aspects_of_existance",
+                      "amount": 20
+                    },
+                    "parents": [
+                      "reaper_brand"
+                    ],
+                    "requires_stones": [],
+                    "activation": "press",
+                    "cooldown_ticks": 0,
+                    "in_tree": true,
+                    "in_bar": true,
+                    "gui_position": [
+                      6,
+                      -1.5
+                    ],
+                    "aim": false,
+                    "settings": {
+                      "min": 6,
+                      "max": 20,
+                      "step": 1,
+                      "default": 14,
+                      "label": "infinity.setting.soul.harvest_radius"
+                    },
+                    "commands": [],
+                    "first_tick_commands": [],
+                    "last_tick_commands": []
+                  },
+                  {
+                    "id": "soul_link",
+                    "original_type": "infinity:soul_link",
+                    "title": "@ability.infinity.soul_stone.soul_link.title",
+                    "description": "@ability.infinity.soul_stone.soul_link.description",
+                    "icon": "minecraft:lead",
+                    "cost": {
+                      "type": "item",
+                      "item": "infinity:aspects_of_existance",
+                      "amount": 18
+                    },
+                    "parents": [
+                      "soul_capture"
+                    ],
+                    "requires_stones": [],
+                    "activation": "press",
+                    "cooldown_ticks": 0,
+                    "in_tree": true,
+                    "in_bar": true,
+                    "gui_position": [
+                      5,
+                      0
+                    ],
+                    "aim": true,
+                    "commands": [],
+                    "first_tick_commands": [],
+                    "last_tick_commands": []
+                  },
+                  {
+                    "id": "return_pact",
+                    "original_type": "infinity:return_pact",
+                    "title": "@ability.infinity.soul_stone.return_pact.title",
+                    "description": "@ability.infinity.soul_stone.return_pact.description",
+                    "icon": "minecraft:totem_of_undying",
+                    "cost": {
+                      "type": "item",
+                      "item": "infinity:aspects_of_existance",
+                      "amount": 16
+                    },
+                    "parents": [
+                      "soul_sovereignty"
+                    ],
+                    "requires_stones": [],
+                    "activation": "press",
+                    "cooldown_ticks": 0,
+                    "in_tree": true,
+                    "in_bar": true,
+                    "gui_position": [
+                      2,
+                      1
+                    ],
+                    "aim": false,
+                    "commands": [],
+                    "first_tick_commands": [],
+                    "last_tick_commands": []
+                  },
+    {
+      "id": "soul_sight",
+      "original_type": "infinity:soul_sight",
+      "title": "@ability.infinity.soul_stone.soul_sight.title",
+      "description": "@ability.infinity.soul_stone.soul_sight.description",
+      "icon": "minecraft:spyglass",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [
+        "glow"
+      ],
+      "requires_stones": [],
+      "activation": "toggle",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        1,
+        1
+      ],
+      "settings": {
+        "min": 16,
+        "max": 64,
+        "step": 4,
+        "default": 40,
+        "label": "infinity.setting.soul.sight_radius"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "lost_lantern",
+      "original_type": "infinity:lost_lantern",
+      "title": "@ability.infinity.soul_stone.lost_lantern.title",
+      "description": "@ability.infinity.soul_stone.lost_lantern.description",
+      "icon": "minecraft:soul_lantern",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 22
+      },
+      "parents": [
+        "return_pact"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        2,
+        2
+      ],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "sources": [
+    { "type": "minecraft:single", "resource": "infinity:particle/stone_mote", "sprite": "infinity:stone_mote" },
+    { "type": "minecraft:single", "resource": "infinity:particle/stone_spark", "sprite": "infinity:stone_spark" }
+  ]
+}

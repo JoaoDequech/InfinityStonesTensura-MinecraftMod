@@ -1,0 +1,23 @@
+{
+    "key":  {
+                "G":  {
+                          "item":  "minecraft:green_dye"
+                      },
+                "R":  {
+                          "item":  "minecraft:redstone"
+                      },
+                "Q":  {
+                          "item":  "minecraft:quartz"
+                      }
+            },
+    "pattern":  [
+                    " R ",
+                    "QGQ",
+                    " R "
+                ],
+    "result":  {
+                   "id":  "infinity:quartz_circuit",
+                   "count":  2
+               },
+    "type":  "minecraft:crafting_shaped"
+}

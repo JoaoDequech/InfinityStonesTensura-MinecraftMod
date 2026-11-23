@@ -1,0 +1,198 @@
+{
+    "space_stone_portal":  {
+                               "sounds":  [
+                                              {
+                                                  "name":  "infinity:space_stone_portal",
+                                                  "volume":  0.45
+                                              },
+                                              {
+                                                  "name":  "infinity:space_stone_portal2",
+                                                  "volume":  0.45
+                                              },
+                                              {
+                                                  "name":  "infinity:space_stone_portal3",
+                                                  "volume":  0.45
+                                              },
+                                              {
+                                                  "name":  "infinity:space_stone_portal4",
+                                                  "volume":  0.45
+                                              },
+                                              {
+                                                  "name":  "infinity:space_stone_portal5",
+                                                  "volume":  0.45
+                                              }
+                                          ]
+                           },
+    "space_stone_grab":  {
+                             "sounds":  [
+                                            {
+                                                "name":  "infinity:space_stone_grab",
+                                                "volume":  0.45
+                                            }
+                                        ]
+                         },
+    "space_stone_random":  {
+                               "sounds":  [
+                                              {
+                                                  "name":  "infinity:space_stone_random",
+                                                  "volume":  0.45
+                                              }
+                                          ]
+                           },
+    "black_hole":  {
+                       "sounds":  [
+                                      {
+                                          "name":  "infinity:black_hole",
+                                          "volume":  0.45
+                                      }
+                                  ]
+                   },
+    "infinity_stone_equip":  {
+                                 "sounds":  [
+                                                {
+                                                    "name":  "infinity:infinity_stone_equip",
+                                                    "volume":  0.45
+                                                }
+                                            ]
+                             },
+    "use_infinity_gauntlet":  {
+                                  "sounds":  [
+                                                 {
+                                                     "name":  "infinity:use_infinity_gauntlet",
+                                                     "volume":  0.45
+                                                 }
+                                             ]
+                              },
+    "mind_stone_phase":  {
+                             "sounds":  [
+                                            {
+                                                "name":  "infinity:mind_stone_phase1",
+                                                "volume":  0.45
+                                            },
+                                            {
+                                                "name":  "infinity:mind_stone_phase2",
+                                                "volume":  0.45
+                                            }
+                                        ]
+                         },
+    "nano_gauntlet":  {
+                          "sounds":  [
+                                         {
+                                             "name":  "infinity:nano_gauntlet",
+                                             "volume":  0.45
+                                         }
+                                     ]
+                      },
+    "power_stone_beam1":  {
+                              "sounds":  [
+                                             {
+                                                 "name":  "infinity:power_stone_beam1",
+                                                 "volume":  0.45
+                                             },
+                                             {
+                                                 "name":  "infinity:power_stone_beam2",
+                                                 "volume":  0.45
+                                             },
+                                             {
+                                                 "name":  "infinity:power_stone_beam3",
+                                                 "volume":  0.45
+                                             }
+                                         ]
+                          },
+    "power_stone_explode":  {
+                                "sounds":  [
+                                               {
+                                                   "name":  "infinity:power_stone_explode",
+                                                   "volume":  0.45
+                                               }
+                                           ]
+                            },
+    "reality_stone_bubble":  {
+                                 "sounds":  [
+                                                {
+                                                    "name":  "infinity:reality_stone_bubble",
+                                                    "volume":  0.45
+                                                }
+                                            ]
+                             },
+    "reality_stone_invis":  {
+                                "sounds":  [
+                                               {
+                                                   "name":  "infinity:reality_stone_invis",
+                                                   "volume":  0.45
+                                               }
+                                           ]
+                            },
+    "reality_stone_size":  {
+                               "sounds":  [
+                                              {
+                                                  "name":  "infinity:reality_stone_size",
+                                                  "volume":  0.45
+                                              }
+                                          ]
+                           },
+    "reality_stone":  {
+                          "sounds":  [
+                                         {
+                                             "name":  "infinity:reality_stone1",
+                                             "volume":  0.45
+                                         },
+                                         {
+                                             "name":  "infinity:reality_stone2",
+                                             "volume":  0.45
+                                         },
+                                         {
+                                             "name":  "infinity:reality_stone3",
+                                             "volume":  0.45
+                                         }
+                                     ]
+                      },
+    "soul_stone":  {
+                       "sounds":  [
+                                      {
+                                          "name":  "infinity:soul_stone",
+                                          "volume":  0.45
+                                      }
+                                  ]
+                   },
+    "space_stone_forcefield":  {
+                                   "sounds":  [
+                                                  {
+                                                      "name":  "infinity:space_stone_forcefield",
+                                                      "volume":  0.45
+                                                  }
+                                              ]
+                               },
+    "stone_remove":  {
+                         "sounds":  [
+                                        {
+                                            "name":  "infinity:stone_remove",
+                                            "volume":  0.45
+                                        }
+                                    ]
+                     },
+    "time_stone":  {
+                       "sounds":  [
+                                      {
+                                          "name":  "infinity:time_stone1",
+                                          "volume":  0.45
+                                      },
+                                      {
+                                          "name":  "infinity:time_stone2",
+                                          "volume":  0.45
+                                      },
+                                      {
+                                          "name":  "infinity:time_stone3",
+                                          "volume":  0.45
+                                      }
+                                  ]
+                   },
+    "np52":  {
+                 "sounds":  [
+                                {
+                                    "name":  "infinity:np52",
+                                    "volume":  0.45
+                                }
+                            ]
+             }
+}

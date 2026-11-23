@@ -1,0 +1,23 @@
+{
+    "type":  "tconstruct:casting_table",
+    "cast":  {
+                 "item":  "tconstruct:ingot_cast"
+             },
+    "cast_consumed":  false,
+    "fluid":  {
+                  "fluid":  "kubejs:molten_ferro-titanium-gold_alloy",
+                  "amount":  6000
+              },
+    "result":  "infinity:ferro-titanium-gold_alloy_ingot",
+    "cooling_time":  2080,
+    "neoforge:conditions":  [
+                                {
+                                    "type":  "neoforge:mod_loaded",
+                                    "modid":  "tconstruct"
+                                },
+                                {
+                                    "type":  "neoforge:mod_loaded",
+                                    "modid":  "kubejs"
+                                }
+                            ]
+}

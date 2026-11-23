@@ -1,0 +1,55 @@
+{
+  "ability.infinity.mind_stone.psychic_avatar.title": "Psychic Avatar",
+  "ability.infinity.mind_stone.psychic_avatar.description": "Toggle. Your mind leaves your body: the body kneels as a golden shell and you fly as an invisible golden projection. Mobs cannot see you, you cannot break/place blocks or attack, and you see living beings nearby through walls. Alt+scroll: leash 32 to 96 blocks. If the body is hit, the projection takes damage or you pass the leash, the mind snaps back and the damage lands.",
+  "ability.infinity.mind_stone.phantasm.title": "Phantasm",
+  "ability.infinity.mind_stone.phantasm.description": "Left: release a double of yourself that runs where you look; mobs switch to it and you turn invisible (armour too) for 8 s. Whoever hits the double makes it shatter into golden shards that blind and nauseate. Right: detonate the double (blindness and nausea in 5 blocks).",
+  "ability.infinity.mind_stone.suggestion.title": "Suggestion",
+  "ability.infinity.mind_stone.suggestion.description": "Aim and give a mental order. Left: apply the chosen order. Right: order menu — Sleep, Flee, Fight for me, Freeze, Persuade. Bosses are immune.",
+  "ability.infinity.mind_stone.hive_mind.title": "Hive Mind",
+  "ability.infinity.mind_stone.hive_mind.description": "Left (aiming): golden threads seize up to 8 mobs in the cone in front of you for 20 s and they attack the aimed target — even cows hit. Use again on another target to retarget. Right: release them all. Alt+scroll: radius 6 to 16.",
+  "ability.infinity.mind_stone.nightmare.title": "Nightmare",
+  "ability.infinity.mind_stone.nightmare.description": "Conjunction Mind + Soul. The aimed creature falls into a nightmare for 10 s. Player: darkness, creeper hisses, footsteps and whispers only they hear from every side, shaking screen, racing heartbeat and a wandering camera. Mob: panics and flees from you, and its pack scatters.",
+
+  "infinity.extra.mind.setting.leash": "Leash",
+  "infinity.extra.mind.setting.hive_radius": "Radius",
+
+  "infinity.extra.mind.no_target": "No target in sight",
+  "infinity.extra.mind.boss": "This boss's mind is too strong",
+
+  "infinity.extra.mind.avatar.cant": "Your mind cannot leave your body right now",
+  "infinity.extra.mind.avatar.on": "Mind projected — leash %s blocks",
+  "infinity.extra.mind.avatar.far": "Leash stretching: %s / %s blocks",
+  "infinity.extra.mind.avatar.leash": "The leash snapped — back to your body!",
+  "infinity.extra.mind.avatar.hit": "Your body was hit — snapping back!",
+
+  "infinity.extra.mind.phantasm.out": "Your double runs — you vanished",
+  "infinity.extra.mind.phantasm.none": "No active double",
+
+  "infinity.extra.mind.suggestion.sleep": "Sleep",
+  "infinity.extra.mind.suggestion.sleep.desc": "The mob stops and sleeps for 15 s (wakes when hurt). Player: heavy drowsiness.",
+  "infinity.extra.mind.suggestion.flee": "Flee",
+  "infinity.extra.mind.suggestion.flee.desc": "The target flees from you for 10 s. Player: thrown away.",
+  "infinity.extra.mind.suggestion.fight": "Fight for me",
+  "infinity.extra.mind.suggestion.fight.desc": "The mob attacks your enemies for 20 s (whatever you hit first).",
+  "infinity.extra.mind.suggestion.freeze": "Freeze",
+  "infinity.extra.mind.suggestion.freeze.desc": "Rooted for 6 s. Player: stuck in place, free to look around.",
+  "infinity.extra.mind.suggestion.persuade": "Persuade",
+  "infinity.extra.mind.suggestion.persuade.desc": "Villager: positive gossip (better prices). Piglin: calms down and barters once (every 5 min). Player: looks at you for 3 s. Other mobs: stay calm toward you.",
+  "infinity.extra.mind.suggestion.chosen": "Order: %s",
+  "infinity.extra.mind.suggestion.done": "%s → %s",
+  "infinity.extra.mind.suggestion.fight_player": "Players do not obey this order",
+  "infinity.extra.mind.suggestion.barter_wait": "This piglin bartered recently",
+  "infinity.extra.mind.suggestion.victim.sleep": "%s whispers in your mind: sleep...",
+  "infinity.extra.mind.suggestion.victim.flee": "%s commands: run!",
+  "infinity.extra.mind.suggestion.victim.fight": "%s tries to command you",
+  "infinity.extra.mind.suggestion.victim.freeze": "%s commands: do not move!",
+  "infinity.extra.mind.suggestion.victim.persuade": "%s draws your gaze",
+
+  "infinity.extra.mind.hive.attack": "Pack of %s attacks %s",
+  "infinity.extra.mind.hive.guard": "Pack of %s guards you",
+  "infinity.extra.mind.hive.nobody": "No mobs to seize in the cone",
+  "infinity.extra.mind.hive.none": "You have no pack",
+  "infinity.extra.mind.hive.released": "%s minds released",
+
+  "infinity.extra.mind.nightmare.cast": "%s sinks into a nightmare"
+}

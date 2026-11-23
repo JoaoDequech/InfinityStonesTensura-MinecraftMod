@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "infinity:item/black_fabric"
+                 },
+    "parent":  "minecraft:item/generated"
+}

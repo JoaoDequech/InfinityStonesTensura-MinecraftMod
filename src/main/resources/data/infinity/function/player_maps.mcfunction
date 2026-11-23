@@ -1,0 +1,5 @@
+give @s minecraft:map[minecraft:custom_name='{"text":"Sanctum Sanctorum Explorer Map"}',minecraft:custom_data={sanctummap:1b}]
+give @s minecraft:map[minecraft:custom_name='{"text":"Norse Village Explorer Map"}',minecraft:custom_data={norsemap:1b}]
+give @s minecraft:map[minecraft:custom_name='{"text":"Morag Temple Explorer Map"}',minecraft:custom_data={moragmap:1b}]
+give @s minecraft:map[minecraft:custom_name='{"text":"Aether Chamber Explorer Map"}',minecraft:custom_data={aethermap:1b}]
+give @s minecraft:map[minecraft:custom_name='{"text":"Sanctuary Explorer Map"}',minecraft:custom_data={sanctuarymap:1b}]

@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "killed_tagged_wolf": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:wolf",
+          "tags": ["tamed_wolf"]
+        },
+        "player": {
+          "predicate": "infinity:near_soul_guardian"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "infinity:give_soul"
+  }
+}

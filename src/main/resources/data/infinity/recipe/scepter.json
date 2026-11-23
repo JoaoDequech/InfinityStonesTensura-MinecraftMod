@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "infinity:mind_stone"
+    },
+    {
+      "item": "infinity:empty_scepter"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "infinity:scepter"
+  }
+}

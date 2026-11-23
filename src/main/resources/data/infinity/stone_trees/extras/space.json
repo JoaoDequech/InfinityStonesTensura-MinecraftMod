@@ -1,0 +1,245 @@
+{
+  "nodes": [
+    {
+      "id": "area_heist", "tier": 2,
+      "original_type": "infinity:area_heist",
+      "title": "@ability.infinity.space_stone.area_heist.title",
+      "description": "@ability.infinity.space_stone.area_heist.description",
+      "icon": "minecraft:ender_chest",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 15 },
+      "parents": ["spatial_sovereignty"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [2, -2],
+      "aim": true,
+      "settings": { "min": 3, "max": 48, "step": 1, "default": 10, "label": "infinity.extra.area_heist.setting" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "scene_anchor",
+      "original_type": "infinity:scene_anchor",
+      "title": "@ability.infinity.space_stone.scene_anchor.title",
+      "description": "@ability.infinity.space_stone.scene_anchor.description",
+      "icon": "minecraft:lodestone",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
+      "parents": ["teleport_gui"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [0, -2],
+      "aim": false,
+      "settings": { "min": 4, "max": 12, "step": 1, "default": 8, "label": "infinity.extra.scene_anchor.setting" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "fold_distance",
+      "original_type": "infinity:fold_distance",
+      "title": "@ability.infinity.space_stone.fold_distance.title",
+      "description": "@ability.infinity.space_stone.fold_distance.description",
+      "icon": "minecraft:ender_pearl",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["teleport_command"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-1, -1.5],
+      "aim": true,
+      "settings": { "min": 8, "max": 96, "step": 8, "default": 32, "label": "infinity.extra.fold_distance.setting" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "event_horizon",
+      "original_type": "infinity:containment_cube",
+      "title": "@ability.infinity.space_stone.containment_cube.title",
+      "description": "@ability.infinity.space_stone.containment_cube.description",
+      "icon": "minecraft:tinted_glass",
+      "cost": null,
+      "parents": ["spatial_sovereignty"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [3, -1],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "space_mirror",
+      "original_type": "infinity:space_mirror",
+      "title": "@ability.infinity.space_stone.space_mirror.title",
+      "description": "@ability.infinity.space_stone.space_mirror.description",
+      "icon": "minecraft:glass_pane",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 14 },
+      "parents": ["spatial_reflection"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [3, -3.5],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "abyss_watch", "tier": 2,
+      "original_type": "infinity:abyss_watch",
+      "title": "@ability.infinity.space_stone.abyss_watch.title",
+      "description": "@ability.infinity.space_stone.abyss_watch.description",
+      "icon": "minecraft:ender_eye",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 10 },
+      "parents": ["spatial_banishment"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [5, -4.5],
+      "aim": false,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+        "id":  "gauntlet_convergence",
+        "original_type":  "infinity:gauntlet_convergence",
+        "title":  "@ability.infinity.space_stone.gauntlet_convergence.title",
+        "description":  "@ability.infinity.space_stone.gauntlet_convergence.description",
+        "icon":  "infinity:infinity_gauntlet",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  48
+                 },
+        "parents":  [
+    
+                    ],
+        "requires_stones":  [
+                                "infinity:mind_stone",
+                                "infinity:power_stone_passive",
+                                "infinity:reality_stone",
+                                "infinity:soul_stone",
+                                "infinity:time_stone"
+                            ],
+        "activation":  "press",
+        "cooldown_ticks":  600,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             -4,
+                             -1
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+      "id": "soul_rift",
+      "original_type": "infinity:soul_rift",
+      "title": "@ability.infinity.space_stone.soul_rift.title",
+      "description": "@ability.infinity.space_stone.soul_rift.description",
+      "icon": "minecraft:ender_eye",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 30
+      },
+      "parents": [
+        "spatial_banishment"
+      ],
+      "requires_stones": [
+        "infinity:soul_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        4,
+        -3.5
+      ],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "portal_gun",
+      "original_type": "infinity:portal_gun",
+      "title": "@ability.infinity.space_stone.portal_gun.title",
+      "description": "@ability.infinity.space_stone.portal_gun.description",
+      "icon": "minecraft:end_portal_frame",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
+      "parents": ["teleport_command"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-2, -1],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "pocket_orbit",
+      "original_type": "infinity:pocket_orbit",
+      "title": "@ability.infinity.space_stone.pocket_orbit.title",
+      "description": "@ability.infinity.space_stone.pocket_orbit.description",
+      "icon": "minecraft:heart_of_the_sea",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["teleport_gui"],
+      "requires_stones": [],
+      "activation": "toggle",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-2, -2],
+      "settings": { "min": 4, "max": 10, "default": 7, "step": 1, "label": "infinity.extra.space.setting.reach" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "spiritual_gathering",
+      "original_type": "infinity:spiritual_gathering",
+      "title": "@ability.infinity.space_stone.spiritual_gathering.title",
+      "description": "@ability.infinity.space_stone.spiritual_gathering.description",
+      "icon": "minecraft:cherry_sapling",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 48 },
+      "parents": ["spatial_sovereignty"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [4, -2],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "display": {
+    "title": {
+      "text": "1.5 Trillion Aspects",
+      "color": "dark_purple",
+      "bold": true
+    },
+    "description": {
+      "text": "How did you pull this off?!"
+    },
+    "icon": {
+      "id": "infinity:power_stone"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "power": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "infinity:pugmeowla"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "power"
+    ]
+  ],
+  "parent": "infinity:power"
+}

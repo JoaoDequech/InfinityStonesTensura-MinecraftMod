@@ -1,0 +1,44 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = 'infinity-stones-tensura' }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+    parchment {
+        minecraftVersion = '1.21.1'
+        mappingsVersion = '2024.11.17'
+    }
+    mods {
+        "${mod_id}" { sourceSet(sourceSets.main) }
+    }
+}
+
+repositories {
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    // Runtime is provided by the modpack (Tensura, ManasCore, Architectury). Compile against the exact jars it ships.
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+var replaceProperties = [
+        minecraft_version: minecraft_version, neo_version: neo_version,
+        mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, mod_license: mod_license
+]
+processResources {
+    inputs.properties replaceProperties
+    filesMatching('META-INF/neoforge.mods.toml') { expand replaceProperties }
+}

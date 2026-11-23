@@ -1,0 +1,1 @@
+execute as @s run give @s infinity:soul_stone[minecraft:custom_name='{"text":"Soul Stone","color":"gold","bold":true,"italic":false}',minecraft:enchantment_glint_override=true] 1

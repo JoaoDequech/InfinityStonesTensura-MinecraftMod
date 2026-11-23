@@ -1,0 +1,6 @@
+{
+    "textures":  {
+                     "layer0":  "infinity:item/raw_vibranium"
+                 },
+    "parent":  "minecraft:item/generated"
+}

@@ -1,0 +1,1 @@
+give @p infinity:best_friends_soul[minecraft:custom_name='{"text":"Best Friends Soul","color":"dark_purple","italic":false}',minecraft:lore=['{"text":"How Could You","color":"gold","italic":true}']] 1

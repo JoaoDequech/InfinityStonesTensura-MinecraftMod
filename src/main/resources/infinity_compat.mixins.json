@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.infinitystones.tensura.mixin.compat",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "OpacDynamicInfoMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

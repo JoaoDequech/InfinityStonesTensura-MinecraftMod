@@ -1,0 +1,1 @@
+execute as @s run give @s infinity:space_stone[minecraft:custom_name='{"text":"Space Stone","color":"aqua","bold":true,"italic":false}',minecraft:enchantment_glint_override=true] 1

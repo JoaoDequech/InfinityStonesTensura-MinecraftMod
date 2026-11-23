@@ -1,0 +1,1 @@
+execute as @s run give @s infinity:reality_stone[minecraft:custom_name='{"text":"Reality Stone","color":"red","bold":true,"italic":false}',minecraft:enchantment_glint_override=true] 1

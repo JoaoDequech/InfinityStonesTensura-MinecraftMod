@@ -1,0 +1,46 @@
+{
+  "ability.infinity.mind_stone.mind_palace.title": "Mind Palace",
+  "ability.infinity.mind_stone.mind_palace.description": "Toggle. Time stretches around you: you move and strike much faster while every creature nearby is slowed and projectiles crawl (bullet time). Only you see a golden outline through walls on each creature, a dotted line showing where it is heading and a red thread to whoever it is about to attack. Alt + scroll: palace radius 12-32.",
+  "infinity.extra.mind.setting.palace": "Palace radius",
+  "infinity.extra.mind.palace.on": "The Mind Palace opens",
+  "infinity.extra.mind.palace.off": "The Mind Palace closes",
+
+  "ability.infinity.mind_stone.puppet_strings.title": "Puppet Strings",
+  "ability.infinity.mind_stone.puppet_strings.description": "Left: golden strings tie up to 3 creatures in front of you (bosses are immune). They float where you look until you let go (left again), 20 s pass or you drop the stone. Right: hurl every puppet along your look direction; each smashes on impact and the shock hurts everything around it.",
+  "infinity.wheel.dual.puppet_strings": "Left: tie / release  ·  Right: hurl the puppets",
+  "infinity.extra.mind.puppet.none": "No creature on your strings",
+  "infinity.extra.mind.puppet.grab": "%s puppet(s) on your strings",
+  "infinity.extra.mind.puppet.release": "The strings go slack",
+  "infinity.extra.mind.puppet.fling": "Hurled!",
+
+  "ability.infinity.mind_stone.astral_swap.title": "Astral Projection Swap",
+  "ability.infinity.mind_stone.astral_swap.description": "Conjunction Mind + Space. Left (aim): you and the aimed creature trade places through a gold and blue rift; it is dazed and every monster that was hunting you now hunts it for 8 s. Right: leave a glowing astral double where you stand (30 s); right again swaps you with it from anywhere in the same dimension.",
+  "infinity.wheel.dual.astral_swap": "Left: swap with the aimed creature  ·  Right: leave / swap with astral double",
+  "infinity.extra.mind.astral.blocked": "No room to swap",
+  "infinity.extra.mind.astral.left": "Astral double left behind. Right-click again to swap with it",
+  "infinity.extra.mind.astral.swapped": "You swapped with your astral double",
+
+  "ability.infinity.power_stone.gravity_hammer.title": "Gravity Hammer",
+  "ability.infinity.power_stone.gravity_hammer.description": "Left: a purple leap, and at the top gravity multiplies and you crash down like a comet. Right: dive at once from the air, or hop and dive from the ground. The impact cracks the ground in a star of fissures, throws earth and hurts and launches everything around (10-30 damage, more the higher you fell). No fall damage. Alt + scroll: impact radius 5-12.",
+  "infinity.wheel.dual.gravity_hammer": "Left: leap and slam  ·  Right: instant dive",
+  "infinity.extra.power.setting.radius": "Impact radius",
+
+  "ability.infinity.power_stone.prism_barrage.title": "Prism Barrage",
+  "ability.infinity.power_stone.prism_barrage.description": "A spinning prism opens above your head inside layered circles and fires purple lances in waves. Left: a flat fan that follows where you look while it fires (sweep it across a crowd). Right: the lances burst out in every direction, then curve onto the aimed creature (or the point you aim at). Alt + scroll: 6-18 lances.",
+  "infinity.wheel.dual.prism_barrage": "Left: sweeping fan  ·  Right: homing burst",
+  "infinity.extra.power.setting.lances": "Lances",
+  "infinity.extra.power.prism.busy": "Too many lances in the air",
+
+  "ability.infinity.space_stone.portal_gun.title": "Portal Gun",
+  "ability.infinity.space_stone.portal_gun.description": "Left: a blue portal on the block face you aim at (up to 64 blocks). Right: an orange portal. Walk, fall, throw items or fire arrows into one and they come out of the other keeping their speed, on walls, floors and ceilings. A new shot replaces that colour; both must be in the same dimension; they close after 5 minutes, if the wall behind is gone or when you log out.",
+  "infinity.wheel.dual.portal_gun": "Left: blue portal  ·  Right: orange portal",
+  "infinity.extra.space.portal.nowall": "Aim at a solid surface with free space in front",
+  "infinity.extra.space.portal.blue": "Blue portal opened",
+  "infinity.extra.space.portal.orange": "Orange portal opened",
+
+  "ability.infinity.space_stone.pocket_orbit.title": "Pocket Orbit",
+  "ability.infinity.space_stone.pocket_orbit.description": "Toggle. You become a small blue planet: rings of light and three moons circle you, you float down softly and everything in reach is caught in orbit (up to 8 creatures, bosses excepted, and 14 items or projectiles). Enemies in orbit cannot fight and take 2 damage per second. Sneak to sling everything outward (6 damage to creatures). Alt + scroll: capture radius 4-10.",
+  "infinity.extra.space.setting.reach": "Capture radius",
+  "infinity.extra.space.orbit.on": "You become a planet",
+  "infinity.extra.space.orbit.off": "The orbit fades"
+}

@@ -1,0 +1,235 @@
+{
+  "nodes": [
+    {
+      "id": "psychic_avatar",
+      "original_type": "infinity:psychic_avatar",
+      "title": "@ability.infinity.mind_stone.psychic_avatar.title",
+      "description": "@ability.infinity.mind_stone.psychic_avatar.description",
+      "icon": "minecraft:ender_eye",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 20 },
+      "parents": ["intangibility"],
+      "requires_stones": [],
+      "activation": "toggle",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [1, 0],
+      "settings": { "min": 32, "max": 96, "default": 48, "step": 8, "label": "infinity.extra.mind.setting.leash" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "phantasm",
+      "original_type": "infinity:phantasm",
+      "title": "@ability.infinity.mind_stone.phantasm.title",
+      "description": "@ability.infinity.mind_stone.phantasm.description",
+      "icon": "minecraft:armor_stand",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 14 },
+      "parents": ["synaptic_cascade"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [4, 3],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "suggestion", "tier": 2,
+      "original_type": "infinity:suggestion",
+      "title": "@ability.infinity.mind_stone.suggestion.title",
+      "description": "@ability.infinity.mind_stone.suggestion.description",
+      "icon": "minecraft:bell",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 12 },
+      "parents": ["psychic_dominion"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [5, 3],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "psionic_overload_aim",
+      "original_type": "infinity:hive_mind",
+      "title": "@ability.infinity.mind_stone.hive_mind.title",
+      "description": "@ability.infinity.mind_stone.hive_mind.description",
+      "icon": "minecraft:sculk_sensor",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
+      "parents": ["psionic_mastery"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [3, 2],
+      "aim": true,
+      "settings": { "min": 6, "max": 16, "default": 10, "step": 1, "label": "infinity.extra.mind.setting.hive_radius" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "nightmare",
+      "original_type": "infinity:nightmare",
+      "title": "@ability.infinity.mind_stone.nightmare.title",
+      "description": "@ability.infinity.mind_stone.nightmare.description",
+      "icon": "minecraft:wither_rose",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 22 },
+      "parents": ["terror_projection"],
+      "requires_stones": ["infinity:mind_stone", "infinity:soul_stone"],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [6, 3],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+        "id":  "gauntlet_eye",
+        "tier":  2,
+        "original_type":  "infinity:gauntlet_eye",
+        "title":  "@ability.infinity.mind_stone.gauntlet_eye.title",
+        "description":  "@ability.infinity.mind_stone.gauntlet_eye.description",
+        "icon":  "minecraft:observer",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  15
+                 },
+        "parents":  [
+    
+                    ],
+        "requires_stones":  [
+                                "infinity:power_stone_passive",
+                                "infinity:reality_stone",
+                                "infinity:soul_stone",
+                                "infinity:space_stone",
+                                "infinity:time_stone"
+                            ],
+        "activation":  "press",
+        "cooldown_ticks":  200,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             -3,
+                             0.5
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+        "id":  "gauntlet_dominion",
+        "tier":  2,
+        "original_type":  "infinity:gauntlet_dominion",
+        "title":  "@ability.infinity.mind_stone.gauntlet_dominion.title",
+        "description":  "@ability.infinity.mind_stone.gauntlet_dominion.description",
+        "icon":  "minecraft:dragon_head",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  20
+                 },
+        "parents":  [
+                        "gauntlet_eye"
+                    ],
+        "requires_stones":  [
+                                "infinity:power_stone_passive",
+                                "infinity:reality_stone",
+                                "infinity:soul_stone",
+                                "infinity:space_stone",
+                                "infinity:time_stone"
+                            ],
+        "activation":  "press",
+        "cooldown_ticks":  1200,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             -3,
+                             1.5
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+      "id": "mind_palace",
+      "original_type": "infinity:mind_palace",
+      "title": "@ability.infinity.mind_stone.mind_palace.title",
+      "description": "@ability.infinity.mind_stone.mind_palace.description",
+      "icon": "minecraft:clock",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["psionic_mastery"],
+      "requires_stones": [],
+      "activation": "toggle",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [3, 3],
+      "settings": { "min": 12, "max": 32, "default": 20, "step": 4, "label": "infinity.extra.mind.setting.palace" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "puppet_strings", "tier": 2,
+      "original_type": "infinity:puppet_strings",
+      "title": "@ability.infinity.mind_stone.puppet_strings.title",
+      "description": "@ability.infinity.mind_stone.puppet_strings.description",
+      "icon": "minecraft:lead",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 14 },
+      "parents": ["mental_bastion"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [7, 3],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "astral_swap",
+      "original_type": "infinity:astral_swap",
+      "title": "@ability.infinity.mind_stone.astral_swap.title",
+      "description": "@ability.infinity.mind_stone.astral_swap.description",
+      "icon": "minecraft:ender_pearl",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 20 },
+      "parents": ["terror_projection"],
+      "requires_stones": ["infinity:mind_stone", "infinity:space_stone"],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [6, 4],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

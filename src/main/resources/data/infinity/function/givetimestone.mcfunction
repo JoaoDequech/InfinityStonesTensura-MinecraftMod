@@ -1,0 +1,1 @@
+execute as @s run give @s infinity:time_stone[minecraft:custom_name='{"text":"Time Stone","color":"green","bold":true,"italic":false}',minecraft:enchantment_glint_override=true] 1

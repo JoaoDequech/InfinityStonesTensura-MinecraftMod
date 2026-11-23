@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "HG ",
+    "   ",
+    "   "
+  ],
+  "key": {
+    "H": {
+      "item": "infinity:shards_of_existance"
+    },
+    "G": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "result": {
+    "count": 4,
+    "id": "infinity:aspects_of_existance"
+  }
+}

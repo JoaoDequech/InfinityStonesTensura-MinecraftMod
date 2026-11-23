@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "infinitygenerator:infinity_generator"
+    }
+  ],
+  "pattern": [
+    "DCD",
+    "SNS",
+    "DHD"
+  ],
+  "key": {
+    "D": {
+      "item": "infinity:dwarf_star_alloy_plate"
+    },
+    "C": {
+      "item": "infinity:vibranium_circuit"
+    },
+    "S": {
+      "tag": "c:blocks/steel"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "H": {
+      "item": "infinity:vibranium_flux_capacitor"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinitygenerator:infinity_generator"
+  }
+}

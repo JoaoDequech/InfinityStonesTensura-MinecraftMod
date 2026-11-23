@@ -1,0 +1,39 @@
+{
+  "display": {
+    "title": {
+      "text": "It's Clobberin' Time!",
+      "color": "gray",
+      "bold": true
+    },
+    "description": {
+      "text": "Obtain a hammer"
+    },
+    "icon": {
+      "id": "infinity:hammer"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "power": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "infinity:hammer"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "power"
+    ]
+  ],
+  "parent": "infinity:root"
+}

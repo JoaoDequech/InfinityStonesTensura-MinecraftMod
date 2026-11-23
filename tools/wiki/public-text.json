@@ -1,0 +1,43 @@
+{
+  "_about": "Short descriptions used on the wiki for a few powers (the wiki keeps them brief). hide_levels = do not list the level range.",
+  "power.size_toggle": {
+    "hide_levels": true,
+    "pt": "Liga/desliga o reforço dos socos da Joia do Poder. O nível do reforço é escolhido com o scroll em cima do poder na roda.",
+    "en": "Turns the Power Stone punch boost on or off. Pick the boost level by scrolling over the power in the wheel."
+  },
+  "soul.regen": {
+    "pt": "Regeneração enquanto estiver ligada. Começa desligada; liga/desliga na roda.",
+    "en": "Regeneration while on. Starts off; toggle it on the wheel."
+  },
+  "power.celestial_annihilation_aim": {
+    "pt": "Mire um ponto: círculos mágicos se abrem no céu e um feixe desce sobre o alvo, com onda de choque. O tamanho é escolhido com o scroll.",
+    "en": "Aim a point: magic circles open in the sky and a beam falls on the target, with a shockwave. Scroll picks the size."
+  },
+  "power.convergence": {
+    "pt": "Conjunção: as joias que você carrega orbitam você e disparam juntas um feixe colorido. Fica mais forte com mais joias.",
+    "en": "Conjunction: the stones you carry orbit you and fire a braided colourful beam together. Stronger with more stones."
+  },
+  "power.power_blast_aim": {
+    "hide_levels": true,
+    "pt": "Raio de energia da Joia do Poder, no estilo do mod original. Entra em modo raio: esquerdo dispara, direito sai. O nível muda com o scroll.",
+    "en": "Power Stone energy beam, in the style of the original mod. Enters beam mode: left fires, right exits. Scroll changes the level."
+  },
+  "mind.aim": {
+    "hide_levels": true,
+    "pt": "Raio de energia da Joia da Mente (precisa do Cetro na mão). O nível muda com o scroll.",
+    "en": "Mind Stone energy beam (needs the Scepter in hand). Scroll changes the level."
+  },
+  "mind.power_blast_head": {
+    "hide_levels": true,
+    "pt": "Raio de energia disparado pela cabeça. O nível muda com o scroll.",
+    "en": "Energy beam fired from the head. Scroll changes the level."
+  },
+  "reality.gauntlet_destroy": {
+    "pt": "Ritual da Manopla completa: no fim, as seis joias da Manopla são destruídas para sempre e você vai para o Mundo das Almas.",
+    "en": "Full Gauntlet ritual: at the end the six stones in the Gauntlet are destroyed for good and you are sent to the Soulworld."
+  },
+  "reality.broken_mode": {
+    "pt": "Modo Quebrado (liga/desliga): a realidade falha em volta de você, com efeitos visuais vermelhos. Tem um preço: você recebe mais dano.",
+    "en": "Broken Mode (toggle): reality glitches around you with red visual effects. It has a price: you take more damage."
+  }
+}

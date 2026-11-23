@@ -1,0 +1,1649 @@
+{
+    "stone":  "soul",
+    "original_power":  "infinity:soul_stone",
+    "nodes":  [
+                  {
+                      "id":  "dummy1",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           -2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy2",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1,
+                                           -2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy3",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           -2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "dummy4",
+                      "original_type":  "palladium:dummy",
+                      "title":  " ",
+                      "description":  "",
+                      "icon":  "infinity:textures/icon/nothing.png",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           -2
+                                       ],
+                      "list_index":  null,
+                      "color":  null,
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "properties":  {
+                                                     "title":  " ",
+                                                     "icon":  "infinity:textures/icon/nothing.png",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -2
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "glow",
+                      "original_type":  "palladium:command",
+                      "title":  "Glow",
+                      "description":  "@ability.infinity.soul_stone.glow.description",
+                      "icon":  "minecraft:textures/mob_effect/glowing.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           1,
+                                           0
+                                       ],
+                      "list_index":  0,
+                      "color":  "orange",
+                      "commands":  [
+                                       "effect give @e[distance=..100,type=!minecraft:player] minecraft:glowing 2 0 true"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "commands":  [
+                                                   "effect give @e[distance=..100,type=!minecraft:player] minecraft:glowing 2 0 true"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:held",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Glow",
+                                                     "icon":  "minecraft:textures/mob_effect/glowing.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.glow.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  0,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "immortal",
+                      "tier":  2,
+                      "original_type":  "palladium:immortality",
+                      "title":  "immortal",
+                      "description":  "@ability.infinity.soul_stone.immortal.description",
+                      "icon":  "minecraft:totem_of_undying",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "health"
+                                  ],
+                      "requires_stones":  [
+                                              "infinity:mind_stone",
+                                              "infinity:power_stone_passive",
+                                              "infinity:space_stone",
+                                              "infinity:reality_stone",
+                                              "infinity:time_stone"
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_gray",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:immortality",
+                                  "persistent_data":  true,
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "burn"
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:objective_score",
+                                                                                                  "objective":  "powerborne.stormbreaker_projectile_distance",
+                                                                                                  "min_score":  1,
+                                                                                                  "max_score":  1
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  128
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "health"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:mind_stone"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:power_stone_passive"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:space_stone"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:reality_stone"
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:has_power",
+                                                                           "power":  "infinity:time_stone"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "icon":  "minecraft:totem_of_undying",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.immortal.description"
+                                                                     },
+                                                     "color":  "light_gray",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "saturation",
+                      "original_type":  "palladium:command",
+                      "title":  "Saturation",
+                      "description":  "@ability.infinity.soul_stone.saturation.description",
+                      "icon":  "minecraft:textures/mob_effect/saturation.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "glow"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           0
+                                       ],
+                      "list_index":  -1,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:saturation infinite 20 true"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "effect clear @s"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:saturation infinite 20 true"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "effect clear @s"
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:objective_score",
+                                                                                                  "objective":  "powerborne.stormbreaker_projectile_distance",
+                                                                                                  "min_score":  1,
+                                                                                                  "max_score":  1
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "glow"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Saturation",
+                                                     "icon":  "minecraft:textures/mob_effect/saturation.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.saturation.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "effect_immune", "tier": 2,
+                      "original_type":  "palladium:command",
+                      "title":  "Effect Immunity",
+                      "description":  "@ability.infinity.soul_stone.effect_immune.description",
+                      "icon":  "minecraft:barrier",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "saturation"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           -0.5
+                                       ],
+                      "list_index":  -1,
+                      "color":  "orange",
+                      "commands":  [
+                                       "effect clear @s minecraft:unluck",
+                                       "effect clear @s minecraft:bad_omen",
+                                       "effect clear @s minecraft:blindness",
+                                       "effect clear @s minecraft:darkness",
+                                       "effect clear @s minecraft:hunger",
+                                       "effect clear @s minecraft:mining_fatigue",
+                                       "effect clear @s minecraft:nausea",
+                                       "effect clear @s minecraft:poison",
+                                       "effect clear @s minecraft:slowness",
+                                       "effect clear @s minecraft:weakness",
+                                       "effect clear @s minecraft:wither"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "effect clear @s minecraft:unluck",
+                                                   "effect clear @s minecraft:bad_omen",
+                                                   "effect clear @s minecraft:blindness",
+                                                   "effect clear @s minecraft:darkness",
+                                                   "effect clear @s minecraft:hunger",
+                                                   "effect clear @s minecraft:mining_fatigue",
+                                                   "effect clear @s minecraft:nausea",
+                                                   "effect clear @s minecraft:poison",
+                                                   "effect clear @s minecraft:slowness",
+                                                   "effect clear @s minecraft:weakness",
+                                                   "effect clear @s minecraft:wither"
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:objective_score",
+                                                                                                  "objective":  "powerborne.stormbreaker_projectile_distance",
+                                                                                                  "min_score":  1,
+                                                                                                  "max_score":  1
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "saturation"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Effect Immunity",
+                                                     "icon":  "minecraft:barrier",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.effect_immune.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -0.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "summon_zombie",
+                      "original_type":  "palladium:command",
+                      "title":  "Summon Zombie",
+                      "description":  "@ability.infinity.soul_stone.summon_zombie.description",
+                      "icon":  "minecraft:zombie_head",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           0
+                                       ],
+                      "list_index":  1,
+                      "color":  "orange",
+                      "commands":  [
+                                       "function infinity:zombies"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "function infinity:zombies"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Summon Zombie",
+                                                     "icon":  "minecraft:zombie_head",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.summon_zombie.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  1,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "health",
+                      "tier":  2,
+                      "original_type":  "palladium:attribute_modifier",
+                      "title":  "Health",
+                      "description":  "@ability.infinity.soul_stone.health.description",
+                      "icon":  "minecraft:textures/mob_effect/health_boost.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "regen"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:attribute_modifier",
+                                  "persistent_data":  true,
+                                  "attribute":  "minecraft:generic.max_health",
+                                  "amount":  2147483647,
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:objective_score",
+                                                                                                  "objective":  "powerborne.stormbreaker_projectile_distance",
+                                                                                                  "min_score":  1,
+                                                                                                  "max_score":  1
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "burn"
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  64
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "regen"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Health",
+                                                     "icon":  "minecraft:textures/mob_effect/health_boost.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.health.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1,
+                                                                          -1
+                                                                      ]
+                                                 },
+                                  "id":  "infinity:soul_stone/health",
+                                  "operation":  "add_value"
+                              }
+                  },
+                  {
+                      "id":  "enter_soulworld",
+                      "original_type":  "palladium:command",
+                      "title":  "Enter Soulworld",
+                      "description":  "@ability.infinity.soul_stone.enter_soulworld.description",
+                      "icon":  "infinity:soul_stone",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           0,
+                                           -1.5
+                                       ],
+                      "list_index":  2,
+                      "color":  "orange",
+                      "commands":  [
+                                       "tag @s remove in_soul",
+                                       "execute as @e[distance=..5] run execute in infinity:soulworld run tp @s ~ 72 ~",
+                                       "tag @s add in_soul"
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "tag @s remove in_soul",
+                                                   "execute as @e[distance=..5] run execute in infinity:soulworld run tp @s ~ 72 ~",
+                                                   "tag @s add in_soul"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "in_soul"
+                                                                                              }
+                                                                                          ]
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Enter Soulworld",
+                                                     "icon":  "infinity:soul_stone",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.enter_soulworld.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  2,
+                                                     "gui_position":  [
+                                                                          0,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "exit_soulworld",
+                      "original_type":  "palladium:command",
+                      "title":  "Exit Soulworld",
+                      "description":  "@ability.infinity.soul_stone.exit_soulworld.description",
+                      "icon":  "minecraft:barrier",
+                      "cost":  null,
+                      "parents":  [
+
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  0,
+                      "in_tree":  false,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           2,
+                                           -3
+                                       ],
+                      "list_index":  2,
+                      "color":  "orange",
+                      "commands":  [
+                                       "execute as @e[distance=..5] run effect give @e[distance=..5] minecraft:slow_falling 20 1 true",
+                                       "effect give @s minecraft:slow_falling 20 1 true",
+                                       "execute as @e[distance=..5] run execute in minecraft:overworld run tp @s ~ 72 ~",
+                                       "tag @s remove in_soul"
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:slow_falling 20 1 true"
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:slow_falling 20 1 true"
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   "execute as @e[distance=..5] run effect give @e[distance=..5] minecraft:slow_falling 20 1 true",
+                                                   "effect give @s minecraft:slow_falling 20 1 true",
+                                                   "execute as @e[distance=..5] run execute in minecraft:overworld run tp @s ~ 72 ~",
+                                                   "tag @s remove in_soul"
+                                               ],
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:has_tag",
+                                                                           "tag":  "in_soul"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Exit Soulworld",
+                                                     "icon":  "minecraft:barrier",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.exit_soulworld.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  true,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  2,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -3
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "regen",
+                      "original_type":  "palladium:command",
+                      "title":  "Regeneration",
+                      "description":  "@ability.infinity.soul_stone.regen.description",
+                      "icon":  "minecraft:textures/mob_effect/regeneration.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  16
+                               },
+                      "parents":  [
+                                      "saturation"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           1.5,
+                                           -1
+                                       ],
+                      "list_index":  -1,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+                                                  "effect give @s minecraft:regeneration infinite 20 true",
+                                                  "effect give @s minecraft:instant_health 1 20 true"
+                                              ],
+                      "last_tick_commands":  [
+                                                 "effect clear @s"
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:command",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+                                                              "effect give @s minecraft:regeneration infinite 20 true",
+                                                              "effect give @s minecraft:instant_health 1 20 true"
+                                                          ],
+                                  "last_tick_commands":  [
+                                                             "effect clear @s"
+                                                         ],
+                                  "commands":  [
+
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:objective_score",
+                                                                                                  "objective":  "powerborne.stormbreaker_projectile_distance",
+                                                                                                  "min_score":  1,
+                                                                                                  "max_score":  1
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:not",
+                                                                           "conditions":  [
+                                                                                              {
+                                                                                                  "type":  "palladium:has_tag",
+                                                                                                  "tag":  "burn"
+                                                                                              }
+                                                                                          ]
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  16
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "saturation"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Regeneration",
+                                                     "icon":  "minecraft:textures/mob_effect/regeneration.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.regen.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          1.5,
+                                                                          -1
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "locateplayer_command",
+                      "tier":  2,
+                      "original_type":  "palladium:dummy",
+                      "title":  "Locate Entity Command",
+                      "description":  "@ability.infinity.soul_stone.locateplayer_command.description",
+                      "icon":  "minecraft:recovery_compass",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  1
+                               },
+                      "parents":  [
+                                      "glow"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           0.5,
+                                           0
+                                       ],
+                      "list_index":  -1,
+                      "color":  "light_blue",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:dummy",
+                                  "persistent_data":  true,
+                                  "first_tick_commands":  [
+
+                                                          ],
+                                  "last_tick_commands":  [
+
+                                                         ],
+                                  "commands":  [
+                                                   ""
+                                               ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  1
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "glow"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  "Locate Entity Command",
+                                                     "icon":  "minecraft:recovery_compass",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.locateplayer_command.description"
+                                                                     },
+                                                     "color":  "light_blue",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          0.5,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "soul_sovereignty",
+                      "original_type":  "palladium:damage_immunity",
+                      "title":  "@ability.infinity.soul_stone.soul_sovereignty.title",
+                      "description":  "@ability.infinity.soul_stone.soul_sovereignty.description",
+                      "icon":  "infinity:textures/icon/premium/soul_severance.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  12
+                               },
+                      "parents":  [
+                                      "glow"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "passive",
+                      "cooldown_ticks":  0,
+                      "in_tree":  true,
+                      "in_bar":  false,
+                      "gui_position":  [
+                                           2,
+                                           0
+                                       ],
+                      "list_index":  -1,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:damage_immunity",
+                                  "persistent_data":  true,
+                                  "damage_sources":  [
+                                                         "minecraft:is_fire",
+                                                         "minecraft:is_fall",
+                                                         "minecraft:is_drowning",
+                                                         "minecraft:is_freezing",
+                                                         "minecraft:is_explosion",
+                                                         "minecraft:is_projectile",
+                                                         "minecraft:is_lightning"
+                                                     ],
+                                  "conditions":  {
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  12
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "glow"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.soul_sovereignty.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/soul_severance.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.soul_sovereignty.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  true,
+                                                     "list_index":  -1,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "essence_siphon",
+                      "original_type":  "palladium:essence_siphon",
+                      "title":  "@ability.infinity.soul_stone.essence_siphon.title",
+                      "description":  "@ability.infinity.soul_stone.essence_siphon.description",
+                      "icon":  "infinity:textures/icon/premium/essence_siphon.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  16
+                               },
+                      "parents":  [
+                                      "glow"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  200,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           2,
+                                           -1.5
+                                       ],
+                      "list_index":  5,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:essence_siphon",
+                                  "radius":  10.0,
+                                  "sound":  "infinity:soul_stone",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  100,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  16
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "glow"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.essence_siphon.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/essence_siphon.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.essence_siphon.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  5,
+                                                     "gui_position":  [
+                                                                          2,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "spirit_legion",
+                      "original_type":  "palladium:spirit_legion",
+                      "title":  "@ability.infinity.soul_stone.spirit_legion.title",
+                      "description":  "@ability.infinity.soul_stone.spirit_legion.description",
+                      "icon":  "infinity:textures/icon/premium/spirit_legion.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  18
+                               },
+                      "parents":  [
+                                      "essence_siphon"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  360,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           -1.5
+                                       ],
+                      "list_index":  7,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:spirit_legion",
+                                  "sound":  "infinity:soul_stone",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  300,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  18
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "essence_siphon"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.spirit_legion.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/spirit_legion.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.spirit_legion.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  7,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "soul_sanctuary",
+                      "original_type":  "palladium:soul_sanctuary",
+                      "title":  "@ability.infinity.soul_stone.soul_sanctuary.title",
+                      "description":  "@ability.infinity.soul_stone.soul_sanctuary.description",
+                      "icon":  "infinity:textures/icon/premium/soul_sanctuary.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  20
+                               },
+                      "parents":  [
+                                      "spirit_legion"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  400,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           4,
+                                           -1.5
+                                       ],
+                      "list_index":  8,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:soul_sanctuary",
+                                  "radius":  6.0,
+                                  "sound":  "infinity:soul_stone",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  200,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  20
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "spirit_legion"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.soul_sanctuary.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/soul_sanctuary.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.soul_sanctuary.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  8,
+                                                     "gui_position":  [
+                                                                          4,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "reaper_brand",
+                      "original_type":  "palladium:reaper_brand",
+                      "title":  "@ability.infinity.soul_stone.reaper_brand.title",
+                      "description":  "@ability.infinity.soul_stone.reaper_brand.description",
+                      "icon":  "infinity:textures/icon/premium/reaper_brand.png",
+                      "cost":  {
+                                   "type":  "item",
+                                   "item":  "infinity:aspects_of_existance",
+                                   "amount":  24
+                               },
+                      "parents":  [
+                                      "soul_sanctuary"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "hold",
+                      "cooldown_ticks":  260,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           5,
+                                           -1.5
+                                       ],
+                      "list_index":  9,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:reaper_brand",
+                                  "sound":  "infinity:soul_stone",
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:activation",
+                                                                          "ticks":  122,
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:item_buyable",
+                                                                           "ingredient":  {
+                                                                                              "item":  "infinity:aspects_of_existance"
+                                                                                          },
+                                                                           "amount":  24
+                                                                       },
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "soul_sanctuary"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.reaper_brand.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/reaper_brand.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.reaper_brand.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  9,
+                                                     "gui_position":  [
+                                                                          5,
+                                                                          -1.5
+                                                                      ]
+                                                 }
+                              }
+                  },
+                  {
+                      "id":  "soul_severance",
+                      "original_type":  "palladium:projectile",
+                      "title":  "@ability.infinity.soul_stone.soul_severance.title",
+                      "description":  "@ability.infinity.soul_stone.soul_severance.description",
+                      "icon":  "infinity:textures/icon/premium/soul_severance.png",
+                      "cost":  null,
+                      "parents":  [
+                                      "soul_sovereignty"
+                                  ],
+                      "requires_stones":  [
+
+                                          ],
+                      "activation":  "press",
+                      "cooldown_ticks":  100,
+                      "in_tree":  true,
+                      "in_bar":  true,
+                      "gui_position":  [
+                                           3,
+                                           0
+                                       ],
+                      "list_index":  6,
+                      "color":  "orange",
+                      "commands":  [
+
+                                   ],
+                      "first_tick_commands":  [
+
+                                              ],
+                      "last_tick_commands":  [
+
+                                             ],
+                      "raw":  {
+                                  "type":  "palladium:projectile",
+                                  "persistent_data":  true,
+                                  "entity_type":  "palladium:custom_projectile",
+                                  "velocity":  2.5,
+                                  "inaccuracy":  0.0,
+                                  "entity_data":  {
+                                                      "Damage":  240,
+                                                      "Gravity":  0.0,
+                                                      "Size":  1.4,
+                                                      "Lifetime":  220,
+                                                      "DieOnEntityHit":  false,
+                                                      "DieOnBlockHit":  true,
+                                                      "ExplosionRadius":  9,
+                                                      "ExplosionCausesFire":  true,
+                                                      "ExplosionBlockInteraction":  "destroy",
+                                                      "Appearances":  [
+                                                                          {
+                                                                              "Type":  "laser",
+                                                                              "Thickness":  1.02,
+                                                                              "Color":  "#8B3600"
+                                                                          },
+                                                                          {
+                                                                              "Type":  "laser",
+                                                                              "Thickness":  0.5,
+                                                                              "Color":  "#FFD17A"
+                                                                          },
+                                                                          {
+                                                                              "Type":  "trail",
+                                                                              "Trail":  "infinity:soul_severance"
+                                                                          }
+                                                                      ]
+                                                  },
+                                  "conditions":  {
+                                                     "enabling":  [
+                                                                      {
+                                                                          "type":  "palladium:action",
+                                                                          "cooldown":  0,
+                                                                          "key_type":  "key_bind",
+                                                                          "needs_empty_hand":  false,
+                                                                          "allow_scrolling_when_crouching":  true
+                                                                      }
+                                                                  ],
+                                                     "unlocking":  [
+                                                                       {
+                                                                           "type":  "palladium:ability_unlocked",
+                                                                           "ability":  "soul_sovereignty"
+                                                                       }
+                                                                   ]
+                                                 },
+                                  "properties":  {
+                                                     "title":  {
+                                                                   "translate":  "ability.infinity.soul_stone.soul_severance.title"
+                                                               },
+                                                     "icon":  "infinity:textures/icon/premium/soul_severance.png",
+                                                     "description":  {
+                                                                         "translate":  "ability.infinity.soul_stone.soul_severance.description"
+                                                                     },
+                                                     "color":  "orange",
+                                                     "hidden_in_gui":  false,
+                                                     "hidden_in_bar":  false,
+                                                     "list_index":  6,
+                                                     "gui_position":  [
+                                                                          3,
+                                                                          0
+                                                                      ]
+                                                 }
+                              }
+                  }
+              ]
+}

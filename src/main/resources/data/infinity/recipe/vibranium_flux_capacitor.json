@@ -1,0 +1,26 @@
+{
+    "key":  {
+                "C":  {
+                          "item":  "infinity:vibranium_circuit"
+                      },
+                "R":  {
+                          "item":  "minecraft:redstone"
+                      },
+                "B":  {
+                          "item":  "minecraft:redstone_block"
+                      },
+                "V":  {
+                          "item":  "infinity:vibranium_ingot"
+                      }
+            },
+    "pattern":  [
+                    "VCV",
+                    "RBR",
+                    "VCV"
+                ],
+    "result":  {
+                   "id":  "infinity:vibranium_flux_capacitor",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shaped"
+}

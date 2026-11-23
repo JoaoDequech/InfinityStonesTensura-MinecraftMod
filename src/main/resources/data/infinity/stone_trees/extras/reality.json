@@ -1,0 +1,318 @@
+{
+  "nodes": [
+    {
+      "id": "will_construct",
+      "original_type": "infinity:will",
+      "title": "@ability.infinity.reality_stone.will.title",
+      "description": "@ability.infinity.reality_stone.will.description",
+      "icon": "minecraft:lime_stained_glass",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["weather_wheel"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-1, -1.5],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "reality_shatter", "tier": 2,
+      "original_type": "infinity:metamorphosis",
+      "title": "@ability.infinity.reality_stone.metamorphosis.title",
+      "description": "@ability.infinity.reality_stone.metamorphosis.description",
+      "icon": "minecraft:rabbit_foot",
+      "cost": null,
+      "parents": ["reality_dominion"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-2, -3],
+      "aim": true,
+      "settings": { "min": 1, "max": 10, "default": 1, "label": "infinity.extra.metamorphosis.setting",
+        "values": ["infinity.extra.metamorphosis.species.chicken", "infinity.extra.metamorphosis.species.sheep",
+          "infinity.extra.metamorphosis.species.rabbit", "infinity.extra.metamorphosis.species.wolf",
+          "infinity.extra.metamorphosis.species.pig", "infinity.extra.metamorphosis.species.cow",
+          "infinity.extra.metamorphosis.species.goat", "infinity.extra.metamorphosis.species.fox",
+          "infinity.extra.metamorphosis.species.bee", "infinity.extra.metamorphosis.species.snow_golem"] },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "reality_pet",
+      "original_type": "infinity:reality_pet",
+      "title": "@ability.infinity.reality_stone.reality_pet.title",
+      "description": "@ability.infinity.reality_stone.reality_pet.description",
+      "icon": "minecraft:lead",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 14 },
+      "parents": ["reality_shatter"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-3, -3],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "local_decree",
+      "original_type": "infinity:local_decree",
+      "title": "@ability.infinity.reality_stone.local_decree.title",
+      "description": "@ability.infinity.reality_stone.local_decree.description",
+      "icon": "minecraft:writable_book",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 20 },
+      "parents": ["reality_pet"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-4, -3],
+      "aim": true,
+      "settings": { "min": 6, "max": 16, "default": 10, "label": "infinity.extra.local_decree.setting" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "mirage",
+      "original_type": "infinity:mirage",
+      "title": "@ability.infinity.reality_stone.mirage.title",
+      "description": "@ability.infinity.reality_stone.mirage.description",
+      "icon": "minecraft:tinted_glass",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
+      "parents": ["will_construct"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-2, -1.5],
+      "aim": true,
+      "settings": { "min": 1, "max": 5, "default": 3, "label": "infinity.extra.mirage.setting" },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "broken_mode",
+      "original_type": "infinity:broken_mode",
+      "title": "@ability.infinity.reality_stone.broken_mode.title",
+      "description": "@ability.infinity.reality_stone.broken_mode.description",
+      "icon": "minecraft:crying_obsidian",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 24 },
+      "parents": ["reality_confiscation"],
+      "requires_stones": [],
+      "activation": "toggle",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-6, -4.5],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+        "id":  "gauntlet_transmute",
+        "original_type":  "infinity:gauntlet_transmute",
+        "title":  "@ability.infinity.reality_stone.gauntlet_transmute.title",
+        "description":  "@ability.infinity.reality_stone.gauntlet_transmute.description",
+        "icon":  "minecraft:egg",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  48
+                 },
+        "parents":  [
+    
+                    ],
+        "requires_stones":  [
+                                "infinity:mind_stone",
+                                "infinity:power_stone_passive",
+                                "infinity:soul_stone",
+                                "infinity:space_stone",
+                                "infinity:time_stone"
+                            ],
+        "activation":  "press",
+        "cooldown_ticks":  300,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             5,
+                             -1
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+        "id":  "gauntlet_destroy",
+        "original_type":  "infinity:gauntlet_destroy",
+        "title":  "@ability.infinity.reality_stone.gauntlet_destroy.title",
+        "description":  "@ability.infinity.reality_stone.gauntlet_destroy.description",
+        "icon":  "minecraft:barrier",
+        "cost":  {
+                     "type":  "item",
+                     "item":  "infinity:aspects_of_existance",
+                     "amount":  32
+                 },
+        "parents":  [
+                        "gauntlet_transmute"
+                    ],
+        "requires_stones":  [
+                                "infinity:mind_stone",
+                                "infinity:power_stone_passive",
+                                "infinity:soul_stone",
+                                "infinity:space_stone",
+                                "infinity:time_stone"
+                            ],
+        "activation":  "toggle",
+        "cooldown_ticks":  0,
+        "in_tree":  true,
+        "in_bar":  true,
+        "gui_position":  [
+                             5,
+                             -2.5
+                         ],
+        "commands":  [
+    
+                     ],
+        "first_tick_commands":  [
+    
+                                ],
+        "last_tick_commands":  [
+    
+                               ]
+    },
+    {
+      "id": "greed",
+      "tier": 2,
+      "original_type": "infinity:greed",
+      "title": "@ability.infinity.reality_stone.greed.title",
+      "description": "@ability.infinity.reality_stone.greed.description",
+      "icon": "minecraft:gold_ingot",
+      "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
+      "parents": ["reality_confiscation"],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [-5, -5.5],
+      "aim": true,
+      "settings": { "min": 1, "max": 5, "default": 3, "label": "infinity.extra.greed.setting", "values": ["infinity.extra.greed.lv1", "infinity.extra.greed.lv2", "infinity.extra.greed.lv3", "infinity.extra.greed.lv4", "infinity.extra.greed.lv5"] },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "paint_world",
+      "original_type": "infinity:paint_world",
+      "title": "@ability.infinity.reality_stone.paint_world.title",
+      "description": "@ability.infinity.reality_stone.paint_world.description",
+      "icon": "minecraft:pink_dye",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "mirage"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -3,
+        -1.5
+      ],
+      "settings": {
+        "min": 1,
+        "max": 4,
+        "default": 1,
+        "label": "infinity.extra.paint.setting",
+        "values": [
+          "infinity.extra.paint.theme1",
+          "infinity.extra.paint.theme2",
+          "infinity.extra.paint.theme3",
+          "infinity.extra.paint.theme4"
+        ]
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "pocket_card",
+      "original_type": "infinity:pocket_card",
+      "title": "@ability.infinity.reality_stone.pocket_card.title",
+      "description": "@ability.infinity.reality_stone.pocket_card.description",
+      "icon": "minecraft:paper",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [
+        "mirage"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -2,
+        -0.5
+      ],
+      "aim": true,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "creation_chest",
+      "tier": 2,
+      "original_type": "infinity:creation_chest",
+      "title": "@ability.infinity.reality_stone.creation_chest.title",
+      "description": "@ability.infinity.reality_stone.creation_chest.description",
+      "icon": "minecraft:chest",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [
+        "greed"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -6,
+        -5.5
+      ],
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

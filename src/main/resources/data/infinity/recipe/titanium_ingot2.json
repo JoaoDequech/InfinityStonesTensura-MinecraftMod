@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GGG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "infinity:titanium_nugget"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "infinity:titanium_ingot"
+  }
+}

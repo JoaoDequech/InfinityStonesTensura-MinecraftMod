@@ -1,0 +1,26 @@
+{
+    "key":  {
+                "Q":  {
+                          "item":  "infinity:quartz_circuit"
+                      },
+                "R":  {
+                          "item":  "minecraft:redstone"
+                      },
+                "C":  {
+                          "item":  "infinity:lead_circuit"
+                      },
+                "V":  {
+                          "item":  "infinity:vibranium_ingot"
+                      }
+            },
+    "pattern":  [
+                    "RVR",
+                    "QCQ",
+                    "RVR"
+                ],
+    "result":  {
+                   "id":  "infinity:vibranium_circuit",
+                   "count":  1
+               },
+    "type":  "minecraft:crafting_shaped"
+}
