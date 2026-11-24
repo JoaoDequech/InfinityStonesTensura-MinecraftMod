@@ -13,6 +13,8 @@ import com.infinitystones.tensura.skill.ability.extra.fx.FxNet;
 import com.infinitystones.tensura.skill.ability.extra.mind.MindKit;
 import com.infinitystones.tensura.skill.ability.extra.mind.PsychicAvatar;
 import net.minecraft.core.Rotations;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -74,7 +76,38 @@ public final class BorrowedEyes implements Ability {
     private static final Map<UUID, List<UUID>> MENU = new HashMap<>();
     private static final Map<UUID, Tasks.Handle> CONFUSED = new HashMap<>();
 
+    /** Borrowers (while parked as spectators) mapped to the game mode everybody else must keep seeing in the tab list. */
+    private static final Map<UUID, GameType> SHOWN = new java.util.concurrent.ConcurrentHashMap<>();
+    private static java.lang.reflect.Field entriesField;
+
     public static boolean isBorrowing(ServerPlayer p) { return ACTIVE.containsKey(p.getUUID()); }
+
+    /** Called for every player-info packet before it is sent to recipient: hides the borrower's spectator mode from everyone else. */
+    public static Packet<?> tabMask(ClientboundPlayerInfoUpdatePacket pk, UUID recipient) {
+        if (SHOWN.isEmpty() || !pk.actions().contains(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE)) return pk;
+        boolean any = false;
+        for (ClientboundPlayerInfoUpdatePacket.Entry e : pk.entries())
+            if (e.gameMode() == GameType.SPECTATOR && SHOWN.containsKey(e.profileId()) && !e.profileId().equals(recipient)) { any = true; break; }
+        if (!any) return pk;
+        try {
+            List<ClientboundPlayerInfoUpdatePacket.Entry> out = new ArrayList<>();
+            for (ClientboundPlayerInfoUpdatePacket.Entry e : pk.entries()) {
+                GameType shown = SHOWN.get(e.profileId());
+                if (shown != null && e.gameMode() == GameType.SPECTATOR && !e.profileId().equals(recipient))
+                    e = new ClientboundPlayerInfoUpdatePacket.Entry(e.profileId(), e.profile(), e.listed(), e.latency(), shown, e.displayName(), e.chatSession());
+                out.add(e);
+            }
+            if (entriesField == null) {
+                entriesField = ClientboundPlayerInfoUpdatePacket.class.getDeclaredField("entries");
+                entriesField.setAccessible(true);
+            }
+            ClientboundPlayerInfoUpdatePacket copy = new ClientboundPlayerInfoUpdatePacket(pk.actions(), List.<ServerPlayer>of());
+            entriesField.set(copy, out);
+            return copy;
+        } catch (ReflectiveOperationException | RuntimeException ex) {
+            return pk;
+        }
+    }
 
     private static int seconds(ServerPlayer p) { return ExtraSettings.get(p, MODE, 20, 10, 40, 5); }
 
@@ -155,7 +188,10 @@ public final class BorrowedEyes implements Ability {
         Fx.sound(l, c, SoundEvents.AMETHYST_BLOCK_RESONATE, 0.6F, 0.9F);
         Fx.sound(l, c, SoundEvents.SOUL_ESCAPE, 0.5F, 1.4F);
 
+        SHOWN.put(p.getUUID(), s.gm);
         p.setGameMode(GameType.SPECTATOR);
+        p.setInvisible(true);
+        MindKit.hideEquipment(p, 40);
         p.setCamera(t);
         FxNet.screen(p, FxNet.AVATAR_TINT, 60);
         refreshFx(s);
@@ -187,6 +223,8 @@ public final class BorrowedEyes implements Ability {
         if (s.shell == null || s.shell.isRemoved()) {
             if (s.level.isLoaded(net.minecraft.core.BlockPos.containing(s.body))) spawnShell(p, s);
         } else if (s.age % 4 == 0) s.shell.setHeadPose(new Rotations(22 + Mth.sin(s.age * 0.08F) * 3F, 0, 0));
+        if (!p.isInvisible()) p.setInvisible(true);
+        if (s.age % 20 == 0) MindKit.hideEquipment(p, 40);
         if (s.age % 30 == 0) { FxNet.screen(p, FxNet.AVATAR_TINT, 60); refreshFx(s); }
         if (s.age % 40 == 0) Fx.sound(s.level, s.body.add(0, 1, 0), SoundEvents.AMETHYST_BLOCK_CHIME, 0.3F, 0.6F + s.level.random.nextFloat() * 0.4F);
         if (s.age % 20 == 0) Fx.bar(p, Stone.MIND, K + "left", t.getDisplayName(), (s.left + 19) / 20);
@@ -203,6 +241,10 @@ public final class BorrowedEyes implements Ability {
                 p.fallDistance = 0;
             }
         } finally {
+            SHOWN.remove(p.getUUID());
+            p.setInvisible(p.hasEffect(net.minecraft.world.effect.MobEffects.INVISIBILITY));
+            MindKit.hideEquipment(p, 0);
+            MindKit.sendEquipment(p, false);
             if (s.shell != null) MindKit.discard(s.shell);
             for (int id : new int[]{s.runeId, s.rune2Id, s.orbId}) FxNet.kill(s.level, s.body, id);
             FxNet.screen(p, FxNet.AVATAR_TINT, 0);
@@ -311,6 +353,7 @@ public final class BorrowedEyes implements Ability {
         ServerLevel l = dim == null ? null : p.server.getLevel(ResourceKey.create(Registries.DIMENSION, dim));
         GameType gm = GameType.byId(t.getInt("gm"));
         if (p.gameMode.getGameModeForPlayer() != gm) p.setGameMode(gm);
+        p.setInvisible(p.hasEffect(net.minecraft.world.effect.MobEffects.INVISIBILITY));
         if (l != null) p.teleportTo(l, t.getDouble("x"), t.getDouble("y"), t.getDouble("z"), t.getFloat("yaw"), t.getFloat("pitch"));
     }
 
@@ -320,7 +363,7 @@ public final class BorrowedEyes implements Ability {
             ServerPlayer p = e.getServer().getPlayerList().getPlayer(en.getKey());
             if (p != null) restore(p, en.getValue(), false);
         }
-        ACTIVE.clear(); MENU.clear();
+        ACTIVE.clear(); MENU.clear(); SHOWN.clear();
         for (Tasks.Handle h : CONFUSED.values()) h.cancel();
         CONFUSED.clear();
     }
