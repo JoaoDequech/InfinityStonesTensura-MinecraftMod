@@ -1,6 +1,8 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
 import com.infinitystones.tensura.registry.ModSounds;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.StoneTree;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -307,8 +310,9 @@ public final class PolishFx {
     // ------------------------------------------------------------------ Space: black hole
 
     private static final class Hole {
-        final UUID stand; final ResourceKey<Level> dim; final long born; Vec3 center; final int id;
-        Hole(UUID stand, int id, ResourceKey<Level> dim, Vec3 center, long born) { this.stand = stand; this.id = id; this.dim = dim; this.center = center; this.born = born; }
+        final UUID stand; final ResourceKey<Level> dim; final long born; Vec3 center; final int id; final UUID owner;
+        double eaten = 0;
+        Hole(UUID stand, int id, ResourceKey<Level> dim, Vec3 center, long born, UUID owner) { this.stand = stand; this.id = id; this.dim = dim; this.center = center; this.born = born; this.owner = owner; }
     }
     private record Search(UUID player, ResourceKey<Level> dim, Vec3 pos, long expire) {}
     private static final List<Hole> HOLES = new ArrayList<>();
@@ -331,7 +335,7 @@ public final class PolishFx {
                     a -> a.getTags().contains("blackhole") && !known.contains(a.getUUID()));
             if (found.isEmpty()) continue;
             ArmorStand a = found.get(0);
-            Hole h = new Hole(a.getUUID(), a.getId(), q.dim(), a.position().add(0, HOLE_Y, 0), now);
+            Hole h = new Hole(a.getUUID(), a.getId(), q.dim(), a.position().add(0, HOLE_Y, 0), now, q.player());
             HOLES.add(h);
             holeBirth(lv, h);
             it.remove();
@@ -391,6 +395,41 @@ public final class PolishFx {
             dustRing(lv, c, 2.6, 5, Stone.SPACE, 1.0F, -age * 0.4);
         }
         if (age % 8 == 0) FxNet.shake(lv, c, 28, 0.3F, 8);
+        holeEat(lv, h, age);
+    }
+
+    /**
+     * Hidden power: the hole really eats the world. Its horizon grows from 6 to 24 blocks (a block a second); every
+     * 10 ticks the new shell is carved (no drops, claims and unbreakables kept, per-tick caps in Terrain), everything
+     * inside 1.6x the horizon is pulled in, takes 8% of its max HP a second ignoring resistances, and whatever reaches
+     * the core is gone. Without its owner online it only swirls.
+     */
+    private static void holeEat(ServerLevel lv, Hole h, long age) {
+        ServerPlayer owner = lv.getServer().getPlayerList().getPlayer(h.owner);
+        if (owner == null || owner.serverLevel() != lv) return;
+        Vec3 c = h.center;
+        double horizon = Math.min(24.0, 6.0 + age * 0.05);
+        if (age % 10 == 0 && horizon > h.eaten + 0.2) {
+            Terrain.blastShell(lv, owner, c, Math.max(0, h.eaten - 0.5), horizon, Float.MAX_VALUE, 500);
+            h.eaten = horizon;
+        }
+        double reach = horizon * 1.6;
+        for (Entity e : lv.getEntities((Entity) null, new AABB(c, c).inflate(reach), x -> x.isAlive() && !x.isSpectator())) {
+            double d = e.getBoundingBox().getCenter().distanceTo(c);
+            if (d > reach) continue;
+            if (e instanceof net.minecraft.world.entity.item.ItemEntity || e instanceof net.minecraft.world.entity.ExperienceOrb) {
+                if (d < 3.5) e.discard();
+                else e.setDeltaMovement(e.getDeltaMovement().add(c.subtract(e.position()).normalize().scale(0.12)));
+                continue;
+            }
+            if (!(e instanceof LivingEntity le) || !Rules.canHarm(owner, le)) continue;
+            Vec3 pull = c.subtract(le.getBoundingBox().getCenter()).normalize().scale(0.05 + 0.18 * (1 - d / reach));
+            if (!Rules.isBoss(le)) { le.setDeltaMovement(le.getDeltaMovement().scale(0.9).add(pull)); le.hurtMarked = true; }
+            if (age % 20 == 0 && d <= horizon) {
+                if (d < 3) Rules.execute(owner, le);
+                else Rules.hurtHidden(owner, le, 6F, 0.08F);
+            }
+        }
     }
 
     private static void holeCollapse(ServerLevel lv, Hole h) {
@@ -413,8 +452,8 @@ public final class PolishFx {
     // ------------------------------------------------------------------ Power: meteor storm
 
     private static final class Storm {
-        final ResourceKey<Level> dim; final Vec3 origin; final long start; int impacts;
-        Storm(ResourceKey<Level> dim, Vec3 origin, long start) { this.dim = dim; this.origin = origin; this.start = start; }
+        final ResourceKey<Level> dim; final Vec3 origin; final long start; final UUID owner; int impacts;
+        Storm(ResourceKey<Level> dim, Vec3 origin, long start, UUID owner) { this.dim = dim; this.origin = origin; this.start = start; this.owner = owner; }
     }
     private static final class Meteor {
         Vec3 last; final Storm storm;
@@ -427,7 +466,7 @@ public final class PolishFx {
     private static void stormStart(ServerPlayer p) {
         ServerLevel lv = p.serverLevel();
         Vec3 pos = p.position();
-        STORMS.add(new Storm(lv.dimension(), pos, p.server.getTickCount()));
+        STORMS.add(new Storm(lv.dimension(), pos, p.server.getTickCount(), p.getUUID()));
         // a colossal seal in the sky where the rocks are summoned, plus the caster's own ground seal
         at(lv, pos.add(0, 66, 0), DOWN, 30F, Stone.POWER, 90, T3 | RAYS | FAST);
         at(lv, pos.add(0, 62, 0), DOWN, 18F, Stone.POWER, 80, T2 | HEPTA);
@@ -504,6 +543,16 @@ public final class PolishFx {
         if (st.impacts++ < 6) {
             at(lv, g.add(0, 0.06, 0), UP, 6.5F, Stone.POWER, 34, T2 | RAYS | FAST);
             PortFx.sound(lv, g, ModSounds.POWER_STONE_EXPLODE, 0.25F, 0.8F);
+        }
+        // every rock leaves a crater (radius about 6, no drops, claims respected) and hits for 12% of max HP around it
+        ServerPlayer owner = lv.getServer().getPlayerList().getPlayer(st.owner);
+        if (owner != null && owner.serverLevel() == lv) {
+            Terrain.boom(lv, owner, g.add(0, 0.3, 0), 5F, 150F);
+            for (LivingEntity e : lv.getEntitiesOfClass(LivingEntity.class, new AABB(g, g).inflate(7),
+                    e -> Rules.isLiving(e) && Rules.canHarm(owner, e) && e.getBoundingBox().getCenter().distanceToSqr(g) <= 49)) {
+                Rules.hurtPct(owner, e, 12F, 0.12F);
+                e.igniteForSeconds(3);
+            }
         }
     }
 

@@ -2,6 +2,8 @@ package com.infinitystones.tensura.skill.ability.extra.v2a;
 
 import com.infinitystones.tensura.InfinityStones;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -12,6 +14,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,10 +43,62 @@ public final class V2aNet {
         @Override public Type<Msg> type() { return TYPE; }
     }
 
+    /**
+     * Creator's Hand cutscene lock for one player. mode 0 = free, 1 = held in the fist (camera shot + every input locked),
+     * 2 = the caster (rooted, can still look and use the wheel). shotYaw = direction the shot looks along (degrees),
+     * dist = camera distance from the fist. The server repeats it every second; the client frees itself when it stops.
+     */
+    public record Lock(int mode, int id, float shotYaw, float dist, float scale) implements CustomPacketPayload {
+        public static final Type<Lock> TYPE = new Type<>(InfinityStones.id("v2a_hand_lock"));
+        public static final StreamCodec<ByteBuf, Lock> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Lock::mode, ByteBufCodecs.VAR_INT, Lock::id, ByteBufCodecs.FLOAT, Lock::shotYaw,
+                ByteBufCodecs.FLOAT, Lock::dist, ByteBufCodecs.FLOAT, Lock::scale, Lock::new);
+        @Override public Type<Lock> type() { return TYPE; }
+    }
+
+    /** Gore burst of an executed body (entity id = the client entity whose texture the pieces use). */
+    public record Gore(int entity, double x, double y, double z, float w, float h) implements CustomPacketPayload {
+        public static final Type<Gore> TYPE = new Type<>(InfinityStones.id("v2a_hand_gore"));
+        public static final StreamCodec<ByteBuf, Gore> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Gore::entity, ByteBufCodecs.DOUBLE, Gore::x, ByteBufCodecs.DOUBLE, Gore::y,
+                ByteBufCodecs.DOUBLE, Gore::z, ByteBufCodecs.FLOAT, Gore::w, ByteBufCodecs.FLOAT, Gore::h, Gore::new);
+        @Override public Type<Gore> type() { return TYPE; }
+    }
+
+    public record Target(UUID id, String name, int dist) {
+        public static final StreamCodec<ByteBuf, Target> CODEC = StreamCodec.composite(
+                UUIDUtil.STREAM_CODEC, Target::id, ByteBufCodecs.STRING_UTF8, Target::name, ByteBufCodecs.VAR_INT, Target::dist, Target::new);
+    }
+
+    /** The player list of the Hand's menu (server → caster). */
+    public record Targets(List<Target> list) implements CustomPacketPayload {
+        public static final Type<Targets> TYPE = new Type<>(InfinityStones.id("v2a_hand_targets"));
+        public static final StreamCodec<ByteBuf, Targets> CODEC = StreamCodec.composite(
+                Target.CODEC.apply(ByteBufCodecs.list(64)), Targets::list, Targets::new);
+        @Override public Type<Targets> type() { return TYPE; }
+    }
+
+    /** The caster picked a player in the menu (client → server, validated again there). */
+    public record Pick(UUID id) implements CustomPacketPayload {
+        public static final Type<Pick> TYPE = new Type<>(InfinityStones.id("v2a_hand_pick"));
+        public static final StreamCodec<ByteBuf, Pick> CODEC = StreamCodec.composite(UUIDUtil.STREAM_CODEC, Pick::id, Pick::new);
+        @Override public Type<Pick> type() { return TYPE; }
+    }
+
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
-        event.registrar("1").optional().playToClient(Msg.TYPE, Msg.CODEC,
+        var r = event.registrar("1").optional();
+        r.playToClient(Msg.TYPE, Msg.CODEC,
                 (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.V2aClient.accept(msg)));
+        r.playToClient(Lock.TYPE, Lock.CODEC,
+                (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.HandClient.lock(msg)));
+        r.playToClient(Gore.TYPE, Gore.CODEC,
+                (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.HandClient.gore(msg)));
+        r.playToClient(Targets.TYPE, Targets.CODEC,
+                (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.HandClient.targets(msg)));
+        r.playToServer(Pick.TYPE, Pick.CODEC, (msg, ctx) -> ctx.enqueueWork(() -> {
+            if (ctx.player() instanceof ServerPlayer sp) CreatorHand.pick(sp, msg.id());
+        }));
     }
 
     public static Msg msg(int kind, int id, int state, int life, float scale, Vec3 at, float yaw, double y0, double y1, int dur, float extra) {

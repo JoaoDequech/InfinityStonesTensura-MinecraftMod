@@ -6,6 +6,7 @@ import com.infinitystones.tensura.skill.ability.extra.ExtraSettings;
 import com.infinitystones.tensura.skill.ability.extra.Fx;
 import com.infinitystones.tensura.skill.ability.extra.Ground;
 import com.infinitystones.tensura.skill.ability.extra.MenuNet;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.ability.extra.Tasks;
 import com.infinitystones.tensura.skill.ability.extra.fx.FxNet;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -18,6 +19,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -37,9 +41,11 @@ import java.util.UUID;
 
 /**
  * Wish (complete Infinity Gauntlet). Left: grants the selected wish; right: menu of wishes; scroll: cycle the wish. Every
- * wish is harmless and temporary: a rain of flowers, a feast on a floating table, a rainbow arc across the sky, a
- * fireworks show and a starry night with shooting stars (drawn on the clients of everyone nearby, the world itself is
- * untouched). A new wish replaces the caster's previous one.
+ * wish is temporary and leaves the world untouched, but each one helps: the flower rain heals allies (3% of max HP a
+ * second) with Regeneration; the feast heals 40% of max HP at once and gives Regeneration II, Resistance II, Strength II
+ * and Saturation for a minute; the rainbow gives Luck, Saturation and a shield worth 20% of max HP; the fireworks hurt
+ * hostile mobs around (3% of max HP a second); the starry night gives Night Vision, Speed II and Jump Boost II.
+ * "Allies" are the caster, its team, its pets. A new wish replaces the caster's previous one.
  */
 public final class GauntletWish implements Ability {
     public static final GauntletWish INSTANCE = new GauntletWish();
@@ -92,6 +98,21 @@ public final class GauntletWish implements Ability {
         ACTIVE.put(p.getUUID(), Tasks.add(t));
     }
 
+    /** The caster plus allies, team members and pets within r of c. */
+    private static List<LivingEntity> allies(ServerPlayer p, ServerLevel l, Vec3 c, double r) {
+        return l.getEntitiesOfClass(LivingEntity.class, new AABB(c, c).inflate(r),
+                e -> e.isAlive() && !e.isSpectator() && Rules.isAlly(p, e) && e.getBoundingBox().getCenter().distanceToSqr(c) <= r * r);
+    }
+
+    private static void buff(LivingEntity e, net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect, int ticks, int amp) {
+        e.addEffect(new MobEffectInstance(effect, ticks, amp, true, true, true));
+    }
+
+    private static void heal(LivingEntity e, float share) {
+        e.heal(e.getMaxHealth() * share);
+        if (e.level() instanceof ServerLevel sl) sl.sendParticles(ParticleTypes.HEART, e.getX(), e.getY(0.8), e.getZ(), 3, 0.35, 0.3, 0.35, 0);
+    }
+
     /** Common base: runs for a fixed time and forgets the caster's slot when it ends. */
     private abstract static class Wish implements Tasks.Task {
         final ServerPlayer p; final ServerLevel l; final Vec3 home; final int life;
@@ -119,7 +140,10 @@ public final class GauntletWish implements Ability {
                     double a = rnd.nextDouble() * Math.PI * 2, rr = rnd.nextDouble() * 14;
                     l.sendParticles(ParticleTypes.CHERRY_LEAVES, c.x + Math.cos(a) * rr, c.y + 10 + rnd.nextDouble() * 4, c.z + Math.sin(a) * rr, 6, 1.5, 0.5, 1.5, 0.01);
                 }
-                if (age % 20 == 0) Fx.sound(l, c, SoundEvents.AMETHYST_BLOCK_CHIME, 0.35F, 1.2F + rnd.nextFloat() * 0.5F);
+                if (age % 20 == 0) {
+                    Fx.sound(l, c, SoundEvents.AMETHYST_BLOCK_CHIME, 0.35F, 1.2F + rnd.nextFloat() * 0.5F);
+                    for (LivingEntity e : allies(p, l, c, 14)) { heal(e, 0.03F); buff(e, MobEffects.REGENERATION, 60, 1); }
+                }
             }
             return age < life;
         }
@@ -190,8 +214,13 @@ public final class GauntletWish implements Ability {
             if (age % 6 == 0) for (Vec3 c : candles) l.sendParticles(ParticleTypes.SMALL_FLAME, c.x, c.y, c.z, 1, 0.01, 0.01, 0.01, 0);
             if (age % 10 == 0) l.sendParticles(ParticleTypes.END_ROD, base.x, base.y + 1.4, base.z, 3, 1.8, 0.2, 0.7, 0.01);
             if (age == 20)
-                for (ServerPlayer sp : l.players())
-                    if (sp.position().distanceToSqr(base) < 36 && !sp.isSpectator()) sp.addEffect(new MobEffectInstance(MobEffects.SATURATION, 1, 1, true, false, false));
+                for (LivingEntity e : allies(p, l, base, 8)) {
+                    heal(e, 0.40F);
+                    buff(e, MobEffects.SATURATION, 40, 1);
+                    buff(e, MobEffects.REGENERATION, 600, 1);
+                    buff(e, MobEffects.DAMAGE_RESISTANCE, 1200, 1);
+                    buff(e, MobEffects.DAMAGE_BOOST, 1200, 1);
+                }
             if (age == life - 20) for (int i = 0; i < parts.size(); i++) {
                 Display d = parts.get(i);
                 if (!d.isRemoved()) Dsp.pose(d, 0.01F, 0.01F, 0.01F, full.get(i)[3], full.get(i)[4], 18);
@@ -267,6 +296,12 @@ public final class GauntletWish implements Ability {
                 Fx.sound(l, p.position(), SoundEvents.AMETHYST_CLUSTER_BREAK, 0.6F, 1.6F);
             }
             if (age % 30 == 10) Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.35F, 1.5F);
+            if (age % 40 == 0 && age < life - 40) for (LivingEntity e : allies(p, l, p.position(), 24)) {
+                buff(e, MobEffects.LUCK, 3600, 1);
+                buff(e, MobEffects.SATURATION, 40, 1);
+                buff(e, MobEffects.ABSORPTION, 1200, 4);
+                if (age == 0) e.setAbsorptionAmount(Math.max(e.getAbsorptionAmount(), Math.min(e.getMaxHealth() * 0.2F, 300F)));
+            }
             return age < life;
         }
 
@@ -285,6 +320,11 @@ public final class GauntletWish implements Ability {
                 Fx.sound(l, p.position(), SoundEvents.BEACON_ACTIVATE, 0.4F, 1.8F);
             }
             if (age % 50 == 25) Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.3F, 0.8F + l.random.nextFloat() * 0.8F);
+            if (age % 40 == 0 && age < life - 40) for (LivingEntity e : allies(p, l, p.position(), 30)) {
+                buff(e, MobEffects.NIGHT_VISION, 400, 0);
+                buff(e, MobEffects.MOVEMENT_SPEED, 100, 1);
+                buff(e, MobEffects.JUMP, 100, 1);
+            }
             return age < life;
         }
 
@@ -304,6 +344,12 @@ public final class GauntletWish implements Ability {
             boolean finale = age > 260 && age < 320;
             if ((age % 8 == 0 && age < 300) || (finale && age % 3 == 0)) burst(c, rnd, finale ? 2 : 1);
             if (age % 8 == 0 && age < 300) Fx.sound(l, c, SoundEvents.FIREWORK_ROCKET_LAUNCH, 0.5F, 0.9F + rnd.nextFloat() * 0.3F);
+            if (age % 20 == 10 && age < 320)
+                for (LivingEntity e : l.getEntitiesOfClass(LivingEntity.class, new AABB(c, c).inflate(22, 14, 22),
+                        e -> e instanceof Enemy && Rules.canHarm(p, e) && e.getBoundingBox().getCenter().distanceToSqr(c) <= 22 * 22)) {
+                    Rules.hurtPct(p, e, 4F, 0.03F);
+                    l.sendParticles(ParticleTypes.FIREWORK, e.getX(), e.getY(0.6), e.getZ(), 6, 0.3, 0.4, 0.3, 0.05);
+                }
             return age < life;
         }
 

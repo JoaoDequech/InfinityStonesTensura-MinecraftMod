@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -169,7 +170,7 @@ public final class SpiritLegion implements Ported {
         if (s.attackDelay > 0) s.attackDelay--;
         if (target != null && spirit.distanceToSqr(target) <= 6.25D && spirit.hasLineOfSight(target) && s.attackDelay == 0) {
             s.attackDelay = 20;
-            if (target.hurt(PortFx.attack(caster, target), 30F)) {
+            if (target.hurt(Rules.source(caster, target, false), Rules.amount(target, 30F, 0.04F, false))) {
                 level.sendParticles(legion.dust, target.getX(), target.getEyeY(), target.getZ(), 12, 0.4D, 0.4D, 0.4D, 0D);
                 PortFx.sound(level, spirit.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.45F, 1.4F);
             }

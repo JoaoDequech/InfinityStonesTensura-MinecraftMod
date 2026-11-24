@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -69,7 +70,7 @@ public final class TerrorProjection implements Ported {
 
         for (int index = 0; index < targets.size(); index++) {
             Mob mob = targets.get(index);
-            mob.hurt(PortFx.attack(p, mob), damage);
+            mob.hurt(Rules.source(p, mob, false), Rules.amount(mob, damage, 0.10F, false));
             if (!mob.isAlive()) continue;
             if (isBossLike(mob)) {
                 mob.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, fearTicks, bossAmp, false, true, true));

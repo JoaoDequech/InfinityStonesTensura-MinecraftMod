@@ -135,7 +135,7 @@ public final class SoulRift implements Ability {
                 e.fallDistance = 0;
             }
             if (age % 10 == 0) {
-                Rules.hurt(p, e, (float) (2.0 + 4.0 * near));
+                Rules.hurtPct(p, e, (float) (2.0 + 4.0 * near), (float) (0.02 + 0.03 * near));
                 SoulKit.soulBurst(l, at, 0.5F);
                 FxNet.beam(l, at, core, SoulKit.ORANGE, 0.06F, 6);
             } else if (age % 5 == 0) {
@@ -166,7 +166,7 @@ public final class SoulRift implements Ability {
         AABB box = new AABB(c, c).inflate(R, 12, R);
         for (LivingEntity e : l.getEntitiesOfClass(LivingEntity.class, box, e -> Rules.canHarm(p, e))) {
             if (e.position().multiply(1, 0, 1).distanceToSqr(c.multiply(1, 0, 1)) > R * R) continue;
-            Rules.hurt(p, e, 24F);
+            Rules.hurtPct(p, e, 24F, 0.15F);
             Vec3 away = e.position().subtract(c).multiply(1, 0, 1);
             away = away.lengthSqr() < 0.01 ? new Vec3(0, 0, 0) : away.normalize();
             if (!Rules.isBoss(e)) e.push(away.x * 1.2, 0.7, away.z * 1.2);

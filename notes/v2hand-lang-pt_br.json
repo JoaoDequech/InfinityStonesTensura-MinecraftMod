@@ -1,0 +1,9 @@
+{
+  "ability.infinity.power_stone.creator_hand.description": "Manopla completa. Esq. (mire): uma manopla dourada colossal com as seis joias desce das nuvens sobre o ser vivo mirado (jogador ou qualquer criatura, chefes incluídos) ou, mirando um ponto vazio, sobre todos ao redor. Clique do meio: lista de jogadores da dimensão; a escolhida é agarrada a qualquer distância. A mão fecha o punho e ergue a presa, que fica presa numa cena fixa, sem poder apertar nenhuma tecla. Enquanto segura, causa dano contínuo por segundo que ignora armadura e resistências. Scroll: força 1-10 (de 2% a 25% da vida máxima por segundo; força 10 executa: tudo na mão explode em pedaços). Dir.: aperta (pulsos fortes, ou a execução na força 10); dir. de novo: abre a mão e solta todos devagar. Você fica parado enquanto segura, mas pode olhar e usar a roda. Todos são soltos se você sair do jogo, morrer, mudar de dimensão ou largar a manopla.",
+  "ability.infinity.power_stone.creator_hand.setting": "Força da mão",
+  "infinity.wheel.dual.creator_hand": "Esq.: agarrar mirado  ·  Meio: lista de jogadores  ·  Dir.: apertar / soltar",
+  "infinity.v2a.creator.nobody": "Ninguém para agarrar",
+  "infinity.v2a.creator.pick.title": "MÃO DO CRIADOR",
+  "infinity.v2a.creator.pick.hint": "Escolha quem a mão vai buscar",
+  "infinity.v2a.creator.pick.dist": "%s blocos"
+}

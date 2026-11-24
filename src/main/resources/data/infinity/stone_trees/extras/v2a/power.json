@@ -38,7 +38,7 @@
         ]
       },
       "stats": {
-        "damage": "6 ❤",
+        "damage": "7% vida máx.",
         "range": "48 blocos",
         "duration": "10 s",
         "area": "3-4 blocos",
@@ -126,7 +126,7 @@
         ]
       },
       "stats": {
-        "damage": "nenhum",
+        "damage": "cura aliados · fogos 3% vida máx./s em hostis",
         "range": "ao redor",
         "duration": "12-35 s",
         "area": "20 blocos",
@@ -167,10 +167,10 @@
       "page": 2,
       "aim": true,
       "settings": {
-        "min": 4,
-        "max": 16,
+        "min": 1,
+        "max": 10,
         "step": 1,
-        "default": 8,
+        "default": 5,
         "label": "ability.infinity.power_stone.creator_hand.setting"
       },
       "commands": [],

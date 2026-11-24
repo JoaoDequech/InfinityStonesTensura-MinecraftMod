@@ -21,10 +21,12 @@ import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 @EventBusSubscriber(modid = InfinityStones.MOD_ID, value = Dist.CLIENT)
 public final class VibrateGhosts {
     private static boolean rendering;
+    /** A render error (another mod's layer, a shader pack...) switches the copies off for the session instead of crashing the game. */
+    private static boolean broken;
 
     @SubscribeEvent
     public static void pre(RenderPlayerEvent.Pre e) {
-        if (rendering || !(e.getEntity() instanceof AbstractClientPlayer player)) return;
+        if (rendering || broken || !(e.getEntity() instanceof AbstractClientPlayer player)) return;
         float partial = e.getPartialTick();
         float v = PortVisuals.vibrate(player, partial);
         if (v <= 0F || player.isInvisible()) return;
@@ -36,10 +38,15 @@ public final class VibrateGhosts {
         try {
             for (int i = 0; i < 10; i++) {
                 pose.pushPose();
-                pose.translate((rand.nextFloat() - 0.5F) / 15F * v, 0, (rand.nextFloat() - 0.5F) / 15F * v);
-                e.getRenderer().render(player, yaw, partial, pose, ghost, e.getPackedLight());
-                pose.popPose();
+                try {
+                    pose.translate((rand.nextFloat() - 0.5F) / 15F * v, 0, (rand.nextFloat() - 0.5F) / 15F * v);
+                    e.getRenderer().render(player, yaw, partial, pose, ghost, e.getPackedLight());
+                } finally {
+                    pose.popPose();
+                }
             }
+        } catch (RuntimeException | LinkageError ex) {
+            broken = true;
         } finally {
             rendering = false;
         }

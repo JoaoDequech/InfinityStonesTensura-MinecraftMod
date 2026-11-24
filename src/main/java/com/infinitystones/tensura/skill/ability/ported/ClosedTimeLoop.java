@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.BlockPos;
@@ -137,7 +138,7 @@ public final class ClosedTimeLoop implements Ported {
                 if (t instanceof Mob mob) mob.getNavigation().stop();
                 loop.level.sendParticles(ParticleTypes.REVERSE_PORTAL, prev.x, prev.y, prev.z, 12, 0.35D, 0.5D, 0.35D, 0.06D);
             }
-            t.hurt(new DamageSource(type, null, loop.owner), 60F);
+            t.hurt(new DamageSource(type, null, loop.owner), Rules.amount(t, 60F, 0.08F, false));
             PortFx.sound(loop.level, t.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 0.7F, 0.8F + loop.nextPulse / 150F);
         }
         render(loop, true);

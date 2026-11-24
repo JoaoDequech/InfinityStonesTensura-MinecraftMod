@@ -160,7 +160,7 @@ public final class V2aClient {
             ps.translate(m.x(), originY, m.z());
             ps.mulPose(Axis.YP.rotation(m.yaw()));
             ps.scale(s, s, s);
-            Hands.solid(ps, buf, Hands.RUNE_STONE, light, curl, palm ? 0.6F : 0F, armLen, palm, 0, pulse(t, 0.4F));
+            Hands.solid(ps, buf, Hands.SKY, light, curl, palm ? 0.6F : 0F, armLen, palm, 0, pulse(t, 0.4F), t, 0F);
             ps.popPose();
             return;
         }
@@ -181,7 +181,8 @@ public final class V2aClient {
                 ps.translate(m.x(), originY, m.z());
                 ps.mulPose(Axis.YP.rotation(m.yaw()));
                 ps.scale(s, s, s);
-                Hands.glow(ps, buf, Hands.RUNE_STONE, 0, pulse(t, 0.4F), flash, palm, armLen);
+                Hands.glow(ps, buf, Hands.SKY, 0, pulse(t, 0.4F), flash, palm, armLen,
+                        palm ? 0F : V2aAnim.ease((t - V2aAnim.FIST_CURL) / (float) (V2aAnim.FIST_IMPACT - V2aAnim.FIST_CURL)), palm ? 0.6F : 0F, t);
                 ps.popPose();
             }
         }
@@ -223,9 +224,9 @@ public final class V2aClient {
             ps.scale(s, s, s);
             if (pass == 0) {
                 int light = light(mc, hx, originY + 2 * s, hz);
-                Hands.solid(ps, buf, Hands.RUNE_STONE, light, curl, 0.5F, armLen, false, 0, pulse(t, 0.35F + 0.05F * side));
+                Hands.solid(ps, buf, Hands.SCULPTOR, light, curl, 0.5F, armLen, false, 0, pulse(t, 0.35F + 0.05F * side), t + side * 20F, 0F);
             } else {
-                Hands.glow(ps, buf, Hands.RUNE_STONE, 0, pulse(t, 0.35F + 0.05F * side), 0, false, armLen);
+                Hands.glow(ps, buf, Hands.SCULPTOR, 0, pulse(t, 0.35F + 0.05F * side), 0, false, armLen, curl, 0.5F, t + side * 20F);
             }
             ps.popPose();
         }
@@ -281,9 +282,9 @@ public final class V2aClient {
         ps.scale(s, s, s);
         if (pass == 0) {
             int light = light(mc, m.x(), yb + 2, m.z());
-            Hands.solid(ps, buf, Hands.GOLD, light, curl, st == V2aAnim.G_OPEN ? 0.7F : 0.2F, armLen, false, mask, pulse);
+            Hands.solid(ps, buf, Hands.GOLD, light, curl, st == V2aAnim.G_OPEN ? 0.7F : 0.2F, armLen, false, mask, pulse, t, flash);
         } else {
-            Hands.glow(ps, buf, Hands.GOLD, mask, pulse, flash, false, armLen);
+            Hands.glow(ps, buf, Hands.GOLD, mask, pulse, flash, false, armLen, curl, st == V2aAnim.G_OPEN ? 0.7F : 0.2F, t);
         }
         ps.popPose();
         if (pass == 2 && st == V2aAnim.G_DESC) {

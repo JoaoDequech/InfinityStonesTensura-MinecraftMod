@@ -114,14 +114,14 @@ final class MobPowers {
             for (int i = 1; i < 20; i++) l.sendParticles(ParticleTypes.SONIC_BOOM, eye.x + look.x * i, eye.y + look.y * i, eye.z + look.z * i, 1, 0, 0, 0, 0);
             for (LivingEntity t : l.getEntitiesOfClass(LivingEntity.class, m.getBoundingBox().expandTowards(look.scale(20)).inflate(1.5),
                     t -> t != m && t != p && !Possession.isGhost(t) && onRay(eye, look, t, 20)))
-                t.hurt(l.damageSources().sonicBoom(m), 10F);
+                t.hurt(l.damageSources().sonicBoom(m), com.infinitystones.tensura.skill.ability.extra.Rules.amount(t, 10F, 0.15F, false));
             l.playSound(null, m.blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, m.getSoundSource(), 3F, 1F);
             return;
         }
         if (m instanceof Guardian) {
             if (aimed != null) {
                 SoulFx.line(l, eye, aimed.getEyePosition(), 0.3, ParticleTypes.BUBBLE, null);
-                aimed.hurt(l.damageSources().indirectMagic(m, m), m instanceof ElderGuardian ? 8F : 6F);
+                aimed.hurt(l.damageSources().indirectMagic(m, m), com.infinitystones.tensura.skill.ability.extra.Rules.amount(aimed, m instanceof ElderGuardian ? 8F : 6F, m instanceof ElderGuardian ? 0.05F : 0.04F, false));
             }
             l.playSound(null, m.blockPosition(), SoundEvents.GUARDIAN_ATTACK, m.getSoundSource(), 1.5F, 1F);
             return;

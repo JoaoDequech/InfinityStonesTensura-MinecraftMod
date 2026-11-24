@@ -5,6 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -38,12 +41,12 @@ public final class VirtualProjectile implements Ported {
     private static final class Shot {
         final ServerLevel level; final UUID owner; final Vec3 vel; Vec3 pos;
         final float damage, size, explosion; final int lifetime; final boolean dieOnEntity, dieOnBlock, fire, destroy;
-        final int outer, inner; final Set<UUID> hit = new HashSet<>(); int age;
+        final int outer, inner; final boolean hidden; final Set<UUID> hit = new HashSet<>(); int age;
         Shot(ServerLevel level, UUID owner, Vec3 pos, Vec3 vel, float damage, float size, int lifetime, boolean dieOnEntity,
-             boolean dieOnBlock, float explosion, boolean fire, boolean destroy, int outer, int inner) {
+             boolean dieOnBlock, float explosion, boolean fire, boolean destroy, int outer, int inner, boolean hidden) {
             this.level = level; this.owner = owner; this.pos = pos; this.vel = vel; this.damage = damage; this.size = size;
             this.lifetime = lifetime; this.dieOnEntity = dieOnEntity; this.dieOnBlock = dieOnBlock; this.explosion = explosion;
-            this.fire = fire; this.destroy = destroy; this.outer = outer; this.inner = inner;
+            this.fire = fire; this.destroy = destroy; this.outer = outer; this.inner = inner; this.hidden = hidden;
         }
     }
     private static final List<Shot> SHOTS = new ArrayList<>();
@@ -71,7 +74,7 @@ public final class VirtualProjectile implements Ported {
                 (int) num(d, "Lifetime", 200), bool(d, "DieOnEntityHit", true), bool(d, "DieOnBlockHit", true),
                 num(d, "ExplosionRadius", 0), bool(d, "ExplosionCausesFire", false),
                 !"keep".equalsIgnoreCase(d.has("ExplosionBlockInteraction") ? d.get("ExplosionBlockInteraction").getAsString() : "keep"),
-                outer, inner));
+                outer, inner, n.upper()));
         // original companion "*_sound" abilities
         switch (n.modeId()) {
             case "space.event_horizon" -> PortFx.sound(p.serverLevel(), p.getEyePosition(), "minecraft:block.end_portal.spawn", 0.7F, 0.55F);
@@ -116,7 +119,7 @@ public final class VirtualProjectile implements Ported {
             if (t.getBoundingBox().inflate(s.size / 2D).clip(s.pos, end).isEmpty() && !t.getBoundingBox().intersects(sweep.deflate(s.size / 4D))) continue;
             if (owner != null && !PortFx.canAffect(owner, t)) continue;
             s.hit.add(t.getUUID());
-            t.hurt(owner != null ? PortFx.attack(owner, t) : s.level.damageSources().magic(), s.damage);
+            hit(s, owner, t);
             s.level.sendParticles(ParticleTypes.FLASH, t.getX(), t.getY(0.5), t.getZ(), 1, 0, 0, 0, 0);
             explode(s, owner, t.position()); // original CustomProjectile explodes on every entity hit
             if (s.dieOnEntity) return true;
@@ -135,14 +138,40 @@ public final class VirtualProjectile implements Ported {
         s.level.sendParticles(ParticleTypes.END_ROD, end.x, end.y, end.z, 2, s.size * 0.2, s.size * 0.2, s.size * 0.2, 0.01);
     }
 
+    /**
+     * Direct hit: the original Damage (180-240) is a floor capped for small mobs; players and tough mobs take a share of
+     * their max HP instead (public ones 18-25%, the hidden Reality Shatter 50% ignoring every resistance).
+     */
+    private static void hit(Shot s, ServerPlayer owner, Entity t) {
+        float floor = Math.min(s.damage, s.hidden ? 100F : 40F);
+        float pct = s.hidden ? 0.50F : Math.min(0.25F, s.damage / 1000F);
+        if (owner != null && t instanceof LivingEntity le) Rules.hit(owner, le, floor, pct, s.hidden, s.hidden ? 120F : 60F);
+        else t.hurt(s.level.damageSources().magic(), floor);
+    }
+
     private static void explode(Shot s, ServerPlayer owner, Vec3 at) {
         s.level.sendParticles(PortFx.dust(s.outer, 3F), at.x, at.y, at.z, 60, s.explosion * 0.3, s.explosion * 0.3, s.explosion * 0.3, 0.1);
         s.level.sendParticles(PortFx.dust(s.inner, 2F), at.x, at.y, at.z, 30, s.explosion * 0.2, s.explosion * 0.2, s.explosion * 0.2, 0.1);
-        if (s.explosion <= 0) return;
-        boolean grief = s.destroy && owner != null && PortFx.mayEdit(owner, BlockPos.containing(at));
-        // entity-less explosion source: also hurts players when PvP is off (project decision)
-        s.level.explode(owner, new net.minecraft.world.damagesource.DamageSource(s.level.registryAccess()
-                .registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.EXPLOSION)), null, at.x, at.y, at.z, s.explosion,
-                s.fire && grief, grief ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE);
+        if (s.explosion <= 0 || owner == null) return;
+        // terrain: a sphere of the explosion radius (claims, spawn protection and unbreakables respected, no drops)
+        if (s.destroy) Terrain.boom(s.level, owner, at, s.explosion, s.hidden ? Float.MAX_VALUE : 120F);
+        else s.level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, at.x, at.y, at.z, 1, 0, 0, 0, 0);
+        double reach = s.explosion * 1.3;
+        for (LivingEntity e : s.level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(reach),
+                e -> e.isAlive() && PortFx.canAffect(owner, e) && e.getBoundingBox().getCenter().distanceToSqr(at) <= reach * reach)) {
+            Rules.hit(owner, e, s.hidden ? 40F : 10F, s.hidden ? 0.20F : 0.08F, s.hidden, s.hidden ? 80F : 40F);
+            if (s.fire) e.igniteForSeconds(4);
+        }
+        if (s.fire) {
+            // scorched ground: a few fires around the impact
+            Terrain.Session t = new Terrain.Session(owner);
+            for (int k = 0; k < 10; k++) {
+                BlockPos fp = BlockPos.containing(at.add((s.level.random.nextDouble() - 0.5) * s.explosion * 1.4, 0, (s.level.random.nextDouble() - 0.5) * s.explosion * 1.4));
+                fp = new BlockPos(fp.getX(), s.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, fp.getX(), fp.getZ()), fp.getZ());
+                if (Math.abs(fp.getY() - at.y) < s.explosion && s.level.isEmptyBlock(fp)
+                        && net.minecraft.world.level.block.BaseFireBlock.canBePlacedAt(s.level, fp, net.minecraft.core.Direction.UP) && t.may(fp))
+                    s.level.setBlockAndUpdate(fp, net.minecraft.world.level.block.BaseFireBlock.getState(s.level, fp));
+            }
+        }
     }
 }

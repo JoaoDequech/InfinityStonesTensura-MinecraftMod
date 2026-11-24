@@ -1,0 +1,9 @@
+{
+  "ability.infinity.power_stone.creator_hand.description": "Complete gauntlet. Left (aim): a colossal golden gauntlet with the six stones descends from the clouds on the aimed living being (player or any creature, bosses included) or, aiming at an empty point, on everyone around it. Middle click: list of the players in the dimension; the chosen one is grabbed from any distance. The hand closes its fist and lifts its prey, who is locked in a fixed cutscene and cannot press any key. While held, it deals continuous damage every second that ignores armour and resistances. Scroll: strength 1-10 (from 2% to 25% of max health per second; strength 10 executes: everything in the hand bursts into pieces). Right: squeeze (strong pulses, or the execution at strength 10); right again: open the hand and set everyone down slowly. You stay still while holding, but can look around and use the wheel. Everyone is released if you leave the game, die, change dimension or drop the gauntlet.",
+  "ability.infinity.power_stone.creator_hand.setting": "Hand strength",
+  "infinity.wheel.dual.creator_hand": "Left: grab the aimed  ·  Middle: player list  ·  Right: squeeze / release",
+  "infinity.v2a.creator.nobody": "Nobody to grab",
+  "infinity.v2a.creator.pick.title": "HAND OF THE CREATOR",
+  "infinity.v2a.creator.pick.hint": "Choose who the hand will fetch",
+  "infinity.v2a.creator.pick.dist": "%s blocks"
+}

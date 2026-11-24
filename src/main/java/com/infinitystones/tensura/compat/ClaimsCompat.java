@@ -28,6 +28,7 @@ public final class ClaimsCompat {
     public static void onDamage(LivingIncomingDamageEvent e) {
         if (!(e.getEntity() instanceof ServerPlayer victim)) return;
         Entity src = e.getSource().getEntity();
+        if (src == null) src = e.getSource().getDirectEntity(); // powers that hit with PvP off carry the caster as direct entity only
         if (!(src instanceof ServerPlayer attacker) || attacker == victim) return;
         if (!bearer(attacker)) return;
         if (isProtected(victim, attacker)) e.setCanceled(true);
@@ -67,8 +68,37 @@ public final class ClaimsCompat {
         }
     }
 
+    /** Same Open Parties and Claims party (like Tensura's own "opacAllyTensura"): powers never hurt party members. */
+    public static boolean sameParty(ServerPlayer a, ServerPlayer b) {
+        if (a == b) return true;
+        if (broken || !ModList.get().isLoaded("openpartiesandclaims")) return false;
+        try {
+            if (apiGet == null) {
+                Class<?> api = Class.forName("xaero.pac.common.server.api.OpenPACServerAPI");
+                apiGet = api.getMethod("get", MinecraftServer.class);
+                claimsManager = api.getMethod("getServerClaimsManager");
+                partyManager = api.getMethod("getPartyManager");
+                claimGet = Class.forName("xaero.pac.common.claims.api.IClaimsManagerAPI")
+                        .getMethod("get", net.minecraft.resources.ResourceLocation.class, net.minecraft.core.BlockPos.class);
+                claimOwner = Class.forName("xaero.pac.common.claims.player.api.IPlayerChunkClaimAPI").getMethod("getPlayerId");
+                partyByMember = Class.forName("xaero.pac.common.server.parties.party.api.IPartyManagerAPI").getMethod("getPartyByMember", UUID.class);
+                partyMember = Class.forName("xaero.pac.common.parties.party.api.IPartyAPI").getMethod("getMemberInfo", UUID.class);
+            }
+            Object party = partyByMember.invoke(partyManager.invoke(apiGet.invoke(null, a.server)), a.getUUID());
+            return party != null && partyMember.invoke(party, b.getUUID()) != null;
+        } catch (ReflectiveOperationException | LinkageError | RuntimeException ex) {
+            broken = true;
+            InfinityStones.LOGGER.warn("[infinity] Open Parties and Claims integration disabled: {}", ex.toString());
+            return false;
+        }
+    }
+
     /** v2d: may this player change the block at pos? False inside a claim owned by somebody outside the player's party. */
     public static boolean canModify(ServerPlayer actor, net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos pos) {
+        return canModify(actor.getUUID(), level, pos);
+    }
+
+    public static boolean canModify(UUID actor, net.minecraft.server.level.ServerLevel level, net.minecraft.core.BlockPos pos) {
         if (broken || !ModList.get().isLoaded("openpartiesandclaims")) return true;
         try {
             if (apiGet == null) {
@@ -86,9 +116,9 @@ public final class ClaimsCompat {
             Object claim = claimGet.invoke(claimsManager.invoke(api), level.dimension().location(), pos);
             if (claim == null) return true;
             UUID owner = (UUID) claimOwner.invoke(claim);
-            if (owner == null || owner.equals(actor.getUUID())) return true;
+            if (owner == null || owner.equals(actor)) return true;
             Object party = partyByMember.invoke(partyManager.invoke(api), owner);
-            return party != null && partyMember.invoke(party, actor.getUUID()) != null;
+            return party != null && partyMember.invoke(party, actor) != null;
         } catch (ReflectiveOperationException | LinkageError | RuntimeException ex) {
             broken = true;
             InfinityStones.LOGGER.warn("[infinity] Open Parties and Claims integration disabled: {}", ex.toString());

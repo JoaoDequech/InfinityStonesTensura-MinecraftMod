@@ -94,7 +94,8 @@ public final class Convergence implements Ability {
                         if (proj < -1 || proj > len + 1.5) continue;
                         double lat = ec.subtract(head.add(dir.scale(proj))).length();
                         if (lat > 1.3 + e.getBbWidth() * 0.5 + w || !done.add(e.getId())) continue;
-                        Rules.hurt(p, e, dmg);
+                        if (count >= 6) Rules.hurtHidden(p, e, 100F, 0.60F);
+                        else Rules.hurtPct(p, e, dmg, new float[]{0, 0, 0.12F, 0.18F, 0.26F, 0.35F}[Math.max(2, count)]);
                         e.setDeltaMovement(e.getDeltaMovement().add(dir.x * 0.6, 0.25, dir.z * 0.6));
                         e.hurtMarked = true;
                     }

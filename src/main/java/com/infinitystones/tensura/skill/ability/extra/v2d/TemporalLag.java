@@ -189,7 +189,7 @@ public final class TemporalLag implements Ability {
                     FxNet.runes(l, ring, owner.position().add(0, 0.05, 0), 3.5F, GREEN, 30, -2F);
                 }
                 if (age % 5 == 0) V2dNet.clock(l, clock, owner.position().add(0, owner.getBbHeight() + 0.8, 0), Vec3.ZERO, 0.5F, GREEN, 0xB9FFD2, 10, (age % 20) / 20F);
-                if (age % 2 == 0) predict(owner, l);
+                if (age % 4 == 0) predict(owner, l); // 4-tick cadence: the ghosts below live 9 ticks
                 return true;
             }
             @Override public void end() {
@@ -212,7 +212,7 @@ public final class TemporalLag implements Ability {
         found.sort(Comparator.comparingDouble(e -> e.distanceToSqr(owner)));
         int shown = 0;
         for (Entity e : found) {
-            if (shown++ >= 14) break;
+            if (shown++ >= 10) break;
             Vec3 from = e.getBoundingBox().getCenter(), future;
             if (e instanceof Projectile) {
                 Vec3 v = e.getDeltaMovement(), pos = e.position();
@@ -226,11 +226,11 @@ public final class TemporalLag implements Ability {
                 future = e.position().add(ahead);
             }
             boolean proj = e instanceof Projectile;
-            PacketDistributor.sendToPlayer(owner, TimeNet.of(TimeNet.GHOST, 0, GREEN, 5, proj ? 0.35F : Math.max(0.4F, e.getBbWidth()),
+            PacketDistributor.sendToPlayer(owner, TimeNet.of(TimeNet.GHOST, 0, GREEN, 9, proj ? 0.35F : Math.max(0.4F, e.getBbWidth()),
                     proj ? 0.35F : e.getBbHeight(), future, new Vec3(0, e.getYRot(), 0), -1));
             Vec3 mid = future.add(0, proj ? 0 : e.getBbHeight() * 0.5, 0);
-            for (int i = 1; i < 6; i++) {
-                Vec3 q = from.lerp(mid, i / 6.0);
+            for (int i = 1; i < 4; i++) {
+                Vec3 q = from.lerp(mid, i / 4.0);
                 l.sendParticles(owner, Fx.dust(GREEN, 0.7F), true, q.x, q.y, q.z, 1, 0, 0, 0, 0);
             }
         }

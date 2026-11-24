@@ -378,7 +378,7 @@ public final class WillMode {
             if ((e.horizontalCollision || e.verticalCollision) && en.getValue()[0] < 58) {
                 if (e instanceof LivingEntity le && e.level() instanceof ServerLevel sl) {
                     float dmg = (float) (4 + speed * 9);
-                    le.hurt(sl.damageSources().flyIntoWall(), dmg);
+                    le.hurt(sl.damageSources().flyIntoWall(), com.infinitystones.tensura.skill.ability.extra.Rules.amount(le, dmg, com.infinitystones.tensura.skill.ability.extra.Rules.pctFor(dmg), false));
                     burst(sl, e.position(), 26);
                     sl.sendParticles(ParticleTypes.EXPLOSION, e.getX(), e.getY() + 0.3, e.getZ(), 1, 0, 0, 0, 0);
                     sound(sl, e.position(), SoundEvents.GENERIC_EXPLODE.value(), 0.4F, 1.6F);

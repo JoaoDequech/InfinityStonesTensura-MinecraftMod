@@ -6,6 +6,7 @@ import com.infinitystones.tensura.skill.GauntletStones;
 import com.infinitystones.tensura.skill.HeldItems;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -75,9 +76,14 @@ public final class PowerPunishment implements Ported {
             }
             for (int[] o : RING) {
                 double x = p.getX() + o[0], z = p.getZ() + o[1];
-                boolean grief = PortFx.mayEdit(p, BlockPos.containing(x, p.getY(), z));
-                level.explode(null, x, p.getY(), z, 4F, grief ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE);
+                level.explode(null, x, p.getY(), z, 4F, Level.ExplosionInteraction.NONE); // the original blast: hurts everything, the holder included
             }
+            for (int i = 0; i < 2; i++) { // terrain: two ring points per tick, carved without drops (claims respected)
+                int[] o = RING[(p.tickCount % 4 * 2 + i) % 8];
+                Terrain.carve(level, p, new net.minecraft.world.phys.Vec3(p.getX() + o[0], p.getY(), p.getZ() + o[1]), 4F, 150F);
+            }
+            if (p.tickCount % 20 == 0) // 5% of the holder's max HP a second on top, so the punishment still bites at 1000 HP
+                p.hurt(p.damageSources().magic(), Math.max(4F, p.getMaxHealth() * 0.05F));
             p.addEffect(new MobEffectInstance(MobEffects.WITHER, 20, 1, true, true));
         } else if (old == 10) {
             Radiation.cause(p, "punish", false);

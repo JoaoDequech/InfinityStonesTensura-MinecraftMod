@@ -39,7 +39,7 @@ import java.util.UUID;
  * Cataclysm Forge. Left: start forging (an orb above the hand absorbs the surroundings for up to 4 s); left again:
  * hurl it at the aimed point. Right: cancel. Alt+scroll: size 1–3. The orb takes the nature of the place:
  * STORM (thunder) / INFERNO (Nether, lava, fire) / TIDE (water, rain) / BLIZZARD (cold biome, snow) / QUAKE (default).
- * Never breaks blocks (Inferno lights a few fires only with mobGriefing).
+ * Never breaks blocks (Inferno lights a few fires outside claims). Damage is a share of max HP (6-15% at the core).
  */
 public final class CataclysmForge implements Ability {
     public static final CataclysmForge INSTANCE = new CataclysmForge();
@@ -165,11 +165,14 @@ public final class CataclysmForge implements Ability {
             };
         }
 
+        float pctBase = 0.08F; // share of max HP of the strongest hit (6-15%), set on detonation
+
         void detonate(Vec3 at) {
             Vec3 g = Ground.below(l, at.add(0, 0.5, 0), 10);
             float c = Math.max(0.25F, charge);
             double r = 3 + 3 * c + 2 * (size - 1);
             float dmg = 6 + 14 * c + 4 * (size - 1);
+            pctBase = 0.06F + 0.07F * c + 0.02F * (size - 1);
             PowerNet.circle(l, 0, g.add(0, 0.1, 0), new Vec3(0, 1, 0), (float) r, color, PowerUtil.ACCENT, 40, -2F, 0);
             FxNet.shockwave(l, g.add(0, 0.2, 0), (float) r * 1.6F, color, 24);
             FxNet.shake(l, g, 30 + r * 2, 1.5F + c * 2, 20);
@@ -199,13 +202,13 @@ public final class CataclysmForge implements Ability {
                         Fx.at(l, ParticleTypes.LAVA, g, 30, r * 0.4, 0.2);
                         Fx.at(l, ParticleTypes.FLAME, g, 80, r * 0.5, 0.15);
                         Fx.at(l, ParticleTypes.EXPLOSION_EMITTER, g, 1, 0, 0);
-                        for (LivingEntity e : PowerUtil.victims(p, l, g, r)) { Rules.hurt(p, e, dmg); e.igniteForSeconds(6); PowerUtil.push(e, g, 0.8, 0.5); }
-                        if (Rules.griefing(l)) {
+                        for (LivingEntity e : PowerUtil.victims(p, l, g, r)) { Rules.hurtPct(p, e, dmg, pctBase); e.igniteForSeconds(6); PowerUtil.push(e, g, 0.8, 0.5); }
+                        {
                             RandomSource rnd = l.random;
                             for (int k = 0; k < 6 + size * 4; k++) {
                                 BlockPos fp = BlockPos.containing(g.add((rnd.nextDouble() - 0.5) * r * 1.6, 1, (rnd.nextDouble() - 0.5) * r * 1.6));
                                 BlockPos floor = Ground.floorBlock(l, Vec3.atCenterOf(fp).add(0, 1, 0), 4);
-                                if (floor != null && l.getBlockState(floor.above()).isAir()) l.setBlockAndUpdate(floor.above(), BaseFireBlock.getState(l, floor.above()));
+                                if (floor != null && l.getBlockState(floor.above()).isAir() && com.infinitystones.tensura.skill.ability.extra.Terrain.may(p, l, floor.above())) l.setBlockAndUpdate(floor.above(), BaseFireBlock.getState(l, floor.above()));
                             }
                         }
                         return false;
@@ -231,7 +234,7 @@ public final class CataclysmForge implements Ability {
                 }
                 for (LivingEntity e : PowerUtil.victims(p, l, g, rr + 1)) {
                     if (e.position().distanceTo(g) < rr - 1.5) continue;
-                    if (a % 4 == 0) Rules.hurt(p, e, dmg * 0.35F);
+                    if (a % 4 == 0) Rules.hurtPct(p, e, dmg * 0.35F, pctBase * 0.35F);
                     PowerUtil.push(e, g, 0.55 + size * 0.1, 0.15);
                     e.clearFire();
                 }
@@ -253,7 +256,7 @@ public final class CataclysmForge implements Ability {
                         LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(l);
                         if (bolt != null) { bolt.moveTo(hit); bolt.setVisualOnly(true); l.addFreshEntity(bolt); }
                         l.sendParticles(ParticleTypes.ELECTRIC_SPARK, hit.x, hit.y + 0.5, hit.z, 30, 0.6, 0.6, 0.6, 0.3);
-                        for (LivingEntity e : PowerUtil.victims(p, l, hit, 2.5 + size * 0.5)) { Rules.hurt(p, e, dmg * 0.45F); PowerUtil.push(e, hit, 0.4, 0.3); }
+                        for (LivingEntity e : PowerUtil.victims(p, l, hit, 2.5 + size * 0.5)) { Rules.hurtPct(p, e, dmg * 0.45F, pctBase * 0.45F); PowerUtil.push(e, hit, 0.4, 0.3); }
                     }
                     return a < 100;
                 }
@@ -279,7 +282,7 @@ public final class CataclysmForge implements Ability {
                             l.sendParticles(ParticleTypes.SNOWFLAKE, base.x, base.y + 0.5, base.z, 12, 0.4, 0.6, 0.4, 0.1);
                             Fx.sound(l, base, SoundEvents.GLASS_BREAK, 0.4F, 0.6F + rnd.nextFloat() * 0.4F);
                             for (LivingEntity e : PowerUtil.victims(p, l, base.add(0, 1, 0), 1.8 + sc)) {
-                                Rules.hurt(p, e, dmg * 0.5F);
+                                Rules.hurtPct(p, e, dmg * 0.5F, pctBase * 0.5F);
                                 e.setTicksFrozen(Math.max(e.getTicksFrozen(), 300));
                                 e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 3));
                                 PowerUtil.push(e, base, 0.2, 0.6);
@@ -307,7 +310,7 @@ public final class CataclysmForge implements Ability {
                 }
                 for (LivingEntity e : PowerUtil.victims(p, l, g, rr + 1)) {
                     if (e.position().distanceTo(g) < rr - 1.5) continue;
-                    Rules.hurt(p, e, dmg * 0.7F);
+                    Rules.hurtPct(p, e, dmg * 0.4F, pctBase * 0.4F);
                     PowerUtil.push(e, g, 0.3, 0.9 + size * 0.15);
                 }
                 if (a % 3 == 0) Fx.sound(l, g, SoundEvents.DRIPSTONE_BLOCK_BREAK, 0.7F, 0.4F);

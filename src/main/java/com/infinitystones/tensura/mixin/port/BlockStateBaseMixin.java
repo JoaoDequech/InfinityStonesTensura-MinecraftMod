@@ -50,13 +50,13 @@ public abstract class BlockStateBaseMixin {
         }
         VoxelShape shape = cir.getReturnValue();
         if (shape.isEmpty() || !Intangibility.isIntangible(entity)) return;
-        if (!Intangibility.canPass(entity, (BlockState) (Object) this)) return;
+        if (!Intangibility.canPass(entity, (BlockState) (Object) this, level, pos)) return;
         boolean above = Intangibility.isAbove(entity, shape.max(Direction.Axis.Y), pos);
         if (!above || Intangibility.vertical(entity)) cir.setReturnValue(Shapes.empty());
     }
 
     @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
     private void infinity$phasing(Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (Intangibility.isIntangible(entity) && Intangibility.canPass(entity, (BlockState) (Object) this)) ci.cancel();
+        if (Intangibility.isIntangible(entity) && Intangibility.canPass(entity, (BlockState) (Object) this, level, pos)) ci.cancel();
     }
 }

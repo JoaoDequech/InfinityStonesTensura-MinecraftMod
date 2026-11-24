@@ -92,6 +92,7 @@ public final class CommandPorts {
     }
 
     static void msg(ServerPlayer p, String key, ChatFormatting color, Object... args) {
+        if (com.infinitystones.tensura.skill.NodeEffects.quiet()) return;
         p.displayClientMessage(Component.translatable("ability.infinity.port." + key, args).withStyle(color), true);
     }
 
@@ -111,7 +112,11 @@ public final class CommandPorts {
                 revoke(p);
             }
         }
-        @Override public void stop(ServerPlayer p, StoneTree.Node n) { if (FLYERS.contains(p.getUUID())) revoke(p); }
+        @Override public void stop(ServerPlayer p, StoneTree.Node n) {
+            // a switch found ON at login was left by a crash: the saved abilities still carry its flight
+            if (FLYERS.contains(p.getUUID()) || com.infinitystones.tensura.skill.NodeEffects.loginCleanup()) revoke(p);
+            com.infinitystones.tensura.wheel.FlightControl.restoreSpeed(p);
+        }
     }
 
     static void revoke(ServerPlayer p) {
@@ -353,8 +358,9 @@ public final class CommandPorts {
 
     /**
      * Original: while held, "summon tnt ~±8 ~ ~±8 {Fuse:0}" x8 every tick, power_stone_explode on the first tick, and the
-     * hidden explosion3 made the caster immune to explosions. Same ring of TNT-strength blasts, but block damage follows
-     * mobGriefing / spawn protection, and a violet magic circle marks the blast ring.
+     * hidden explosion3 made the caster immune to explosions. Same ring of TNT-strength blasts, but the terrain is carved
+     * without drops (claims, spawn protection and the world border respected, mobGriefing ignored), entities take a share
+     * of their max HP, and a violet magic circle marks the blast ring.
      */
     static final class CosmicExplosion implements Ported {
         @Override public void start(ServerPlayer p, StoneTree.Node n) {
@@ -365,11 +371,18 @@ public final class CommandPorts {
         }
         @Override public void tick(ServerPlayer p, StoneTree.Node n, int ticks) {
             var level = p.serverLevel();
-            for (int[] o : RING) {
-                double x = p.getX() + o[0], y = p.getY(), z = p.getZ() + o[1];
-                boolean grief = PortFx.mayEdit(p, net.minecraft.core.BlockPos.containing(x, y, z));
-                level.explode(p, x, y, z, 4F, grief ? net.minecraft.world.level.Level.ExplosionInteraction.TNT
-                        : net.minecraft.world.level.Level.ExplosionInteraction.NONE);
+            // two ring points per tick, so each of the eight is carved every four ticks (no drops, claims respected)
+            for (int i = 0; i < 2; i++) {
+                int[] o = RING[(ticks % 4 * 2 + i) % 8];
+                net.minecraft.world.phys.Vec3 c = new net.minecraft.world.phys.Vec3(p.getX() + o[0], p.getY(), p.getZ() + o[1]);
+                com.infinitystones.tensura.skill.ability.extra.Terrain.carve(level, p, c, 4F, 150F);
+                if (ticks % 4 == 0) com.infinitystones.tensura.skill.ability.extra.Terrain.bang(level, c, 4F);
+            }
+            if (ticks % 5 == 0) {
+                // strong public power: 4% of max HP four times a second to everything in the blast ring
+                for (var e : level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, p.getBoundingBox().inflate(13),
+                        e -> com.infinitystones.tensura.skill.ability.extra.Rules.isLiving(e) && com.infinitystones.tensura.skill.ability.extra.Rules.canHarm(p, e)))
+                    com.infinitystones.tensura.skill.ability.extra.Rules.hurtPct(p, e, 8F, 0.04F);
             }
             if (ticks % 20 == 0) FxNet.circleOn(p, 0.1, 9F, Stone.POWER, 30, FxNet.TIERS_2 | FxNet.RAYS | FxNet.FAST);
         }
@@ -434,15 +447,32 @@ public final class CommandPorts {
 
     @SubscribeEvent
     public static void login(PlayerEvent.PlayerLoggedInEvent e) {
-        // attribute modifiers are transient: restore the size the player had, if still holding the stone
-        if (e.getEntity() instanceof ServerPlayer p && p.getPersistentData().getInt(SIZE_CYCLE) != 0) {
-            if (Stone.REALITY.isHeldBy(p)) applySize(p, p.getPersistentData().getInt(SIZE_CYCLE)); else applySize(p, 0);
+        // size and time speed never survive a session (see VolatileModes): back to normal on every login
+        if (e.getEntity() instanceof ServerPlayer p) resetLevels(p, true);
+    }
+
+    /**
+     * Size and time speed are wheel levels rather than switches: put both back to normal (level 0) and keep them there.
+     * Logout / server stop undo the world tick rate too when this player set it; login only clears what a crash left.
+     */
+    public static void resetLevels(ServerPlayer p, boolean login) {
+        var data = p.getPersistentData();
+        if (data.getInt(SIZE_CYCLE) != 0) applySize(p, 0);
+        if (data.getInt(TICK_CYCLE) != 0 || p.getUUID().equals(timeSpeeder)) {
+            if (login && !p.getUUID().equals(timeSpeeder)) {
+                data.putInt(TICK_CYCLE, 0);
+                p.removeEffect(MobEffects.MOVEMENT_SPEED);
+                p.removeEffect(MobEffects.DIG_SPEED);
+            } else {
+                applyTimeSpeed(p, 0);
+            }
         }
-        if (e.getEntity() instanceof ServerPlayer p && p.getPersistentData().getInt(TICK_CYCLE) != 0) {
-            p.getPersistentData().putInt(TICK_CYCLE, 0);
-            p.removeEffect(MobEffects.MOVEMENT_SPEED);
-            p.removeEffect(MobEffects.DIG_SPEED);
+        net.minecraft.nbt.CompoundTag all = data.getCompound(Levels.TAG);
+        boolean changed = false;
+        for (String mode : new String[]{SIZE_MODE, TIME_SPEED_MODE}) {
+            if (all.contains(mode) && all.getInt(mode) != 0) { all.putInt(mode, 0); changed = true; }
         }
+        if (changed) data.put(Levels.TAG, all);
     }
 
     @SubscribeEvent

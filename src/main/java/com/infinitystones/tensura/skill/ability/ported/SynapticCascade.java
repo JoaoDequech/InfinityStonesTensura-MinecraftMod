@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +60,7 @@ public final class SynapticCascade implements Ported {
 
     private static void strike(ServerPlayer caster, StoneTree.Node n, ServerLevel level, LivingEntity target, int index,
                                float damage, int interruptTicks) {
-        target.hurt(PortFx.attack(caster, target), damage);
+        target.hurt(Rules.source(caster, target, false), Rules.amount(target, damage, 0.12F, false));
         if (interruptTicks > 0) {
             target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, interruptTicks, 6, false, true, true));
             if (target instanceof Mob mob) {

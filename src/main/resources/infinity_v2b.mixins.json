@@ -1,5 +1,5 @@
 {
-  "required": true,
+  "required": false,
   "minVersion": "0.8",
   "package": "com.infinitystones.tensura.mixin.v2b",
   "compatibilityLevel": "JAVA_21",
@@ -7,6 +7,6 @@
     "TabModeMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

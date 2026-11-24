@@ -158,7 +158,7 @@ public final class Reaper implements Ability {
                     FxNet.chain(l, 0, p, at, e, SoulKit.ORANGE, 10);
                     float max = e.getMaxHealth();
                     e.invulnerableTime = 0;
-                    e.hurt(Rules.magic(p), Math.max(max, 40F) * 3);
+                    Rules.hurtPct(p, e, 40F, 0.36F);
                     if (!e.isAlive()) {
                         reaped++;
                         SoulKit.soulBurst(l, at, 1.5F);

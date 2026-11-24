@@ -4,6 +4,10 @@ import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.registry.ModSounds;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Executions;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
+import net.minecraft.util.Mth;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,11 +70,13 @@ import java.util.UUID;
  * "particle minecraft:lava" at the hit. The Power Stone damage came from the DamageCycle score (2^0..2^11) and at
  * the top step, carrying all six stones, the beam turned rainbow, did 2147483647 damage and "summon tnt" at the hit.</p>
  *
- * <p>Now: four intensity levels (Alt + scroll, see {@link BeamLevel}): 0 weak (about a sword hit), 1 strong (the
- * original numbers of each beam), 2 lethal (the original maximum, 2048, ignores hit cooldown), 3 explosive / infinite
- * (kills anything mortal, pierces every block, explosions along the path; rainbow with all six stones like the
- * original). World effects of the original stay on every level. Lethal levels hit players even with PvP off (project
- * decision). Visuals are drawn by every client from {@link BeamNet} (client/port/BeamClient).</p>
+ * <p>Now: four intensity levels (Alt + scroll, see {@link BeamLevel}). The beam hits every 5 ticks for a share of the target's
+ * max HP (level 0 about 1% a hit, 1 about 2.5-4%, 2 about 6-9%, with small flat floors for tiny mobs; bosses take a capped
+ * amount) as Tensura magic damage. Level 2 (public max) also digs a tunnel about 1 block wide into what it hits and blasts
+ * the impact (3F) every few ticks; level 3 (hidden) hits for 30% a hit ignoring resistances, carves a tunnel 2-3 blocks
+ * wide along its whole length and blasts the ground where it enters (8F); rainbow with all six stones like the original.
+ * Terrain changes never drop items and respect claims, spawn protection and unbreakable blocks (mobGriefing is not used).
+ * Visuals are drawn by every client from {@link BeamNet} (client/port/BeamClient).</p>
  */
 @EventBusSubscriber(modid = InfinityStones.MOD_ID)
 public final class EnergyBeam implements Ported {
@@ -104,8 +110,31 @@ public final class EnergyBeam implements Ported {
     private static final class Active {
         final StoneTree.Node node; final Profile profile; int ticks; long lastTick; int level = -1; boolean rainbow;
         @Nullable BlockPos heatPos; int heat;
+        @Nullable Terrain.Session session;
+        @Nullable Vec3 carveDir; double carveDist;
         Active(StoneTree.Node node, Profile profile) { this.node = node; this.profile = profile; }
+        Terrain.Session session(ServerPlayer p) {
+            if (session == null || ticks % 100 == 0) session = new Terrain.Session(p);
+            return session;
+        }
     }
+
+    // Damage model (the beam hits every HIT_EVERY ticks): percent of the target's max HP per hit, per level.
+    // 0..2 are the public levels; 3 and 4 are hidden and execute (their percentages only feed the blast damage).
+    // Flat floors keep the public levels lethal for small mobs.
+    private static final int HIT_EVERY = 5;
+    private static final float[] PCT_HUMBLE = {0.010F, 0.025F, 0.060F, 0.30F, 0.30F};
+    private static final float[] PCT_STRONG = {0.012F, 0.030F, 0.075F, 0.30F, 0.30F};
+    private static final float[] PCT_HEAVY = {0.015F, 0.040F, 0.090F, 0.30F, 0.30F};
+    private static final float[] BOSS_CAP = {6F, 12F, 22F, 45F, 45F};
+    private static final float FLOOR_CAP = 30F;
+
+    private static float[] pctTable(Profile pr) {
+        if (pr == POWER) return PCT_STRONG;
+        if (pr == PSIONIC || pr == CELESTIAL) return PCT_HEAVY;
+        return PCT_HUMBLE;
+    }
+
     private static final Map<UUID, Active> ACTIVE = new HashMap<>();
 
     private static @Nullable Profile profileFor(StoneTree.Node n) {
@@ -186,8 +215,8 @@ public final class EnergyBeam implements Ported {
     private static void refresh(ServerPlayer p, Active a) {
         Profile pr = a.profile;
         int lvl = Math.max(0, a.level);
-        float width = pr.width() * (1F + lvl * 0.45F) * (lvl == 3 ? 1.35F : 1F);
-        int flags = (pr.lightning() || lvl >= 2 ? 1 : 0) | (a.rainbow ? 2 : 0) | (lvl == 3 ? 4 : 0);
+        float width = pr.width() * (1F + lvl * 0.45F) * (lvl >= BeamLevel.MAX ? 1.9F : lvl >= BeamLevel.EXECUTE ? 1.35F : 1F);
+        int flags = (pr.lightning() || lvl >= 2 ? 1 : 0) | (a.rainbow ? 2 : 0) | (lvl >= BeamLevel.EXECUTE ? 4 : 0);
         BeamNet.send(p, new BeamNet.Visual(pr.origin(), pr.glow(), pr.core(), lvl, width, pr.distance(), flags, pr.rotationSpeed()));
     }
 
@@ -201,7 +230,7 @@ public final class EnergyBeam implements Ported {
         Vec3 dir = p.getViewVector(1F);
         Vec3 end = start.add(dir.scale(pr.distance()));
 
-        if (lvl == BeamLevel.MAX) { pierce(p, a, start, end, dir); return; }
+        if (lvl >= BeamLevel.EXECUTE) { pierce(p, a, start, end, dir, lvl); return; }
 
         BlockHitResult block = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p));
         Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
@@ -214,7 +243,7 @@ public final class EnergyBeam implements Ported {
             Entity target = ent.getEntity();
             if (!targetable(p, target)) return;
             if (pr.fireSeconds() > 0) target.setRemainingFireTicks(Math.max(target.getRemainingFireTicks(), pr.fireSeconds() * 20));
-            hurt(p, target, pr.damage()[lvl], lvl);
+            if (a.ticks % HIT_EVERY == 0) hurt(p, target, pr, lvl);
             if (lvl >= 1 && target instanceof LivingEntity le && le.isAlive())
                 le.push(dir.x * 0.06 * lvl, 0.02 * lvl, dir.z * 0.06 * lvl);
             return;
@@ -232,7 +261,9 @@ public final class EnergyBeam implements Ported {
         if (state.isAir()) return;
         Vec3 at = bh.getLocation();
         if (pr.lavaOnHit() && a.ticks % 2 == 0) level.sendParticles(ParticleTypes.LAVA, at.x, at.y, at.z, 1, 0, 0, 0, 0);
-        if (!PortFx.mayEdit(p, pos)) return;
+        Terrain.Session terrain = a.session(p);
+        if (!terrain.may(pos)) return;
+        if (lvl == 2) dig(p, a, terrain, at, level, p.getViewVector(1F));
         if (pos.equals(a.heatPos)) a.heat++; else { a.heatPos = pos; a.heat = 1; }
         int needed = switch (lvl) { case 0 -> 4; case 1 -> 2; default -> 1; };
         if (pr.smelt() && a.heat >= needed) {
@@ -245,7 +276,7 @@ public final class EnergyBeam implements Ported {
             if (lvl >= 2 && a.ticks % 3 == 0) { // lethal beam: the heat spreads to the exposed blocks around the hit
                 for (Direction d : Direction.values()) {
                     BlockPos o = pos.relative(d);
-                    if (o.equals(pos.relative(bh.getDirection())) || !PortFx.mayEdit(p, o)) continue;
+                    if (o.equals(pos.relative(bh.getDirection())) || !terrain.may(o)) continue;
                     smelt(level, o);
                 }
             }
@@ -273,45 +304,106 @@ public final class EnergyBeam implements Ported {
     }
 
     /**
-     * Level 3: the beam goes through every block (like the rainbow beam that blew up whatever it touched): kills every
-     * mortal thing along the full length and blows up the terrain where it enters solid ground.
+     * Level 2 (public max): the beam eats a tunnel about 1 block wide into whatever it hits, with a small blast every
+     * few ticks. No drops; claims, spawn protection and unbreakable blocks are respected.
      */
-    private static void pierce(ServerPlayer p, Active a, Vec3 start, Vec3 end, Vec3 dir) {
+    private static void dig(ServerPlayer p, Active a, Terrain.Session terrain, Vec3 at, ServerLevel level, Vec3 dir) {
+        boolean humble = pctTable(a.profile) == PCT_HUMBLE;
+        Vec3 inside = at.add(dir.scale(0.7));
+        BlockPos c = BlockPos.containing(inside);
+        double r = humble ? 0.9 : 1.2;
+        int ir = (int) Math.ceil(r);
+        int removed = 0;
+        for (int dx = -ir; dx <= ir; dx++) for (int dy = -ir; dy <= ir; dy++) for (int dz = -ir; dz <= ir; dz++) {
+            if (dx * dx + dy * dy + dz * dz > r * r + 0.3) continue;
+            if (terrain.remove(c.offset(dx, dy, dz), 60F)) removed++;
+        }
+        if (removed > 0 && a.ticks % 3 == 0)
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, inside.x, inside.y, inside.z, 2, 0.3, 0.3, 0.3, 0.02);
+        if (a.ticks % 8 == 0) {
+            float power = humble ? 2F : 3F;
+            Terrain.boom(level, p, at.add(dir.scale(0.4)), power, 60F);
+            blastDamage(p, level, at, power * 1.6, 2, false);
+        }
+    }
+
+    /** Area damage around an impact: public beams hit for a few percent, the hidden one ignores resistances. */
+    private static void blastDamage(ServerPlayer p, ServerLevel level, Vec3 at, double radius, int lvl, boolean hidden) {
+        float pct = hidden ? 0.10F : 0.03F;
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(at, at).inflate(radius),
+                e -> e.isAlive() && targetable(p, e) && e.getBoundingBox().getCenter().distanceToSqr(at) <= radius * radius)) {
+            if (hidden) Executions.silently(p.server, () -> Rules.hit(p, e, 10F, pct, true, BOSS_CAP[lvl]));
+            else Rules.hit(p, e, 4F, pct, false, BOSS_CAP[lvl]);
+            e.igniteForSeconds(2);
+        }
+    }
+
+    /**
+     * Level 3 (hidden): the beam goes through every block (like the rainbow beam that blew up whatever it touched):
+     * it hits everything mortal along its full length with 30% of max HP per hit ignoring resistances, carves a tunnel
+     * 2-3 blocks wide through the terrain (batched, no drops, claims and unbreakables kept) and blasts the ground
+     * where it enters.
+     */
+    private static void pierce(ServerPlayer p, Active a, Vec3 start, Vec3 end, Vec3 dir, int lvl) {
         ServerLevel level = p.serverLevel();
         Profile pr = a.profile;
         double radius = 0.6 + pr.width() * 2;
         AABB box = new AABB(start, end).inflate(radius + 1);
-        for (Entity e : level.getEntities(p, box, e -> e.isAlive() && !e.isSpectator())) {
-            if (!targetable(p, e)) continue;
-            AABB bb = e.getBoundingBox().inflate(radius);
-            if (bb.clip(start, end).isEmpty() && !bb.contains(start)) continue;
-            if (pr.fireSeconds() > 0) e.setRemainingFireTicks(Math.max(e.getRemainingFireTicks(), pr.fireSeconds() * 20));
-            hurt(p, e, INF, BeamLevel.MAX);
+        if (a.ticks % HIT_EVERY == 0) {
+            for (Entity e : level.getEntities(p, box, e -> e.isAlive() && !e.isSpectator())) {
+                if (!targetable(p, e)) continue;
+                AABB bb = e.getBoundingBox().inflate(radius);
+                if (bb.clip(start, end).isEmpty() && !bb.contains(start)) continue;
+                hurt(p, e, pr, lvl);
+            }
         }
         if (pr.loopSound() != null && a.ticks % 20 == 2) PortFx.sound(level, start, pr.loopSound(), pr.loopVolume(), pr.loopPitch());
-        if (a.ticks % 5 != 0) return;
-        // explosions where the beam enters solid ground (first surface + up to 3 more, at least 8 blocks apart)
+        if (lvl < BeamLevel.MAX) return; // the execution beam leaves the terrain alone
+        Terrain.Session terrain = a.session(p);
+        carveTunnel(a, terrain, level, start, dir, start.distanceTo(end));
+        if (a.ticks % 10 != 0) return;
+        // blasts where the beam enters solid ground (the first surface + one more at least 12 blocks later)
         List<Vec3> blasts = new ArrayList<>();
         boolean inside = false;
         double len = start.distanceTo(end);
-        for (double d = 1.5; d < len && blasts.size() < 4; d += 0.5) {
+        for (double d = 1.5; d < len && blasts.size() < 2; d += 0.5) {
             Vec3 pt = start.add(dir.scale(d));
             BlockPos bp = BlockPos.containing(pt);
             boolean solid = !level.getBlockState(bp).getCollisionShape(level, bp).isEmpty();
-            if (solid && !inside && (blasts.isEmpty() || blasts.get(blasts.size() - 1).distanceTo(pt) >= 8)) blasts.add(pt);
+            if (solid && !inside && (blasts.isEmpty() || blasts.get(blasts.size() - 1).distanceTo(pt) >= 12)) blasts.add(pt);
             inside = solid;
         }
-        ExplosionDamageCalculator spareCaster = new ExplosionDamageCalculator() {
-            @Override public boolean shouldDamageEntity(Explosion explosion, Entity entity) { return entity != p && super.shouldDamageEntity(explosion, entity); }
-        };
         for (Vec3 b : blasts) {
-            boolean grief = PortFx.mayEdit(p, BlockPos.containing(b));
-            level.explode(p, null, spareCaster, b.x, b.y, b.z, 4F, pr.causeFire(),
-                    grief ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE);
-            if (pr.smelt() && grief) smelt(level, BlockPos.containing(b).below());
-            if (a.ticks % 10 == 0) FxNet.circle(level, b.subtract(dir.scale(0.6)), dir.scale(-1), 6F, a.rainbow ? 0xFFFFFF : pr.glow(),
+            if (!terrain.may(BlockPos.containing(b))) continue;
+            Terrain.boom(level, p, b, 8F, Float.MAX_VALUE);
+            blastDamage(p, level, b, 12, BeamLevel.MAX, true);
+            if (pr.smelt()) smelt(level, BlockPos.containing(b).below());
+            if (a.ticks % 20 == 0) FxNet.circle(level, b.subtract(dir.scale(0.6)), dir.scale(-1), 6F, a.rainbow ? 0xFFFFFF : pr.glow(),
                     pr.core(), 24, FxNet.TIERS_1 | FxNet.RAYS | FxNet.FAST);
         }
+    }
+
+    /** Carves a tunnel (radius 2.5) along the beam, at most 600 blocks per tick; restarts when the aim moves. */
+    private static void carveTunnel(Active a, Terrain.Session terrain, ServerLevel level, Vec3 start, Vec3 dir, double len) {
+        if (a.carveDir == null || a.carveDir.dot(dir) < 0.9995) { a.carveDir = dir; a.carveDist = 4.0; }
+        final double r = 2.5;
+        int budget = 600, ir = 3;
+        BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+        double d = a.carveDist;
+        for (; d < len && budget > 0; d += 1.0) {
+            Vec3 c = start.add(dir.scale(d));
+            int cx = Mth.floor(c.x), cy = Mth.floor(c.y), cz = Mth.floor(c.z);
+            if (!level.hasChunkAt(m.set(cx, cy, cz))) { d = len; break; }
+            for (int dx = -ir; dx <= ir; dx++) for (int dy = -ir; dy <= ir; dy++) for (int dz = -ir; dz <= ir; dz++) {
+                double ex = cx + dx + 0.5 - c.x, ey = cy + dy + 0.5 - c.y, ez = cz + dz + 0.5 - c.z;
+                // only the slab around this step along the beam: skip blocks more than half a step ahead/behind
+                double along = ex * dir.x + ey * dir.y + ez * dir.z;
+                if (along < -0.5 || along >= 0.5) continue;
+                if (ex * ex + ey * ey + ez * ez - along * along > r * r) continue;
+                if (terrain.remove(m.set(cx + dx, cy + dy, cz + dz), Float.MAX_VALUE)) budget--;
+            }
+        }
+        a.carveDist = d;
     }
 
     // ---------------- damage ----------------
@@ -319,26 +411,25 @@ public final class EnergyBeam implements Ported {
     /** Who the beam may hit: not the caster, its pets or allies; players ALWAYS (project decision), except creative/spectator. */
     static boolean targetable(ServerPlayer caster, Entity target) {
         if (target == caster || !target.isAlive() || target.isSpectator() || target instanceof ArmorStand) return false;
-        if (target instanceof Player pl) return !pl.isCreative();
+        if (target == caster.getVehicle() || target.isPassengerOfSameVehicle(caster)) return false;
+        if (target instanceof Player pl)
+            return !pl.isCreative() && !(pl instanceof ServerPlayer victim && (com.infinitystones.tensura.compat.ClaimsCompat.isProtected(victim, caster)
+                    || com.infinitystones.tensura.compat.ClaimsCompat.sameParty(caster, victim)));
         if (target instanceof OwnableEntity own && caster.getUUID().equals(own.getOwnerUUID())) return false;
         if (target instanceof TamableAnimal t && t.isOwnedBy(caster)) return false;
         return !caster.isAlliedTo(target);
     }
 
-    private static void hurt(ServerPlayer p, Entity target, float damage, int lvl) {
-        if (damage <= 0) return;
-        if (lvl >= 2) target.invulnerableTime = 0; // lethal: no hit cooldown
-        boolean blockedPvp = target instanceof Player other && (!p.server.isPvpAllowed() || !p.canHarmPlayer(other));
-        DamageSource src;
-        if (lvl == BeamLevel.MAX) {
-            var kill = p.serverLevel().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC_KILL);
-            src = blockedPvp ? new DamageSource(kill) : new DamageSource(kill, p);
-        } else if (blockedPvp) {
-            src = new DamageSource(p.serverLevel().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.MAGIC));
+    /** One beam hit: max(flat floor, pct of max HP) as magic damage; the hidden levels execute (nothing resists it, no death message). */
+    private static void hurt(ServerPlayer p, Entity target, Profile pr, int lvl) {
+        if (lvl >= BeamLevel.EXECUTE) { Executions.kill(target); return; }
+        float floor = Math.min(pr.damage()[lvl], FLOOR_CAP);
+        if (floor <= 0) return;
+        if (target instanceof LivingEntity le) {
+            Rules.hit(p, le, floor, pctTable(pr)[lvl], false, BOSS_CAP[lvl]);
         } else {
-            src = PortFx.attack(p);
+            target.hurt(Rules.source(p, target, false), floor);
         }
-        target.hurt(src, damage);
     }
 
     // ---------------- safety: a beam never outlives its owner's input ----------------

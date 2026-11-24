@@ -59,9 +59,16 @@ public final class WheelPayloads {
     /** Server → client: what the wheel shows. holding = mode id of the channel in progress ("" if none). */
     public record State(List<Entry> entries, String holding, int tiers) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(InfinityStones.id("wheel_state"));
-        public static final StreamCodec<ByteBuf, State> CODEC = StreamCodec.composite(
-                Entry.CODEC.apply(ByteBufCodecs.list()), State::entries, ByteBufCodecs.STRING_UTF8, State::holding,
-                ByteBufCodecs.VAR_INT, State::tiers, State::new);
+        public static final StreamCodec<ByteBuf, State> CODEC = StreamCodec.of((buf, s) -> {
+            Entry.CODEC.apply(ByteBufCodecs.list()).encode(buf, s.entries);
+            ByteBufCodecs.STRING_UTF8.encode(buf, s.holding);
+            ByteBufCodecs.VAR_INT.encode(buf, s.tiers);
+        }, buf -> {
+            List<Entry> entries = Entry.CODEC.apply(ByteBufCodecs.list()).decode(buf);
+            String holding = ByteBufCodecs.STRING_UTF8.decode(buf);
+            int tiers = buf.isReadable() ? ByteBufCodecs.VAR_INT.decode(buf) : 0;
+            return new State(entries, holding, tiers);
+        });
         @Override public Type<State> type() { return TYPE; }
     }
 

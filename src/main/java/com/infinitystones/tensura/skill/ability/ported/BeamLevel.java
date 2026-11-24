@@ -7,7 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 
 /**
- * Energy-beam intensity (0 = weak, 1 = strong, 2 = lethal, 3 = explosive / infinite).
+ * Energy-beam intensity (0 = weak, 1 = strong, 2 = lethal, 3 = execution, 4 = execution + devastation).
  *
  * <p>The only place the beam reads its level. Stored through {@link Levels} — the same per-player compound as the
  * wheel-ux AbilitySettings, key = mode id, range declared as "settings" 0..3 in the tree JSON — so the wheel's
@@ -15,8 +15,10 @@ import net.minecraft.sounds.SoundEvents;
  * client/port/BeamClient (only while the local beam fires) turns itself off when the wheel settings class exists.</p>
  */
 public final class BeamLevel {
-    public static final int MAX = 3;
-    private static final String[] LEVEL_NAMES = {"Weak", "Strong", "Lethal", "Explosive ∞"};
+    /** Highest index: 0..2 public, 3 = execution beam (hidden), 4 = execution + terrain destruction (hidden). */
+    public static final int MAX = 4;
+    public static final int EXECUTE = 3;
+    private static final String[] LEVEL_NAMES = {"Weak", "Strong", "Lethal", "Execution", "Obliteration"};
 
     /** Current level 0..3 of this beam node for this player. */
     public static int get(ServerPlayer p, StoneTree.Node n) {
@@ -43,7 +45,7 @@ public final class BeamLevel {
     }
 
     public static void feedback(ServerPlayer p, int level) {
-        ChatFormatting c = switch (level) { case 0 -> ChatFormatting.AQUA; case 1 -> ChatFormatting.LIGHT_PURPLE; case 2 -> ChatFormatting.RED; default -> ChatFormatting.GOLD; };
+        ChatFormatting c = switch (level) { case 0 -> ChatFormatting.AQUA; case 1 -> ChatFormatting.LIGHT_PURPLE; case 2 -> ChatFormatting.RED; case 3 -> ChatFormatting.GOLD; default -> ChatFormatting.DARK_RED; };
         p.displayClientMessage(Component.translatableWithFallback("ability.infinity.port.beam.level", "Beam: %s",
                 Component.translatableWithFallback("ability.infinity.port.beam.level." + level, LEVEL_NAMES[level]).withStyle(c, ChatFormatting.BOLD)), true);
         p.serverLevel().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.COMPARATOR_CLICK,

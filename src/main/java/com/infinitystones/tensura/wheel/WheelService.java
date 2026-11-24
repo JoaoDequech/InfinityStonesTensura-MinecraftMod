@@ -233,9 +233,22 @@ public final class WheelService {
         if (p.tickCount % 10 == 0) sync(p, false);
     }
 
+    /** Ends the channel in progress (if any) with its normal release, without touching the network (logout, server stop). */
+    public static void releaseChannel(ServerPlayer p) {
+        StoneTree.Node held = HOLDING.remove(p.getUUID());
+        HOLD_TICKS.remove(p.getUUID());
+        if (held == null) return;
+        try {
+            NodeEffects.releaseHold(p, held);
+        } catch (RuntimeException ignored) {
+            // never block a logout
+        }
+    }
+
     @SubscribeEvent
     public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
         UUID id = event.getEntity().getUUID();
+        if (event.getEntity() instanceof ServerPlayer p) releaseChannel(p);
         HOLDING.remove(id); HOLD_TICKS.remove(id); LAST_SYNC.remove(id);
     }
 

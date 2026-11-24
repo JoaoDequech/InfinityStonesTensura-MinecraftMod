@@ -25,6 +25,8 @@ public final class PowerNet {
     public static final int NUKE = 1, CIRCLE = 2, BRAID = 3, KILL = 5;
     /** Circle style bits. */
     public static final int RAINBOW = 1, RAYS = 2, SIMPLE = 4, GLYPHS_ONLY = 8;
+    /** NUKE style bit: the full nuclear animation (mushroom cloud, condensation ring, dust wall, ash, delayed sound, white-out). */
+    public static final int FULL_NUKE = 1;
     /** Stone colours in wheel order (mind, power, space, reality, soul, time). */
     public static final int[] STONE_COLORS = {0xF2D02B, 0xA43CE6, 0x2F8CFF, 0xE22B3B, 0xF28A1A, 0x2BD56A};
 
@@ -33,7 +35,7 @@ public final class PowerNet {
 
     /**
      * kind, id (0 = one-shot), style bits, colours, life (ticks), size, extra, points a/b/c, entity (-1 = none).
-     * NUKE: a = sky centre, b = ground target, c = caster, size = circle radius, extra = fire tick.
+     * NUKE: a = sky centre, b = ground target, c = caster, size = circle radius, extra = fire tick, style bit 1 = full nuclear animation.
      * CIRCLE: a = centre (offset when following entity), b = plane normal, size = radius, extra = spin speed.
      * BRAID: a → b, size = width, style = stone mask (bit = Stone.ordinal()).
      */
@@ -74,8 +76,8 @@ public final class PowerNet {
     }
 
     /** The full Celestial Nuke sky sequence; impact at fireTick. Sent far (sky effect visible from 224 blocks). */
-    public static void nuke(ServerLevel l, int id, Vec3 sky, Vec3 ground, Vec3 caster, float radius, int fireTick, int life, int color, int accent) {
-        send(l, ground, 224, msg(NUKE, id, 0, color, accent, life, radius, fireTick, sky, ground, caster, -1));
+    public static void nuke(ServerLevel l, int id, Vec3 sky, Vec3 ground, Vec3 caster, float radius, int fireTick, int life, int color, int accent, boolean full) {
+        send(l, ground, 224, msg(NUKE, id, full ? FULL_NUKE : 0, color, accent, life, radius, fireTick, sky, ground, caster, -1));
     }
 
     /** Layered magic circle in the plane of normal; follows entity (centre = entity pos + a) when given. */

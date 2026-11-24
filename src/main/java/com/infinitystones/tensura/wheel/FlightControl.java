@@ -69,6 +69,14 @@ public final class FlightControl {
         }
     }
 
+    /** The flight toggle went off (or was found ON after a crash): the flying speed it set goes back to vanilla. */
+    public static void restoreSpeed(ServerPlayer p) {
+        float cur = p.getAbilities().getFlyingSpeed();
+        boolean ours = SPEED_SET.remove(p.getUUID());
+        for (int k = 1; k <= 10 && !ours; k++) ours = Math.abs(cur - 0.02F * k) < 1e-4;
+        if (ours && Math.abs(cur - VANILLA) > 1e-4) { p.getAbilities().setFlyingSpeed(VANILLA); p.onUpdateAbilities(); }
+    }
+
     @SubscribeEvent
     public static void startTracking(PlayerEvent.StartTracking e) {
         if (e.getTarget() instanceof ServerPlayer flyer && PALADIN.contains(flyer.getUUID()) && e.getEntity() instanceof ServerPlayer viewer)
@@ -78,7 +86,8 @@ public final class FlightControl {
     @SubscribeEvent
     public static void logout(PlayerEvent.PlayerLoggedOutEvent e) {
         UUID id = e.getEntity().getUUID();
-        SPEED_SET.remove(id); FAST_TICKS.remove(id); LAST_POS.remove(id);
+        if (SPEED_SET.remove(id) && e.getEntity() instanceof ServerPlayer sp) sp.getAbilities().setFlyingSpeed(VANILLA); // abilities are saved with the player
+        FAST_TICKS.remove(id); LAST_POS.remove(id);
         if (PALADIN.remove(id) && e.getEntity() instanceof ServerPlayer p)
             PacketDistributor.sendToPlayersTrackingEntity(p, new WheelPayloads.FlyPose(p.getId(), false));
     }

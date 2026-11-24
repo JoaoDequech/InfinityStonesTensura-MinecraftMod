@@ -129,8 +129,14 @@ public final class BeamClient {
             if (lvl >= 1 && RNG.nextInt(5) == 0) level.addParticle(ParticleTypes.LAVA, at.x, at.y, at.z, 0, 0, 0);
             if (lvl >= 2 && RNG.nextInt(4) == 0) level.addParticle(ParticleTypes.LARGE_SMOKE, at.x, at.y + 0.2, at.z, 0, 0.05, 0);
         }
-        if (lvl == 3 && age % 6 == 0) level.addParticle(ParticleTypes.FLASH, at.x, at.y, at.z, 0, 0, 0);
-        if (lvl == 3 && RNG.nextInt(3) == 0) level.addParticle(ParticleTypes.SONIC_BOOM, s.from.x + dir.x * 2, s.from.y + dir.y * 2, s.from.z + dir.z * 2, 0, 0, 0);
+        if (lvl >= 3 && age % (lvl >= 4 ? 3 : 6) == 0) level.addParticle(ParticleTypes.FLASH, at.x, at.y, at.z, 0, 0, 0);
+        if (lvl >= 3 && RNG.nextInt(lvl >= 4 ? 2 : 3) == 0) level.addParticle(ParticleTypes.SONIC_BOOM, s.from.x + dir.x * 2, s.from.y + dir.y * 2, s.from.z + dir.z * 2, 0, 0, 0);
+        if (lvl >= 4) {
+            for (int k = 0; k < 4; k++)
+                level.addParticle(ParticleTypes.END_ROD, at.x + RNG.nextGaussian() * 0.6, at.y + RNG.nextGaussian() * 0.6, at.z + RNG.nextGaussian() * 0.6,
+                        RNG.nextGaussian() * 0.25, RNG.nextGaussian() * 0.25, RNG.nextGaussian() * 0.25);
+            if (RNG.nextInt(3) == 0) level.addParticle(ParticleTypes.EXPLOSION, at.x + RNG.nextGaussian() * 1.5, at.y + RNG.nextGaussian(), at.z + RNG.nextGaussian() * 1.5, 0, 0, 0);
+        }
     }
 
     // ---------------- render ----------------
@@ -232,8 +238,9 @@ public final class BeamClient {
         // shock rings racing along the beam (lethal / explosive)
         if (lvl >= 2) {
             float speed = 45F;
-            for (int ri = 0; ri < 6; ri++) {
-                double d = ((time * speed) + ri * (len / 6.0)) % len;
+            int rings = lvl >= 4 ? 10 : 6;
+            for (int ri = 0; ri < rings; ri++) {
+                double d = ((time * speed) + ri * (len / rings)) % len;
                 float fade = (float) Math.sin(Math.PI * d / len);
                 ring(vc, m, a.add(dir.scale(d)), basis, w * (2.4F + lvl * 0.4F), w * 0.22F, dir, glow, 0.45F * fade);
             }
@@ -243,9 +250,13 @@ public final class BeamClient {
         if (lvl >= 1) {
             int c2 = lerp(glow, 0xFFFFFF, 0.5F);
             float cr = w * (6F + lvl * 2.5F) * (0.4F + 0.6F * ease);
-            int style = lvl == 3 ? (3 | 4 | 16) : lvl == 2 ? 1 : 0;
+            int style = lvl >= 3 ? (3 | 4 | 16) : lvl == 2 ? 1 : 0;
             MagicCircles.draw(vc, m, a.add(dir.scale(0.9 + lvl * 0.3)), dir, cr, glow, c2, 0.85F, time, seed, style);
-            if (lvl == 3) MagicCircles.draw(vc, m, a.add(dir.scale(Math.min(len * 0.5, 14))), dir, cr * 1.9F, glow, c2, 0.5F, -time * 0.7F, seed + 7, 1 | 8);
+            if (lvl >= 3) MagicCircles.draw(vc, m, a.add(dir.scale(Math.min(len * 0.5, 14))), dir, cr * 1.9F, glow, c2, 0.5F, -time * 0.7F, seed + 7, 1 | 8);
+            if (lvl >= 4) {
+                MagicCircles.draw(vc, m, a.add(dir.scale(Math.min(len * 0.8, 26))), dir, cr * 2.8F, glow, c2, 0.4F, time * 0.5F, seed + 11, 3 | 16);
+                MagicCircles.draw(vc, m, a.add(dir.scale(1.6)), dir, cr * 0.55F, 0xFFFFFF, c2, 0.9F, -time * 1.6F, seed + 13, 1 | 8);
+            }
             if (lvl >= 2 && grow >= 1F && s.hit) MagicCircles.draw(vc, m, b.subtract(dir.scale(0.05)), dir.scale(-1), cr * 0.9F, glow, c2, 0.6F, time * 1.3F, seed + 3, 8);
         }
 
@@ -407,11 +418,13 @@ public final class BeamClient {
         if (mc.player == null || BeamNet.CLIENT.isEmpty()) return;
         float strength = 0;
         for (Map.Entry<Integer, BeamNet.Visual> entry : BeamNet.CLIENT.entrySet()) {
-            if (entry.getValue().level() < 3) continue;
+            int bl = entry.getValue().level();
+            if (bl < 3) continue;
             Entity en = mc.level == null ? null : mc.level.getEntity(entry.getKey());
             if (en == null) continue;
             double dist = en.distanceTo(mc.player);
-            strength = Math.max(strength, en == mc.player ? 0.35F : (float) Math.max(0, 0.3 - dist / 80));
+            float k = bl >= 4 ? 1.6F : 1F;
+            strength = Math.max(strength, en == mc.player ? 0.35F * k : (float) Math.max(0, 0.3 * k - dist / 80));
         }
         if (strength <= 0) return;
         float t = (float) ((BeamNet.clientTicks + e.getPartialTick()) * 1.7);

@@ -217,7 +217,7 @@ public final class LostLantern implements Ability {
                     double dist = dir.length();
                     if (dist < 1.0) {
                         w.dead = true;
-                        Rules.hurt(p, w.target, HIT);
+                        Rules.hurtPct(p, w.target, HIT, 0.02F);
                         end(l, aim, true);
                         continue;
                     }

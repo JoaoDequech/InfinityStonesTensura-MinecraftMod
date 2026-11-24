@@ -94,9 +94,10 @@ public final class Fx {
 
     public static void sound(ServerLevel l, Vec3 v, Holder<SoundEvent> e, float vol, float pitch) { sound(l, v, e.value(), vol, pitch); }
 
-    public static void bar(ServerPlayer p, String key, Object... args) { p.displayClientMessage(Component.translatable(key, args), true); }
+    public static void bar(ServerPlayer p, String key, Object... args) { if (com.infinitystones.tensura.skill.NodeEffects.quiet()) return; p.displayClientMessage(Component.translatable(key, args), true); }
 
     public static void bar(ServerPlayer p, Stone s, String key, Object... args) {
+        if (com.infinitystones.tensura.skill.NodeEffects.quiet()) return;
         p.displayClientMessage(Component.translatable(key, args).withColor(s.color() & 0xFFFFFF), true);
     }
 

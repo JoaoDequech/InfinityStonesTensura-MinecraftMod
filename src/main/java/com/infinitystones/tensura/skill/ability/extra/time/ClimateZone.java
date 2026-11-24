@@ -166,7 +166,7 @@ public final class ClimateZone implements Ability {
         if (z.age == DURATION - 200) Fx.bar(owner, Stone.TIME, "infinity.extra.time.climate.ending");
         if (z.climate == TimeNet.C_NONE) return true;
         RandomSource rnd = l.random;
-        boolean grief = Rules.griefing(l);
+        boolean grief = true; // terrain changes no longer depend on mobGriefing; claims are checked per block
         switch (z.climate) {
             case TimeNet.C_STORM -> {
                 if (z.age % 10 == 0 && rnd.nextFloat() < 0.22F) lightning(z, owner);
@@ -252,7 +252,7 @@ public final class ClimateZone implements Ability {
         BlockPos pos = column(z, rnd, 0);
         if (Math.abs(pos.getY() - z.c.y) > 30) return;
         BlockState snow = Blocks.SNOW.defaultBlockState();
-        if (z.level.getBlockState(pos).isAir() && snow.canSurvive(z.level, pos)) z.level.setBlock(pos, snow, 3);
+        if (z.level.getBlockState(pos).isAir() && snow.canSurvive(z.level, pos) && com.infinitystones.tensura.compat.ClaimsCompat.canModify(z.owner, z.level, pos)) z.level.setBlock(pos, snow, 3);
     }
 
     private static void freezeEdge(Zone z, RandomSource rnd) {
@@ -260,7 +260,8 @@ public final class ClimateZone implements Ability {
         BlockPos water = top.below();
         if (Math.abs(water.getY() - z.c.y) > 30) return;
         BlockState s = z.level.getBlockState(water);
-        if (s.is(Blocks.WATER) && z.level.getFluidState(water).isSourceOfType(Fluids.WATER) && z.level.getBlockState(top).isAir())
+        if (s.is(Blocks.WATER) && z.level.getFluidState(water).isSourceOfType(Fluids.WATER) && z.level.getBlockState(top).isAir()
+                && com.infinitystones.tensura.compat.ClaimsCompat.canModify(z.owner, z.level, water))
             z.level.setBlock(water, Blocks.FROSTED_ICE.defaultBlockState(), 3);
     }
 

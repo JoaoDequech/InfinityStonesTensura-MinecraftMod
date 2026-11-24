@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -73,7 +74,7 @@ public final class TitanicCharge implements Ported {
         for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class, area,
                 l -> l.isAlive() && l instanceof Enemy && !struck.contains(l.getUUID()) && PortFx.canAffect(caster, l))) {
             struck.add(target.getUUID());
-            target.hurt(PortFx.attack(caster, target), damage);
+            target.hurt(PortFx.attack(caster, target), Rules.amount(target, damage, 0.30F, false));
             target.push(direction.x * knockback, 0.38D, direction.z * knockback);
             target.hurtMarked = true;
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, target.getX(), target.getEyeY(), target.getZ(),

@@ -35,7 +35,7 @@
         "label": "infinity.setting.v2d.bomb_fuse"
       },
       "stats": {
-        "damage": "2 a 3 ❤",
+        "damage": "3% vida máx.",
         "range": "40 blocos",
         "duration": "3 a 10 s",
         "area": "7 blocos",

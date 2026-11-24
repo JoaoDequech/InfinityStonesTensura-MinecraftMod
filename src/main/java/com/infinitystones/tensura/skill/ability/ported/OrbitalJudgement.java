@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -237,7 +238,7 @@ public final class OrbitalJudgement implements Ported {
                 target.hurtMarked = true;
             }
             if (damageTargets && caster != null && target.isAlive() && PortFx.canAffect(caster, target)) {
-                target.hurt(PortFx.attack(caster, target), prm.damage);
+                target.hurt(Rules.source(caster, target, false), Rules.amount(target, prm.damage, 0.20F, false));
                 renderImpact(level, target, prm);
             }
         }

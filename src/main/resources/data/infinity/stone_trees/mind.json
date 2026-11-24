@@ -980,7 +980,7 @@
                   },
                   {
                       "id":  "aim",
-                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "settings": {"min": 0, "max": 4, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3", "ability.infinity.port.beam.level.4"]},
                       "original_type":  "palladium:aim",
                       "title":  "Power Blast",
                       "description":  "@ability.infinity.mind_stone.power_blast.description",
@@ -1048,7 +1048,7 @@
                   },
                   {
                       "id":  "power_blast_head",
-                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "settings": {"min": 0, "max": 4, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3", "ability.infinity.port.beam.level.4"]},
                       "original_type":  "palladium:energy_beam",
                       "title":  "Power Blast",
                       "description":  "@ability.infinity.mind_stone.power_blast.description",
@@ -1449,7 +1449,7 @@
                   },
                   {
                       "id":  "psionic_overload_aim",
-                      "settings": {"min": 0, "max": 3, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "settings": {"min": 0, "max": 4, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3", "ability.infinity.port.beam.level.4"]},
                       "original_type":  "palladium:aim",
                       "title":  "@ability.infinity.mind_stone.psionic_overload.title",
                       "description":  "@ability.infinity.mind_stone.psionic_overload.description",

@@ -47,13 +47,17 @@ public final class PowerFxClient {
     }
 
     @SubscribeEvent
-    public static void logout(ClientPlayerNetworkEvent.LoggingOut e) { KEYED.clear(); ONE_SHOT.clear(); }
+    public static void logout(ClientPlayerNetworkEvent.LoggingOut e) { KEYED.clear(); ONE_SHOT.clear(); NukeCloud.clear(); }
 
     @SubscribeEvent
     public static void tick(ClientTickEvent.Post e) {
         if (Minecraft.getInstance().isPaused()) return;
         for (Iterator<Inst> it = ONE_SHOT.iterator(); it.hasNext(); ) { Inst i = it.next(); if (++i.age > i.f.life()) it.remove(); }
         KEYED.values().removeIf(i -> ++i.age > i.f.life());
+        Minecraft mc = Minecraft.getInstance();
+        for (Inst i : KEYED.values())
+            if (i.f.kind() == PowerNet.NUKE && (i.f.style() & PowerNet.FULL_NUKE) != 0) NukeCloud.tick(mc, i.f, i.age - Math.max(20, (int) i.f.extra()));
+        NukeCloud.pumpSounds(mc);
     }
 
     @SubscribeEvent
@@ -133,7 +137,8 @@ public final class PowerFxClient {
 
     private static void nuke(PDraw d, Inst i, float pt, PoseStack ps, MultiBufferSource buf) {
         PowerNet.Msg f = i.f;
-        float t = i.age + pt, F = Math.max(20, f.extra()), L = Math.max(F + 10, f.life());
+        // the sky circles live 50 ticks after the impact; the mushroom cloud (NukeCloud) outlasts them
+        float t = i.age + pt, F = Math.max(20, f.extra()), L = F + 50;
         Vec3 A = f.a(), B = f.b(), C = f.c();
         float R = f.size();
         int c1 = f.color(), c2 = f.color2();
@@ -157,8 +162,10 @@ public final class PowerFxClient {
                 flare(ps, buf, B.add(0, 1, 0), R * 2.4F * k + 4, c1, k * 0.8F, -time);
             }
             if (t < 40) flare(ps, buf, C.add(0, 1, 0), 2.5F, c1, (1 - t / 40F), time * 2);
+            if (t >= F) cloudGlow(ps, buf, B, R, t - F);
             return;
         }
+        if (t > L) return;
 
         // 1) pillar from the caster to the sky
         if (t < 44) {
@@ -248,6 +255,24 @@ public final class PowerFxClient {
         }
     }
 
+    /** Hot glow inside the mushroom cloud: the fireball lifting off, the underside of the cap, the base of the stem. */
+    private static void cloudGlow(PoseStack ps, MultiBufferSource buf, Vec3 B, float R, float tt) {
+        if (tt > 200) return;
+        float rise = easeOut(tt / 200F);
+        double h = R * 3.0 * rise;
+        if (tt < 110) {
+            float k = 1 - tt / 110F;
+            Vec3 fc = B.add(0, Math.min(h * 0.6, tt * 0.9) + R * 0.25, 0);
+            flare(ps, buf, fc, R * 1.3F * k + 2, 0xFF9A3A, k, tt * 0.02);
+            flare(ps, buf, fc, R * 0.6F * k + 1, 0xFFE2A0, k, -tt * 0.03);
+        }
+        if (tt > 8 && tt < 190) {
+            float k = Mth.clamp(1 - tt / 190F, 0, 1);
+            flare(ps, buf, B.add(0, h - R * 0.1, 0), R * 1.1F * (0.4F + rise * 0.6F), 0xFF7A1A, 0.55F * k, -tt * 0.01F);
+        }
+        if (tt < 150) flare(ps, buf, B.add(0, R * 0.35, 0), R * 0.9F, 0xFF6A18, 0.5F * (1 - tt / 150F), 0);
+    }
+
     // ================================================================== screen: sky darkens near a charging nuke
 
     @SubscribeEvent
@@ -255,14 +280,19 @@ public final class PowerFxClient {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || KEYED.isEmpty()) return;
         float pt = e.getPartialTick().getGameTimeDeltaPartialTick(true);
-        float dark = 0;
+        float dark = 0, white = 0;
         for (Inst i : KEYED.values()) {
             if (i.f.kind() != PowerNet.NUKE) continue;
+            if ((i.f.style() & PowerNet.FULL_NUKE) != 0) white = Math.max(white, NukeCloud.whiteout(mc, i.f, i.age + pt - Math.max(20, i.f.extra())));
             double dist = mc.player.position().distanceTo(i.f.b());
             if (dist > 110) continue;
             float t = i.age + pt, F = Math.max(20, i.f.extra());
             float k = t < F ? Mth.clamp((t - F * 0.35F) / (F * 0.65F), 0, 1) : Mth.clamp(1 - (t - F) / 8F, 0, 1);
             dark = Math.max(dark, k * (float) (1 - dist / 110 * 0.6));
+        }
+        if (white > 0.01F) {
+            GuiGraphics wg = e.getGuiGraphics();
+            wg.fill(0, 0, wg.guiWidth(), wg.guiHeight(), ((int) (white * 255) << 24) | 0xFFF8EC);
         }
         if (dark <= 0.01F) return;
         GuiGraphics g = e.getGuiGraphics();

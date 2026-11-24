@@ -2,15 +2,17 @@
   "nodes": [
     {
       "id": "celestial_annihilation_aim", "original_type": "infinity:celestial_nuke",
+      "stats": { "damage": "10000 at the centre → 100 at the edge, ignores resistances · crater", "range": "160 m", "duration": "5 s charge", "area": "r 13 / 22 m", "players": true },
       "title": "@ability.infinity.power_stone.celestial_nuke.title", "description": "@ability.infinity.power_stone.celestial_nuke.description",
       "icon": "minecraft:nether_star", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 32 }, "parents": ["cosmic_resonance"], "requires_stones": [],
       "activation": "press", "cooldown_ticks": 0, "in_tree": true, "in_bar": true, "gui_position": [0, -4.5], "aim": true,
-      "settings": {"min": 1, "max": 3, "step": 1, "default": 1, "label": "ability.infinity.power_stone.celestial_nuke.setting",
-        "values": ["ability.infinity.power_stone.celestial_nuke.setting.1", "ability.infinity.power_stone.celestial_nuke.setting.2", "ability.infinity.power_stone.celestial_nuke.setting.3"]},
+      "settings": {"min": 1, "max": 4, "cap1": 2, "step": 1, "default": 1, "label": "ability.infinity.power_stone.celestial_nuke.setting",
+        "values": ["ability.infinity.power_stone.celestial_nuke.setting.1", "ability.infinity.power_stone.celestial_nuke.setting.2", "ability.infinity.power_stone.celestial_nuke.setting.3", "ability.infinity.power_stone.celestial_nuke.setting.4"]},
       "commands": [], "first_tick_commands": [], "last_tick_commands": []
     },
     {
       "id": "cataclysm_forge", "original_type": "infinity:cataclysm_forge",
+      "stats": { "damage": "6–15% max HP", "range": "Aim", "duration": "Instant (storm 5 s)", "area": "r 3–10 m", "players": true },
       "title": "@ability.infinity.power_stone.cataclysm_forge.title", "description": "@ability.infinity.power_stone.cataclysm_forge.description",
       "icon": "minecraft:fire_charge", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 24},
       "parents": ["cosmic_resonance"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -20,6 +22,7 @@
     },
     {
       "id": "debris_orbit", "original_type": "infinity:debris_orbit",
+      "stats": { "damage": "4% max HP per piece", "range": "48 m", "duration": "30 s", "area": "Up to 8 pieces", "players": true },
       "title": "@ability.infinity.power_stone.debris_orbit.title", "description": "@ability.infinity.power_stone.debris_orbit.description",
       "icon": "minecraft:mossy_cobblestone", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 16},
       "parents": ["meteor_storm"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -28,7 +31,7 @@
     },
     {
       "id": "overcharge", "original_type": "infinity:overcharge",
-      "stats": { "damage": "7 ❤ (bomb)", "range": "32 m", "duration": "3 s fuse · 20 s buff", "area": "r 4 m (bomb)", "players": true },
+      "stats": { "damage": "8% max HP (bomb)", "range": "32 m", "duration": "3 s fuse · 20 s buff", "area": "r 4 m (bomb)", "players": true },
       "title": "@ability.infinity.power_stone.overcharge.title", "description": "@ability.infinity.power_stone.overcharge.description",
       "icon": "minecraft:glowstone_dust", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 18},
       "parents": ["impower"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -37,7 +40,7 @@
     },
     {
       "id": "seismic_wave", "original_type": "infinity:seismic_wave",
-      "stats": { "damage": "2.5 ❤", "range": "10–30 m", "duration": "Instant", "area": "Line / ring", "players": true },
+      "stats": { "damage": "3% max HP", "range": "10–30 m", "duration": "Instant", "area": "Line / ring", "players": true },
       "title": "@ability.infinity.power_stone.seismic_wave.title", "description": "@ability.infinity.power_stone.seismic_wave.description",
       "icon": "minecraft:cracked_stone_bricks", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 14},
       "parents": ["explosion2"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -47,7 +50,7 @@
     },
     {
       "id": "meteor_gate", "original_type": "infinity:meteor_gate",
-      "stats": { "damage": "5 ❤ + fire, per meteor", "range": "96 m", "duration": "4–6 s", "area": "r 3 m per meteor", "players": true },
+      "stats": { "damage": "10% max HP + fire + crater, per meteor", "range": "96 m", "duration": "4–6 s", "area": "r 5 m per meteor", "players": true },
       "title": "@ability.infinity.power_stone.meteor_gate.title", "description": "@ability.infinity.power_stone.meteor_gate.description",
       "icon": "minecraft:magma_block", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 26},
       "parents": ["meteor_storm"], "requires_stones": ["infinity:space_stone"], "activation": "press", "cooldown_ticks": 0,
@@ -57,6 +60,7 @@
     },
     {
       "id": "convergence", "original_type": "infinity:convergence",
+      "stats": { "damage": "12–35% max HP (2–5 stones) · six stones ignore resistances", "range": "96 m", "duration": "Instant", "area": "Beam line", "players": true },
       "title": "@ability.infinity.power_stone.convergence.title", "description": "@ability.infinity.power_stone.convergence.description",
       "icon": "minecraft:beacon", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 40},
       "parents": ["celestial_annihilation_aim"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -145,7 +149,7 @@
     },
     {
       "id": "gravity_hammer",
-      "stats": { "damage": "5–15 ❤", "range": "Self (leap)", "duration": "Instant", "area": "r 5–12 m", "players": true },
+      "stats": { "damage": "6–18% max HP", "range": "Self (leap)", "duration": "Instant", "area": "r 5–12 m", "players": true },
       "original_type": "infinity:gravity_hammer",
       "title": "@ability.infinity.power_stone.gravity_hammer.title",
       "description": "@ability.infinity.power_stone.gravity_hammer.description",
@@ -165,7 +169,7 @@
     },
     {
       "id": "prism_barrage",
-      "stats": { "damage": "2.5–3 ❤ per lance", "range": "48 m", "area": "Fan / burst", "players": true },
+      "stats": { "damage": "3% max HP per lance", "range": "48 m", "area": "Fan / burst", "players": true },
       "original_type": "infinity:prism_barrage",
       "title": "@ability.infinity.power_stone.prism_barrage.title",
       "description": "@ability.infinity.power_stone.prism_barrage.description",

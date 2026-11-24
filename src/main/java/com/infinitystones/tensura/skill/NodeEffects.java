@@ -151,8 +151,74 @@ public final class NodeEffects {
     @SubscribeEvent
     public static void respawn(PlayerEvent.PlayerRespawnEvent event) { RUNNING.remove(event.getEntity().getUUID()); }
 
+    // ---------------- volatile switches (see VolatileModes): off on logout, server stop and (defensively) login ----------------
+
+    private static boolean quiet, loginCleanup;
+
+    /** True while a volatile switch-off runs: ports skip their action-bar messages. */
+    public static boolean quiet() { return quiet; }
+
+    /** True while the login pass stops switches a crash left ON (their state may exist only in the saved player). */
+    public static boolean loginCleanup() { return loginCleanup; }
+
+    /**
+     * Turns every volatile switch off with its normal stop(). With {@code leftovers} (login) a switch found stored as ON
+     * without running is also stopped, so whatever a crash left behind (attributes, flags, effects) is cleaned up.
+     */
+    static void switchOffVolatile(ServerPlayer p, boolean leftovers) {
+        Set<String> running = RUNNING.get(p.getUUID());
+        CompoundTag all = p.getPersistentData().getCompound(TOGGLES);
+        boolean before = quiet, beforeLogin = loginCleanup;
+        quiet = true;
+        loginCleanup = leftovers;
+        try {
+            for (Stone stone : Stone.values()) {
+                for (StoneTree.Node node : StoneTree.of(stone).nodes.values()) {
+                    if (!VolatileModes.is(node)) continue;
+                    String key = node.modeId();
+                    boolean stored = all.getBoolean(key);
+                    boolean was = running != null && running.remove(key);
+                    if (stored) all.putBoolean(key, false);
+                    if (!was && !(leftovers && stored)) continue;
+                    try {
+                        if (!NodeActions.stop(p, node)) run(p, node.lastTick());
+                    } catch (RuntimeException ignored) {
+                        // a failing clean-up must never block a logout or the server stop
+                    }
+                }
+            }
+            if (!all.isEmpty()) p.getPersistentData().put(TOGGLES, all);
+            try {
+                com.infinitystones.tensura.skill.ability.ported.CommandPorts.resetLevels(p, leftovers);
+            } catch (RuntimeException ignored) {
+            }
+        } finally {
+            quiet = before;
+            loginCleanup = beforeLogin;
+        }
+    }
+
     @SubscribeEvent
-    public static void logout(PlayerEvent.PlayerLoggedOutEvent event) { RUNNING.remove(event.getEntity().getUUID()); }
+    public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p) {
+            com.infinitystones.tensura.wheel.WheelService.releaseChannel(p);
+            switchOffVolatile(p, false);
+        }
+        RUNNING.remove(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public static void login(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p) switchOffVolatile(p, true);
+    }
+
+    @SubscribeEvent
+    public static void stopping(net.neoforged.neoforge.event.server.ServerStoppingEvent event) {
+        for (ServerPlayer p : List.copyOf(event.getServer().getPlayerList().getPlayers())) {
+            com.infinitystones.tensura.wheel.WheelService.releaseChannel(p);
+            switchOffVolatile(p, false);
+        }
+    }
 
     // ---------------- command replay ----------------
 

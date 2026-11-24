@@ -183,7 +183,7 @@ public final class SoulLink implements Ability {
                 FxNet.beam(l, from, o.position().add(0, o.getBbHeight() * 0.5, 0), SoulKit.LIGHT, 0.16F, 8);
                 o.invulnerableTime = 0;
                 o.setLastHurtByPlayer(owner);
-                o.hurt(Rules.magic(owner), 6F);
+                Rules.hurtPct(owner, o, 6F, 0.05F);
                 SoulKit.soulBurst(l, o.position().add(0, o.getBbHeight() * 0.5, 0), 0.7F);
             }
         } finally { sharing = prev; }

@@ -8,7 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -22,6 +26,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +41,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @EventBusSubscriber(modid = InfinityStones.MOD_ID)
 public final class Intangibility implements Ported {
     private static final Set<UUID> SERVER = ConcurrentHashMap.newKeySet();
+    /** Last spot where the player stood in the open, for the safety net below the world. */
+    private static final Map<UUID, Vec3> SAFE = new ConcurrentHashMap<>();
+    /** Blocks this close to the bottom of the world stay solid, so intangibility can never drop anybody into the void. */
+    private static final int FLOOR = 4;
     /** Local player's own state on the client (set by {@link Sync}). */
     public static volatile boolean clientSelf;
 
@@ -57,6 +66,7 @@ public final class Intangibility implements Ported {
             PacketDistributor.sendToPlayer(p, new Sync(true));
         }
         VisualSync.set(p, VisualSync.VIBRATE, true);
+        safety(p, ticks);
         AttributeModifier.apply(p, Attributes.ENTITY_INTERACTION_RANGE, AttributeModifier.modifierId(n, "_reach"), -1,
                 net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         AttributeModifier.apply(p, Attributes.BLOCK_INTERACTION_RANGE, AttributeModifier.modifierId(n, "_breach"), -1,
@@ -67,11 +77,58 @@ public final class Intangibility implements Ported {
     public void stop(ServerPlayer p, StoneTree.Node n) {
         if (!"intangibility".equals(n.id())) return;
         SERVER.remove(p.getUUID());
+        SAFE.remove(p.getUUID());
         PacketDistributor.sendToPlayer(p, new Sync(false));
         VisualSync.set(p, VisualSync.VIBRATE, false);
         AttributeModifier.remove(p, Attributes.ENTITY_INTERACTION_RANGE, AttributeModifier.modifierId(n, "_reach"));
         AttributeModifier.remove(p, Attributes.BLOCK_INTERACTION_RANGE, AttributeModifier.modifierId(n, "_breach"));
         PortFx.sound(p.serverLevel(), p.position(), ModSounds.MIND_STONE_PHASE, 0.4F, 0.8F);
+        pushOut(p);
+    }
+
+    // ---------------- never stuck, never lost ----------------
+
+    /** Every few ticks: remember where the player stands in the open; below the world, put them back there. */
+    private static void safety(ServerPlayer p, int ticks) {
+        ServerLevel level = p.serverLevel();
+        if (p.getY() < level.getMinBuildHeight() + 0.5) {
+            Vec3 back = SAFE.get(p.getUUID());
+            if (back == null) {
+                BlockPos s = level.getSharedSpawnPos();
+                back = new Vec3(s.getX() + 0.5, level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, s.getX(), s.getZ()) + 1, s.getZ() + 0.5);
+            }
+            p.teleportTo(level, back.x, back.y, back.z, p.getYRot(), p.getXRot());
+            p.setDeltaMovement(Vec3.ZERO);
+            p.fallDistance = 0;
+            return;
+        }
+        if (ticks % 10 != 0 || !p.onGround()) return;
+        BlockPos feet = p.blockPosition(), head = BlockPos.containing(p.getEyePosition());
+        if (!level.getBlockState(feet).isSuffocating(level, feet) && !level.getBlockState(head).isSuffocating(level, head))
+            SAFE.put(p.getUUID(), p.position());
+    }
+
+    /** Turning it off inside blocks: move to the nearest free space instead of suffocating. */
+    static void pushOut(ServerPlayer p) {
+        ServerLevel level = p.serverLevel();
+        AABB box = p.getBoundingBox();
+        if (level.noCollision(p, box)) return;
+        int min = level.getMinBuildHeight(), max = level.getMaxBuildHeight();
+        BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+        for (int d = 1; d <= 16; d++) {
+            for (int dx = -d; dx <= d; dx++) for (int dy = -d; dy <= d; dy++) for (int dz = -d; dz <= d; dz++) {
+                if (Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz))) != d) continue;
+                double y = p.getY() + dy;
+                if (y < min + FLOOR + 1 || y + p.getBbHeight() > max) continue;
+                if (!level.hasChunkAt(at.set(p.getX() + dx, y, p.getZ() + dz))) continue;
+                AABB moved = box.move(dx, dy, dz);
+                if (!level.noCollision(p, moved) || level.containsAnyLiquid(moved)) continue;
+                p.teleportTo(level, p.getX() + dx, y, p.getZ() + dz, p.getYRot(), p.getXRot());
+                p.setDeltaMovement(Vec3.ZERO);
+                p.fallDistance = 0;
+                return;
+            }
+        }
     }
 
     // ---------------- queried by the mixin ----------------
@@ -82,7 +139,8 @@ public final class Intangibility implements Ported {
     }
 
     /** Whether the entity may pass through this block (vertical = also the floor/ceiling). */
-    public static boolean canPass(Entity e, BlockState state) {
+    public static boolean canPass(Entity e, BlockState state, BlockGetter level, BlockPos pos) {
+        if (pos.getY() <= level.getMinBuildHeight() + FLOOR) return false;
         return !(state.is(Blocks.BEDROCK) || state.is(Blocks.BARRIER) || state.is(Blocks.END_PORTAL_FRAME)
                 || state.is(Blocks.REINFORCED_DEEPSLATE) || state.is(Blocks.END_GATEWAY));
     }
@@ -102,7 +160,10 @@ public final class Intangibility implements Ported {
     }
 
     @SubscribeEvent
-    public static void logout(PlayerEvent.PlayerLoggedOutEvent e) { SERVER.remove(e.getEntity().getUUID()); }
+    public static void logout(PlayerEvent.PlayerLoggedOutEvent e) {
+        SERVER.remove(e.getEntity().getUUID());
+        SAFE.remove(e.getEntity().getUUID());
+    }
 
     // ---------------- network ----------------
 

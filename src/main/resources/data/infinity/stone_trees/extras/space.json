@@ -162,6 +162,7 @@
     {
       "id": "soul_rift",
       "original_type": "infinity:soul_rift",
+      "stats": {"damage": "2–5% max HP every 0.5 s · 15% at the end", "range": "Aim", "duration": "6 s", "area": "r 12 m", "players": true},
       "title": "@ability.infinity.space_stone.soul_rift.title",
       "description": "@ability.infinity.space_stone.soul_rift.description",
       "icon": "minecraft:ender_eye",
@@ -211,6 +212,7 @@
     {
       "id": "pocket_orbit",
       "original_type": "infinity:pocket_orbit",
+      "stats": {"damage": "3% max HP per second · 4% on sling", "range": "Self", "duration": "Toggle", "area": "Up to 8 creatures", "players": true},
       "title": "@ability.infinity.space_stone.pocket_orbit.title",
       "description": "@ability.infinity.space_stone.pocket_orbit.description",
       "icon": "minecraft:heart_of_the_sea",

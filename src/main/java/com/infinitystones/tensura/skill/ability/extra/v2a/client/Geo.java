@@ -26,6 +26,19 @@ final class Geo {
         quad(p, vc, x1, y0, z0, x0, y0, z0, x0, y1, z0, x1, y1, z0, x0 * t, y0 * t, x1 * t, y1 * t, 0, 0, -1, light, r * 0.93F, g * 0.93F, b * 0.93F);
     }
 
+    /** Cube of half-size h around the origin with the same texture patch (u0..u1, v0..v1) on every face. */
+    static void uvCube(PoseStack ps, VertexConsumer vc, float h, float u0, float v0, float u1, float v1,
+                       int light, float r, float g, float b) {
+        PoseStack.Pose p = ps.last();
+        float n = -h;
+        quad(p, vc, h, n, n, h, n, h, h, h, h, h, h, n, u0, v0, u1, v1, 1, 0, 0, light, r * 0.86F, g * 0.86F, b * 0.86F);
+        quad(p, vc, n, n, h, n, n, n, n, h, n, n, h, h, u0, v0, u1, v1, -1, 0, 0, light, r * 0.86F, g * 0.86F, b * 0.86F);
+        quad(p, vc, n, h, h, h, h, h, h, h, n, n, h, n, u0, v0, u1, v1, 0, 1, 0, light, r, g, b);
+        quad(p, vc, n, n, n, h, n, n, h, n, h, n, n, h, u0, v0, u1, v1, 0, -1, 0, light, r * 0.6F, g * 0.6F, b * 0.6F);
+        quad(p, vc, n, n, h, h, n, h, h, h, h, n, h, h, u0, v0, u1, v1, 0, 0, 1, light, r * 0.93F, g * 0.93F, b * 0.93F);
+        quad(p, vc, h, n, n, n, n, n, n, h, n, h, h, n, u0, v0, u1, v1, 0, 0, -1, light, r * 0.93F, g * 0.93F, b * 0.93F);
+    }
+
     /** Corners a, b, c, d (counter-clockwise seen from outside); u0..u1 / v0..v1 = texture span. */
     private static void quad(PoseStack.Pose p, VertexConsumer vc,
                              float ax, float ay, float az, float bx, float by, float bz,

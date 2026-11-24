@@ -1,9 +1,11 @@
 package com.infinitystones.tensura.skill.ability.extra.v2a.client;
 
+import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.client.render.GlowFx;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -16,18 +18,31 @@ import net.minecraft.resources.ResourceLocation;
 final class Hands {
     private static ResourceLocation tex(String name) { return ResourceLocation.withDefaultNamespace("textures/block/" + name + ".png"); }
 
+    /** body/trim/gem: textures of the built-in fallback geometry; model/glowTex/layer: the Blockbench model. */
     record Style(ResourceLocation body, ResourceLocation trim, ResourceLocation gem,
-                 float br, float bg, float bb, boolean gauntlet) {}
+                 float br, float bg, float bb, boolean gauntlet,
+                 ModelLayerLocation layer, ResourceLocation model, ResourceLocation glowTex) {}
 
-    /** Stone hand with purple light veins (Sky Fist, Sculptor's Hands). */
-    static final Style RUNE_STONE = new Style(tex("stone_bricks"), tex("crying_obsidian"), tex("white_concrete"), 0.82F, 0.78F, 0.92F, false);
+    private static ResourceLocation entityTex(String name) {
+        return ResourceLocation.fromNamespaceAndPath(InfinityStones.MOD_ID, "textures/entity/v2/" + name + ".png");
+    }
+
+    /** Dark runed stone of the Sky Fist. */
+    static final Style SKY = new Style(tex("stone_bricks"), tex("crying_obsidian"), tex("white_concrete"), 0.82F, 0.78F, 0.92F, false,
+            HandRig.STONE, entityTex("hand_sky"), entityTex("hand_sky_e"));
+    /** Cracked grey stone of the Sculptor's Hands, purple light in the cracks. */
+    static final Style SCULPTOR = new Style(tex("stone_bricks"), tex("crying_obsidian"), tex("white_concrete"), 0.82F, 0.78F, 0.92F, false,
+            HandRig.STONE, entityTex("hand_sculptor"), entityTex("hand_sculptor_e"));
     /** The golden gauntlet of the Creator. */
-    static final Style GOLD = new Style(tex("gold_block"), tex("raw_gold_block"), tex("white_concrete"), 1F, 0.97F, 0.85F, true);
+    static final Style GOLD = new Style(tex("gold_block"), tex("raw_gold_block"), tex("white_concrete"), 1F, 0.97F, 0.85F, true,
+            HandRig.GAUNTLET, entityTex("gauntlet_gold"), entityTex("gauntlet_gold_e"));
+    /** Kept for the dark patch of sky, which only needs the plain white texture. */
+    static final Style RUNE_STONE = SKY;
 
     /** Gem positions on the back of the hand (stone order mind, power, space, reality, soul, time). */
     static final float[][] GEMS = {
-            {-0.75F, 0.55F, -0.7F, 0.34F}, {-0.25F, 0.55F, -0.7F, 0.34F}, {0.25F, 0.55F, -0.7F, 0.34F}, {0.75F, 0.55F, -0.7F, 0.34F},
-            {0F, 1.5F, -0.72F, 0.5F}, {1.12F, 1.0F, -0.35F, 0.38F}};
+            {-0.75F, 0.5625F, -0.95F, 0.34F}, {-0.25F, 0.5625F, -0.95F, 0.34F}, {0.25F, 0.5625F, -0.95F, 0.34F}, {0.75F, 0.5625F, -0.95F, 0.34F},
+            {0F, 1.5F, -0.95F, 0.5F}, {1.125F, 1.0F, -0.65F, 0.38F}};
     static final int[] GEM_COLORS = {0xF2D02B, 0xA43CE6, 0x2F8CFF, 0xE22B3B, 0xF28A1A, 0x2BD56A};
 
     private static final float[] FLEN = {0.95F, 1F, 0.92F, 0.76F};
@@ -39,7 +54,53 @@ final class Hands {
      * @param litMask gauntlet stones that glow; @param pulse 0..1 light pulse of the runes.
      */
     static void solid(PoseStack ps, MultiBufferSource buf, Style st, int light, float curl, float spread, float armLen,
-                      boolean palmDown, int litMask, float pulse) {
+                      boolean palmDown, int litMask, float pulse, float time, float squeeze) {
+        HandRig rig = HandRig.get(st.layer);
+        if (rig == null) {
+            legacySolid(ps, buf, st, light, curl, spread, armLen, palmDown, litMask, pulse);
+            return;
+        }
+        rig.pose(curl, spread, time, squeeze);
+        if (palmDown) { ps.pushPose(); ps.translate(0, -1.6F, 0); }
+        VertexConsumer vc = buf.getBuffer(RenderType.entityCutoutNoCull(st.model));
+        rig.renderBody(ps, vc, light, 0xFFFFFFFF, armLen, palmDown);
+        if (rig.hasGems()) {
+            for (int i = 0; i < 6; i++) {
+                boolean lit = (litMask & (1 << i)) != 0;
+                int c = GEM_COLORS[i];
+                float k = lit ? 0.7F : 0.14F;
+                rig.renderGem(ps, vc, i, lit ? Geo.FULL : light,
+                        HandRig.rgb(((c >> 16) & 255) / 255F * k, ((c >> 8) & 255) / 255F * k, (c & 255) / 255F * k), palmDown);
+            }
+        }
+        if (palmDown) ps.popPose();
+    }
+
+    /** Emissive pass of the model: rune light, or the lit stones of the gauntlet. Same pose as {@link #solid}. */
+    static void glowModel(PoseStack ps, MultiBufferSource buf, Style st, int litMask, float pulse, float flash, boolean palmDown,
+                          float armLen, float curl, float spread, float time) {
+        HandRig rig = HandRig.get(st.layer);
+        if (rig == null) return;
+        rig.pose(curl, spread, time, flash);
+        if (palmDown) { ps.pushPose(); ps.translate(0, -1.6F, 0); }
+        VertexConsumer vc = buf.getBuffer(RenderType.eyes(st.glowTex));
+        float k = st.gauntlet ? 0.5F + 0.3F * pulse + 0.4F * flash : 0.55F + 0.45F * pulse;
+        rig.renderBody(ps, vc, Geo.FULL, HandRig.rgb(k, k, k), armLen, palmDown);
+        if (rig.hasGems()) {
+            for (int i = 0; i < 6; i++) {
+                if ((litMask & (1 << i)) == 0) continue;
+                int c = GEM_COLORS[i];
+                float g = Math.min(1.3F, 0.8F + 0.2F * pulse + flash);
+                rig.renderGem(ps, vc, i, Geo.FULL, HandRig.rgb(((c >> 16) & 255) / 255F * g, ((c >> 8) & 255) / 255F * g, (c & 255) / 255F * g), palmDown);
+            }
+        }
+        if (palmDown) ps.popPose();
+    }
+
+    static boolean hasModel(Style st) { return HandRig.get(st.layer) != null; }
+
+    private static void legacySolid(PoseStack ps, MultiBufferSource buf, Style st, int light, float curl, float spread, float armLen,
+                                    boolean palmDown, int litMask, float pulse) {
         VertexConsumer body = buf.getBuffer(RenderType.entityCutoutNoCull(st.body));
         VertexConsumer trim = buf.getBuffer(RenderType.entityCutoutNoCull(st.trim));
         float br = st.br, bg = st.bg, bb = st.bb;
@@ -126,7 +187,10 @@ final class Hands {
     }
 
     /** Additive glow pass (flares at the lit stones / rune veins). Same pose as {@link #solid}. */
-    static void glow(PoseStack ps, MultiBufferSource buf, Style st, int litMask, float pulse, float flash, boolean palmDown, float armLen) {
+    static void glow(PoseStack ps, MultiBufferSource buf, Style st, int litMask, float pulse, float flash, boolean palmDown, float armLen,
+                     float curl, float spread, float time) {
+        boolean model = hasModel(st);
+        if (model) glowModel(ps, buf, st, litMask, pulse, flash, palmDown, armLen, curl, spread, time);
         if (palmDown) return;
         if (st.gauntlet) {
             for (int i = 0; i < 6; i++) {
@@ -137,9 +201,9 @@ final class Hands {
                 GlowFx.billboard(ps, buf, GlowFx.HALO, true, g[0], g[1], g[2] - 0.2F, 1.1F * g[3] * 3.4F, 0xFFFFFF, Math.min(1F, 0.4F * k), 0);
             }
         } else {
-            float k = 0.6F + 0.4F * pulse;
+            float k = (0.6F + 0.4F * pulse) * (model ? 0.45F : 1F);
             GlowFx.billboard(ps, buf, GlowFx.FLARE, true, 0, 1.1F, -0.7F, 2.2F, 0xC77DFF, k, pulse);
-            for (float y = 4.6F; y < 2.9F + armLen; y += 6F) GlowFx.billboard(ps, buf, GlowFx.FLARE, true, 0, y, 0, 2.4F, 0xB05CFF, 0.45F * k, -pulse);
+            if (!model) for (float y = 4.6F; y < 2.9F + armLen; y += 6F) GlowFx.billboard(ps, buf, GlowFx.FLARE, true, 0, y, 0, 2.4F, 0xB05CFF, 0.45F * k, -pulse);
         }
     }
 

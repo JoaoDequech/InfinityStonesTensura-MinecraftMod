@@ -1,5 +1,6 @@
 package com.infinitystones.tensura.skill.ability.extra.space;
 
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.ability.extra.Ability;
 import com.infinitystones.tensura.skill.ability.extra.Aim;
@@ -443,7 +444,7 @@ public final class AreaHeist implements Ability {
                     if (h.cells[i] < 0) continue;
                     BlockPos w = origin.offset(h.offset(x, y, z, rot, mirror));
                     boolean ok = l.isInWorldBounds(w) && l.getWorldBorder().isWithinBounds(w) && l.isLoaded(w)
-                            && l.mayInteract(p, w) && replaceable(l.getBlockState(w));
+                            && Terrain.may(p, l, w) && replaceable(l.getBlockState(w));
                     if (!ok) { blocked++; if (bad.size() < 40) bad.add(w); continue; }
                     cells.add(new int[]{i, w.getX(), w.getY(), w.getZ()});
                 }

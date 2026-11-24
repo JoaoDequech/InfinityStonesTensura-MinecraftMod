@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -200,7 +201,7 @@ public final class CosmicArsenal implements Ported {
         if (hit != null) {
             DamageSource src = new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
                     .getHolderOrThrow(DamageTypes.THROWN), null, owner);
-            hit.hurt(src, s.damage);
+            hit.hurt(src, Rules.amount(hit, s.damage, 0.04F, false));
             hit.knockback(SHARD_KNOCKBACK, -s.velocity.x, -s.velocity.z);
             Vec3 c = hit.getBoundingBox().getCenter();
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, c.x, c.y, c.z, 10, 0.25D, 0.25D, 0.25D, 0.12D);

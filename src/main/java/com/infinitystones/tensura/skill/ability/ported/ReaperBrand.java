@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -131,7 +132,7 @@ public final class ReaperBrand implements Ported {
     private static void rupture(Brand b) {
         // Remove before hurt: the rupture cannot charge itself or recurse through the mark.
         BRANDS.remove(b.owner.getUUID());
-        if (PortFx.canAffect(b.owner, b.target)) b.target.hurt(PortFx.attack(b.owner, b.target), 60F + b.charge);
+        if (PortFx.canAffect(b.owner, b.target)) b.target.hurt(Rules.source(b.owner, b.target, false), Rules.amount(b.target, 40F, 0.12F, false) + Math.min(b.charge, 0.18F * b.target.getMaxHealth()));
         Vec3 c = b.target.getBoundingBox().getCenter();
         b.level.sendParticles(ParticleTypes.SOUL, c.x, c.y, c.z, 24, 0.55D, 0.65D, 0.55D, 0.08D);
         b.level.sendParticles(b.light, c.x, c.y, c.z, 36, 0.7D, 0.8D, 0.7D, 0D);

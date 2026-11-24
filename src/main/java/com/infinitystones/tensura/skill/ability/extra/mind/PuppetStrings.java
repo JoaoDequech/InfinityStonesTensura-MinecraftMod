@@ -174,7 +174,7 @@ public final class PuppetStrings implements Ability {
         for (Puppet pp : s.puppets) {
             LivingEntity e = pp.e;
             if (!e.isAlive()) continue;
-            Rules.hurt(p, e, 4);
+            Rules.hurtHidden(p, e, 4, 0.10F);
             Move.set(e, look.scale(2.3).add(0, 0.25, 0));
             FxNet.beam(l, e.getBoundingBox().getCenter(), e.getBoundingBox().getCenter().add(look.scale(-6)), FLING, 0.12F, 8);
             Tasks.add(age -> {
@@ -192,10 +192,10 @@ public final class PuppetStrings implements Ability {
 
     private void impact(ServerPlayer p, ServerLevel l, LivingEntity e) {
         Vec3 c = e.getBoundingBox().getCenter();
-        Rules.hurt(p, e, 6);
+        Rules.hurtHidden(p, e, 6, 0.25F);
         for (LivingEntity o : l.getEntitiesOfClass(LivingEntity.class, e.getBoundingBox().inflate(3),
                 o -> o != e && Rules.isLiving(o) && Rules.canHarm(p, o))) {
-            Rules.hurt(p, o, 4);
+            Rules.hurtHidden(p, o, 4, 0.12F);
             Vec3 d = o.position().subtract(e.position()).multiply(1, 0, 1);
             if (d.lengthSqr() > 1e-4) Move.set(o, o.getDeltaMovement().add(d.normalize().scale(0.8)).add(0, 0.4, 0));
         }

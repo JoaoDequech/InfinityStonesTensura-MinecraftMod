@@ -1,5 +1,6 @@
 package com.infinitystones.tensura.skill.ability.extra.reality;
 
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
 import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.ability.extra.Ability;
@@ -88,7 +89,6 @@ public final class PaintWorld implements Ability {
         }
         if (live != null) return Fx.fail(p, K + "busy");
         ServerLevel l = p.serverLevel();
-        if (!Rules.griefing(l)) return Fx.fail(p, K + "griefing");
         int theme = ExtraSettings.get(p, MODE, 1, 1, 4, 1) - 1;
         Vec3 c = Aim.point(p, 40);
         Job job = new Job(p.getUUID(), l, c, theme);
@@ -121,7 +121,7 @@ public final class PaintWorld implements Ability {
                     if (!l.isInWorldBounds(m) || !l.isLoaded(m)) continue;
                     BlockState s = l.getBlockState(m);
                     if (!paintable(l, m, s) || isPainted(l, m) || !exposed(l, m, n)) continue;
-                    if (!l.mayInteract(p, m)) continue;
+                    if (!Terrain.may(p, l, m)) continue;
                     BlockPos im = m.immutable();
                     out.add(im);
                     job.scanned.put(im, s);

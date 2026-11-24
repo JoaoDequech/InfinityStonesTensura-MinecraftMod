@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.skill.StoneTree;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -57,7 +58,7 @@ public final class EssenceSiphon implements Ported {
         float drained = 0F;
         for (LivingEntity target : targets(level, caster, n)) {
             float before = target.getHealth();
-            if (target.hurt(PortFx.attack(caster, target), 20F)) drained += Math.max(0F, before - target.getHealth());
+            if (target.hurt(Rules.source(caster, target, false), Rules.amount(target, 20F, 0.04F, false))) drained += Math.max(0F, before - target.getHealth());
             renderThread(level, target, caster, c);
         }
         if (drained > 0F) {

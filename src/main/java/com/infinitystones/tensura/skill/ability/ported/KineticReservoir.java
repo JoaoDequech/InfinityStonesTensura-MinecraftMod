@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.ported;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.ability.extra.Rules;
 import com.infinitystones.tensura.skill.StoneTree;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -134,7 +135,7 @@ public final class KineticReservoir implements Ported {
         // the triggering hit just set the victim's hurt cooldown; without this the nested hit would only deal
         // (discharge − that hit), which the original intended as a full release
         target.invulnerableTime = 0;
-        target.hurt(PortFx.attack(attacker, target), discharge);
+        target.hurt(PortFx.attack(attacker, target), Math.min(discharge, Rules.amount(target, 40F, 0.30F, false)));
 
         ServerLevel level = attacker.serverLevel();
         Vec3 direction = target.position().subtract(attacker.position());

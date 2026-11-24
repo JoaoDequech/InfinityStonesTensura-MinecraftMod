@@ -147,7 +147,9 @@ public final class PortFx {
     public static boolean canAffect(ServerPlayer caster, Entity target) {
         if (target == caster || !target.isAlive() || target.isSpectator()) return false;
         if (target instanceof ArmorStand) return false;
-        if (target instanceof Player other) return !other.isCreative(); // hits players even with PvP off (project decision)
+        if (target instanceof Player other) // hits players even with PvP off (project decision), but never inside somebody else's claim
+            return !other.isCreative() && !(other instanceof ServerPlayer victim && (com.infinitystones.tensura.compat.ClaimsCompat.isProtected(victim, caster)
+                    || com.infinitystones.tensura.compat.ClaimsCompat.sameParty(caster, victim)));
         if (target instanceof OwnableEntity own && caster.getUUID().equals(own.getOwnerUUID())) return false;
         if (target instanceof TamableAnimal t && t.isOwnedBy(caster)) return false;
         return !caster.isAlliedTo(target);
@@ -200,12 +202,9 @@ public final class PortFx {
         return caster.level().clip(new ClipContext(eye, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, caster));
     }
 
-    /** Can the caster break/grief blocks here? (mobGriefing + spawn protection + world border; no OP involved.) */
+    /** Can the caster change blocks here? Claims + spawn protection + world border; mobGriefing and OP are not involved. */
     public static boolean mayEdit(ServerPlayer caster, net.minecraft.core.BlockPos pos) {
-        ServerLevel level = caster.serverLevel();
-        return level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)
-                && caster.mayInteract(level, pos) && level.getWorldBorder().isWithinBounds(pos)
-                && !caster.server.isUnderSpawnProtection(level, pos, caster);
+        return com.infinitystones.tensura.skill.ability.extra.Terrain.may(caster, caster.serverLevel(), pos);
     }
 
     private PortFx() {}

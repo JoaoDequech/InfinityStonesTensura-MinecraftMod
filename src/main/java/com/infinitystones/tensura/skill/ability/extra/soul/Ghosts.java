@@ -111,8 +111,11 @@ public final class Ghosts {
         ServerLevel l = owner.serverLevel();
         List<Ghost> mine = BY_OWNER.computeIfAbsent(owner.getUUID(), k -> new ArrayList<>());
         int cap = kind == ECHO ? CAP_ECHO : CAP_ARMY;
-        while (count(owner.getUUID(), kind) >= cap) {
-            for (Ghost g : mine) if (g.kind == kind && g.age < g.life) { g.expireNow(); break; }
+        // each pass retires one live ghost of this kind; stop when none is left to retire (the loop must never spin)
+        for (int guard = 0; guard < cap + 8 && count(owner.getUUID(), kind) >= cap; guard++) {
+            boolean retired = false;
+            for (Ghost g : mine) if (g.kind == kind && g.age < g.life) { g.expireNow(); retired = true; break; }
+            if (!retired) break;
         }
         Mob m = create(l, wanted);
         boolean stand = m.getType() == EntityType.HUSK;

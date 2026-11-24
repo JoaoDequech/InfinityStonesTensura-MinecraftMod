@@ -8,6 +8,7 @@ import com.infinitystones.tensura.skill.ability.extra.ExtraSettings;
 import com.infinitystones.tensura.skill.ability.extra.Fx;
 import com.infinitystones.tensura.skill.ability.extra.Ground;
 import com.infinitystones.tensura.skill.ability.extra.Rules;
+import com.infinitystones.tensura.skill.ability.extra.Terrain;
 import com.infinitystones.tensura.skill.ability.extra.Tasks;
 import com.infinitystones.tensura.skill.ability.extra.fx.FxNet;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,8 +23,8 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Meteor Gate (conjunction Power + Space). A purple-blue rift opens 26 blocks above the aimed point (visible warning,
- * tearing sound), then 3–9 glowing magma meteors (Alt+scroll) fall one after another within 6 blocks: 10 damage
- * each in 3 blocks, fire, shake nearby. No crater.
+ * tearing sound), then 3–9 glowing magma meteors (Alt+scroll) fall one after another within 6 blocks: each digs a
+ * crater (radius about 4.5, no drops, claims respected) and hits for 10% of max HP in 5 blocks, fire, shake nearby.
  */
 public final class MeteorGate implements Ability {
     public static final MeteorGate INSTANCE = new MeteorGate();
@@ -104,8 +105,9 @@ public final class MeteorGate implements Ability {
             PowerUtil.debris(l, c.add(0, 0.6, 0), k % 2 == 0 ? Blocks.MAGMA_BLOCK.defaultBlockState() : PowerUtil.surface(l, c),
                     new Vec3(Math.cos(an) * 0.35, 0.6 + l.random.nextDouble() * 0.4, Math.sin(an) * 0.35), 0.35F, 30, 0);
         }
-        for (LivingEntity e : PowerUtil.victims(p, l, c.add(0, 0.5, 0), 3)) {
-            Rules.hurt(p, e, 10);
+        Terrain.boom(l, p, c.add(0, 0.3, 0), 4F, 100F);
+        for (LivingEntity e : PowerUtil.victims(p, l, c.add(0, 0.5, 0), 5)) {
+            Rules.hurtPct(p, e, 10F, 0.10F);
             e.igniteForSeconds(4);
             PowerUtil.push(e, c, 0.6, 0.4);
         }

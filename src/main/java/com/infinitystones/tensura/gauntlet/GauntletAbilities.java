@@ -50,8 +50,7 @@ public final class GauntletAbilities {
             LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(vl);
             if (bolt != null) { bolt.moveTo(v.position()); bolt.setVisualOnly(true); vl.addFreshEntity(bolt); }
             vl.sendParticles(Fx.dust(0xFFD24A, 1.6F), v.getX(), v.getY() + 1, v.getZ(), 40, 0.4, 0.8, 0.4, 0.05);
-            v.invulnerableTime = 0;
-            v.hurt(p.damageSources().genericKill(), Float.MAX_VALUE);
+            com.infinitystones.tensura.skill.ability.extra.Executions.kill(v);
         }
         GauntletPowers.global(p, SoundEvents.CONDUIT_ACTIVATE, 0.6F, 1F);
         GauntletPowers.global(p, SoundEvents.ENDER_DRAGON_DEATH, 0.4F, 1F);

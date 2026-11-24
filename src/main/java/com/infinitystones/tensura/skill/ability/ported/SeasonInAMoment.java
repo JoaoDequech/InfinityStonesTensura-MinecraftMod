@@ -105,7 +105,7 @@ public final class SeasonInAMoment implements Ported {
         for (Crop crop : s.crops) {
             if (growth == 0 || !s.level.hasChunkAt(crop.position)) continue;
             // respect spawn protection / claims that hook mayInteract
-            if (!s.level.mayInteract(s.owner, crop.position)) continue;
+            if (!s.level.mayInteract(s.owner, crop.position) || !com.infinitystones.tensura.compat.ClaimsCompat.canModify(s.owner, s.level, crop.position)) continue;
             BlockState state = s.level.getBlockState(crop.position);
             if (state.getBlock() != crop.block || state.hasBlockEntity() || !(state.getBlock() instanceof CropBlock plant)) continue;
             int next = Math.min(plant.getMaxAge(), plant.getAge(state) + growth);

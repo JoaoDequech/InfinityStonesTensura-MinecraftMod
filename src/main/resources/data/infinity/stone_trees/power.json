@@ -936,7 +936,7 @@
                   },
                   {
                       "id":  "power_blast_aim",
-                      "settings": {"min": 0, "max": 3, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "settings": {"min": 0, "max": 4, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3", "ability.infinity.port.beam.level.4"]},
                       "original_type":  "palladium:aim",
                       "title":  "Power Blast",
                       "description":  "@ability.infinity.power_stone.power_blast_aim.description",
@@ -1903,7 +1903,7 @@
                   },
                   {
                       "id":  "celestial_annihilation_aim",
-                      "settings": {"min": 0, "max": 3, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3"]},
+                      "settings": {"min": 0, "max": 4, "cap1": 2, "default": 0, "label": "ability.infinity.port.beam.label", "values": ["ability.infinity.port.beam.level.0", "ability.infinity.port.beam.level.1", "ability.infinity.port.beam.level.2", "ability.infinity.port.beam.level.3", "ability.infinity.port.beam.level.4"]},
                       "original_type":  "palladium:aim",
                       "title":  "@ability.infinity.power_stone.celestial_annihilation.title",
                       "description":  "@ability.infinity.power_stone.celestial_annihilation.description",
