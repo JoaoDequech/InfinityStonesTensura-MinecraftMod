@@ -2,6 +2,7 @@
   "nodes": [
     {
       "id": "climate_zone", "original_type": "infinity:climate_zone",
+      "stats": { "damage": "Lightning (storm)", "range": "64 m", "duration": "3 min", "area": "r 6–24 m", "players": true },
       "title": "@ability.infinity.time_stone.climate_zone.title", "description": "@ability.infinity.time_stone.climate_zone.description",
       "icon": "minecraft:lightning_rod", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 18 },
       "parents": ["season_in_a_moment"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -11,6 +12,7 @@
     },
     {
       "id": "stasis_bubble", "original_type": "infinity:stasis_bubble",
+      "stats": { "damage": "Stored, released on pop", "range": "48 m", "duration": "8 s", "area": "r 3–8 m", "players": true },
       "title": "@ability.infinity.time_stone.stasis_bubble.title", "description": "@ability.infinity.time_stone.stasis_bubble.description",
       "icon": "minecraft:clock", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 22 },
       "parents": ["time_freeze"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -28,6 +30,7 @@
     },
     {
       "id": "lapse_field", "original_type": "infinity:lapse_field",
+      "stats": { "damage": "None", "range": "48 m", "duration": "30 s", "area": "r 6 m", "players": true },
       "title": "@ability.infinity.time_stone.lapse_field.title", "description": "@ability.infinity.time_stone.lapse_field.description",
       "icon": "minecraft:repeater", "cost": { "type": "item", "item": "infinity:aspects_of_existance", "amount": 16 },
       "parents": ["fast_forward"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,

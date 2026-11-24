@@ -28,6 +28,7 @@
     },
     {
       "id": "overcharge", "original_type": "infinity:overcharge",
+      "stats": { "damage": "7 ❤ (bomb)", "range": "32 m", "duration": "3 s fuse · 20 s buff", "area": "r 4 m (bomb)", "players": true },
       "title": "@ability.infinity.power_stone.overcharge.title", "description": "@ability.infinity.power_stone.overcharge.description",
       "icon": "minecraft:glowstone_dust", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 18},
       "parents": ["impower"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -36,6 +37,7 @@
     },
     {
       "id": "seismic_wave", "original_type": "infinity:seismic_wave",
+      "stats": { "damage": "2.5 ❤", "range": "10–30 m", "duration": "Instant", "area": "Line / ring", "players": true },
       "title": "@ability.infinity.power_stone.seismic_wave.title", "description": "@ability.infinity.power_stone.seismic_wave.description",
       "icon": "minecraft:cracked_stone_bricks", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 14},
       "parents": ["explosion2"], "requires_stones": [], "activation": "press", "cooldown_ticks": 0,
@@ -45,6 +47,7 @@
     },
     {
       "id": "meteor_gate", "original_type": "infinity:meteor_gate",
+      "stats": { "damage": "5 ❤ + fire, per meteor", "range": "96 m", "duration": "4–6 s", "area": "r 3 m per meteor", "players": true },
       "title": "@ability.infinity.power_stone.meteor_gate.title", "description": "@ability.infinity.power_stone.meteor_gate.description",
       "icon": "minecraft:magma_block", "cost": {"type": "item", "item": "infinity:aspects_of_existance", "amount": 26},
       "parents": ["meteor_storm"], "requires_stones": ["infinity:space_stone"], "activation": "press", "cooldown_ticks": 0,
@@ -142,6 +145,7 @@
     },
     {
       "id": "gravity_hammer",
+      "stats": { "damage": "5–15 ❤", "range": "Self (leap)", "duration": "Instant", "area": "r 5–12 m", "players": true },
       "original_type": "infinity:gravity_hammer",
       "title": "@ability.infinity.power_stone.gravity_hammer.title",
       "description": "@ability.infinity.power_stone.gravity_hammer.description",
@@ -161,6 +165,7 @@
     },
     {
       "id": "prism_barrage",
+      "stats": { "damage": "2.5–3 ❤ per lance", "range": "48 m", "area": "Fan / burst", "players": true },
       "original_type": "infinity:prism_barrage",
       "title": "@ability.infinity.power_stone.prism_barrage.title",
       "description": "@ability.infinity.power_stone.prism_barrage.description",

@@ -30,10 +30,15 @@ public final class StoneTree {
         public boolean isItem() { return "item".equals(type); }
     }
 
+    /** Short texts shown by the wheel's Shift panel; null fields are unknown. Never present on tier-2 nodes. */
+    public record Stats(@Nullable String damage, @Nullable String range, @Nullable String duration, @Nullable String area,
+                        @Nullable Boolean players) {}
+
     public record Node(Stone stone, String id, String originalType, String title, String description, @Nullable String icon,
                        @Nullable Cost cost, List<String> parents, List<String> requiresPowers, Activation activation,
                        int cooldownTicks, boolean inTree, boolean inBar, List<String> commands, List<String> firstTick,
-                       List<String> lastTick, JsonObject raw, float guiX, float guiY, boolean hasPos) {
+                       List<String> lastTick, JsonObject raw, float guiX, float guiY, boolean hasPos,
+                       int page, @Nullable Stats stats) {
         public MutableComponent displayName() {
             // original nodes carry a literal English title: translate it through ability.infinity.<stone>_stone.<id>.title
             if (title != null && !title.isBlank() && !title.startsWith("@"))
@@ -133,7 +138,8 @@ public final class StoneTree {
                         bool(o, "in_tree"), bool(o, "in_bar"), strings(o, "commands"), strings(o, "first_tick_commands"),
                         strings(o, "last_tick_commands"), o.has("raw") ? o.getAsJsonObject("raw") : new JsonObject(),
                         pos(o, 0), pos(o, 1), o.has("gui_position") && o.get("gui_position").isJsonArray()
-                                && o.getAsJsonArray("gui_position").size() >= 2);
+                                && o.getAsJsonArray("gui_position").size() >= 2,
+                        o.has("page") ? Math.max(1, o.get("page").getAsInt()) : 1, stats(o));
                 nodes.put(n.id(), n);
                 json.put(n.id(), o);
             }
@@ -144,6 +150,13 @@ public final class StoneTree {
         }
     }
 
+    private static @Nullable Stats stats(JsonObject o) {
+        if (!o.has("stats") || !o.get("stats").isJsonObject() || (o.has("tier") && o.get("tier").getAsInt() >= 2)) return null;
+        JsonObject s = o.getAsJsonObject("stats");
+        return new Stats(opt(s, "damage"), opt(s, "range"), opt(s, "duration"), opt(s, "area"),
+                s.has("players") && !s.get("players").isJsonNull() ? s.get("players").getAsBoolean() : null);
+    }
+    private static @Nullable String opt(JsonObject o, String k) { return o.has(k) && !o.get(k).isJsonNull() ? o.get(k).getAsString() : null; }
     private static String str(JsonObject o, String k) { return o.has(k) && !o.get(k).isJsonNull() ? o.get(k).getAsString() : ""; }
     private static float pos(JsonObject o, int i) {
         if (!o.has("gui_position") || !o.get("gui_position").isJsonArray()) return 0;

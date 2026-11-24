@@ -21,6 +21,7 @@
     },
     {
       "id": "phantasm",
+      "stats": { "damage": "None", "duration": "8 s", "area": "r 5 m burst", "players": true },
       "original_type": "infinity:phantasm",
       "title": "@ability.infinity.mind_stone.phantasm.title",
       "description": "@ability.infinity.mind_stone.phantasm.description",
@@ -78,6 +79,7 @@
     },
     {
       "id": "nightmare",
+      "stats": { "damage": "None", "range": "32 m", "duration": "10 s", "area": "1 target", "players": true },
       "original_type": "infinity:nightmare",
       "title": "@ability.infinity.mind_stone.nightmare.title",
       "description": "@ability.infinity.mind_stone.nightmare.description",
@@ -214,6 +216,7 @@
     },
     {
       "id": "astral_swap",
+      "stats": { "damage": "None", "range": "40 m", "duration": "8 s (double: 30 s)", "area": "1 target", "players": true },
       "original_type": "infinity:astral_swap",
       "title": "@ability.infinity.mind_stone.astral_swap.title",
       "description": "@ability.infinity.mind_stone.astral_swap.description",

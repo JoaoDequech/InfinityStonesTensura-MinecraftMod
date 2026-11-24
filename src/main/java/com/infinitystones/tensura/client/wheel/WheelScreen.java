@@ -46,6 +46,7 @@ public final class WheelScreen extends Screen {
     private final RandomSource rng = RandomSource.create();
     private int hoveredStone = -1;
     private int hoveredEntry = -1;
+    private boolean hubHover;
     private int lastHoverSig = Integer.MIN_VALUE;
     private boolean usedSomething;
     private boolean introDone;
@@ -58,7 +59,7 @@ public final class WheelScreen extends Screen {
     private static final class Particle {
         float x, y, vx, vy, life, max, size, spin; int color; boolean star;
     }
-    private record Pulse(long start, int stone, int entry, boolean denied) {}
+    private record Pulse(long start, int stone, int page, int entry, boolean denied) {}
     private record Wave(long start, int color, float from, float to, long ms) {}
     private final List<Particle> particles = new ArrayList<>();
     private final List<Pulse> pulses = new ArrayList<>();
@@ -86,7 +87,10 @@ public final class WheelScreen extends Screen {
 
     // ------------------------------------------------------------ data
 
-    private record Slice(int stone, List<WheelPayloads.Entry> entries) {}
+    /** entries = what the focused page shows (all hover / click logic indexes into it); pages = both pages (0 = main, 1 = page 2). */
+    private record Slice(int stone, List<WheelPayloads.Entry> entries, List<List<WheelPayloads.Entry>> pages) {
+        boolean hasPage2() { return !pages.get(1).isEmpty(); }
+    }
 
     private List<Slice> slices() {
         List<Slice> out = new ArrayList<>();
@@ -95,9 +99,41 @@ public final class WheelScreen extends Screen {
             List<WheelPayloads.Entry> list = new ArrayList<>();
             for (WheelPayloads.Entry e : st.entries()) if (e.stone() == s.ordinal()) list.add(e);
             if (s == Stone.SOUL) for (WheelPayloads.Entry e : st.entries()) if (e.stone() == -1) list.add(e);
-            if (!list.isEmpty()) out.add(new Slice(s.ordinal(), list));
+            if (list.isEmpty()) continue;
+            List<WheelPayloads.Entry> p1 = new ArrayList<>(), p2 = new ArrayList<>();
+            for (WheelPayloads.Entry e : list) (pageOf(e) == 1 ? p2 : p1).add(e);
+            if (p1.isEmpty()) { p1 = list; p2 = new ArrayList<>(); }
+            boolean second = s.ordinal() == focusedStone && page == 1 && !p2.isEmpty();
+            out.add(new Slice(s.ordinal(), second ? p2 : p1, List.of(p1, p2)));
         }
         return out;
+    }
+
+    /** 0 = main page, 1 = page 2 (nodes flagged "page": 2). */
+    private static int pageOf(WheelPayloads.Entry e) {
+        StoneTree.Node n = node(e);
+        return n != null && n.page() >= 2 ? 1 : 0;
+    }
+
+    // ---- page state: page = target, pagePos animates between pages (0..1)
+    private static final long PAGE_MS = 200;
+    private static final float PAGE_SLIDE = 150F;
+    private int page;
+    private float pageFrom;
+    private long pageAt;
+
+    private boolean pageSettled(long now) { return now - pageAt >= PAGE_MS; }
+
+    private float pagePos(long now) {
+        float t = Mth.clamp((now - pageAt) / (float) PAGE_MS, 0F, 1F);
+        float e = 1 - (1 - t) * (1 - t) * (1 - t);
+        return pageFrom + (page - pageFrom) * e;
+    }
+
+    private void setPage(int target, long now, boolean animate) {
+        pageFrom = animate ? pagePos(now) : target;
+        page = target;
+        pageAt = animate ? now : 0;
     }
 
     // ------------------------------------------------------------ render
@@ -142,18 +178,24 @@ public final class WheelScreen extends Screen {
                 hoveredStone = slices.get(Mth.clamp(i, 0, slices.size() - 1)).stone();
                 if (hoveredStone != focusedStone) {
                     focusedStone = hoveredStone;
+                    setPage(0, time, false);
+                    slices = slices();
                     waves.add(new Wave(time, color(focusedStone), OUTER_IN - 6, OUTER_OUT + 8, 260));
                 }
             }
         }
+        hubHover = closingAt < 0 && dist < INNER_IN - 4;
         Slice focus = slices.stream().filter(s -> s.stone() == focusedStone).findFirst().orElse(slices.get(0));
-        if (closingAt < 0 && dist >= OUTER_IN - 4 && dist <= OUTER_OUT + 18) {
+        if (page == 1 && !focus.hasPage2()) setPage(0, time, false); // page 2 went away (e.g. stone dropped)
+        boolean settled = pageSettled(time);
+        float pos = pagePos(time);
+        if (closingAt < 0 && settled && dist >= OUTER_IN - 4 && dist <= OUTER_OUT + 18) {
             int i = (int) (ang / (Math.PI * 2 / focus.entries().size()));
             hoveredEntry = Mth.clamp(i, 0, focus.entries().size() - 1);
         }
         if (hoveredEntry >= focus.entries().size()) hoveredEntry = -1;
         int sig = hoveredStone * 1000 + hoveredEntry;
-        if (sig != lastHoverSig) {
+        if (settled && sig != lastHoverSig) {
             if (lastHoverSig != Integer.MIN_VALUE) {
                 playUi(SoundEvents.UI_BUTTON_CLICK.value(), 1.9F, 0.12F);
                 if (hoveredEntry >= 0) hoverSparks(focus, hoveredEntry);
@@ -162,7 +204,6 @@ public final class WheelScreen extends Screen {
         }
 
         int col = color(focus.stone());
-        float oseg = Mth.TWO_PI / focus.entries().size();
         ambient(time, col);
 
         g.pose().pushPose();
@@ -203,13 +244,50 @@ public final class WheelScreen extends Screen {
             item(g, stoneItem(s.stone()), Mth.cos(mid) * r - 8, Mth.sin(mid) * r - 8);
         }
 
+        // outer ring: powers of the focused stone; page changes slide the ring sideways while it fades
+        for (int pg = 0; pg < focus.pages().size(); pg++) {
+            float d = pg - pos;
+            List<WheelPayloads.Entry> list = focus.pages().get(pg);
+            if (Math.abs(d) >= 1F || list.isEmpty()) continue;
+            g.pose().pushPose();
+            g.pose().translate(d * PAGE_SLIDE, 0, 0);
+            drawPowerRing(g, focus.stone(), list, pg, time, open * (1 - Math.abs(d)), col, settled && pg == page ? hoveredEntry : -1);
+            g.pose().popPose();
+        }
+
+        // shockwaves + particles (additive, over the rings)
+        drawWaves(g, time);
+        stepAndDrawParticles(g, dt, open);
+
+        // centre hub
+        disc(g, 0, 0, INNER_IN - 4, withAlpha(0xFF0B0B12, (int) (230 * open)));
+        ring(g, 0, 0, INNER_IN - 5, INNER_IN - 3, 0, Mth.TWO_PI, withAlpha(col, (int) ((170 + 70 * Mth.sin(time / 260F)) * open)));
+        if (hubFlash >= 0 && time - hubFlash < 380) {
+            float t = (time - hubFlash) / 380F, k = 1 - t * t;
+            additive(true);
+            disc(g, 0, 0, (INNER_IN - 4) * (0.6F + 0.5F * t), withAlpha(hubFlashColor, (int) (120 * k)));
+            additive(false);
+        }
+        g.pose().popPose();
+
+        if (closingAt < 0) {
+            drawCentre(g, cx, cy, focus);
+            if (focus.hasPage2()) drawPageDots(g, cx, cy, focus, scale, open, pos);
+            drawInfoPanel(g, cx, cy, focus, scale, open, mouseX, mouseY);
+            drawLevelBar(g, cx, cy, focus, scale, open);
+        }
+    }
+
+    /** One page of the outer ring (the focused stone's powers) in wheel-local space; hov = hovered index on this page or -1. */
+    private void drawPowerRing(GuiGraphics g, int stone, List<WheelPayloads.Entry> entries, int pg, long time, float open, int col, int hov) {
+        float oseg = Mth.TWO_PI / entries.size();
         // outer ring: powers of the focused stone (dark backing keeps it readable over any scenery)
         ring(g, 0, 0, OUTER_IN - 3, OUTER_OUT + 3, 0, Mth.TWO_PI, withAlpha(0xFF07070C, (int) (170 * open)));
-        for (int i = 0; i < focus.entries().size(); i++) {
-            WheelPayloads.Entry e = focus.entries().get(i);
-            boolean hot = i == hoveredEntry;
-            float punch = pulseAmount(time, focus.stone(), i);      // 0..1 elastic punch from a recent click
-            float shake = denyShake(time, focus.stone(), i);         // small wobble when the power is unavailable
+        for (int i = 0; i < entries.size(); i++) {
+            WheelPayloads.Entry e = entries.get(i);
+            boolean hot = i == hov;
+            float punch = pulseAmount(time, stone, pg, i);      // 0..1 elastic punch from a recent click
+            float shake = denyShake(time, stone, pg, i);         // small wobble when the power is unavailable
             float grow = (hot ? 8 : 0) + punch * 10;
             float a0 = i * oseg + 0.02F + shake, a1 = (i + 1) * oseg - 0.02F + shake;
             int base = e.unlocked() ? darken(col, hot ? 0.85F : 0.4F) : 0xFF2A2A30;
@@ -244,27 +322,6 @@ public final class WheelScreen extends Screen {
                 g.drawCenteredString(font, String.valueOf(fav + 1), (int) fx, (int) fy - 4, withAlpha(0xFFFFD45A, (int) (255 * open)));
             }
         }
-
-        // shockwaves + particles (additive, over the rings)
-        drawWaves(g, time);
-        stepAndDrawParticles(g, dt, open);
-
-        // centre hub
-        disc(g, 0, 0, INNER_IN - 4, withAlpha(0xFF0B0B12, (int) (230 * open)));
-        ring(g, 0, 0, INNER_IN - 5, INNER_IN - 3, 0, Mth.TWO_PI, withAlpha(col, (int) ((170 + 70 * Mth.sin(time / 260F)) * open)));
-        if (hubFlash >= 0 && time - hubFlash < 380) {
-            float t = (time - hubFlash) / 380F, k = 1 - t * t;
-            additive(true);
-            disc(g, 0, 0, (INNER_IN - 4) * (0.6F + 0.5F * t), withAlpha(hubFlashColor, (int) (120 * k)));
-            additive(false);
-        }
-        g.pose().popPose();
-
-        if (closingAt < 0) {
-            drawCentre(g, cx, cy, focus);
-            drawInfoPanel(g, cx, cy, focus, scale, open, mouseX, mouseY);
-            drawLevelBar(g, cx, cy, focus, scale, open);
-        }
     }
 
     /**
@@ -293,13 +350,21 @@ public final class WheelScreen extends Screen {
         } else {
             gaps.add(lines.size());
             for (Component h : WheelActions.hints(n)) lines.addAll(font.split(h, W));
+            if (statsOf(n) != null) lines.addAll(font.split(Component.translatableWithFallback("infinity.wheel.hint.stats", "[Shift] stats")
+                    .withStyle(ChatFormatting.DARK_GRAY), W));
         }
+        List<FormattedCharSequence> stats = hasShiftDown() && statsOf(n) != null ? statLines(n, W) : List.of();
         int h = lines.size() * 10 + gaps.size() * 4 + 8;
         float wheelR = (OUTER_OUT + 34) * scale;
         int x;
         if (cx + wheelR + 10 + W + 12 <= width) x = (int) (cx + wheelR + 10);
         else if (cx - wheelR - 10 - W - 12 >= 0) x = (int) (cx - wheelR - 10 - W - 12);
-        else { g.renderTooltip(font, lines, mouseX, mouseY); return; }
+        else {
+            List<FormattedCharSequence> all = new ArrayList<>(lines);
+            all.addAll(stats);
+            g.renderTooltip(font, all, mouseX, mouseY);
+            return;
+        }
         int y = Mth.clamp(cy - h / 2, 4, Math.max(4, height - h - 4));
         int a = (int) (230 * open);
         g.fill(x, y, x + W + 12, y + h, withAlpha(0xFF0A0A12, a));
@@ -312,6 +377,55 @@ public final class WheelScreen extends Screen {
             g.drawString(font, lines.get(i), x + 7, ly, 0xFFFFFFFF, true);
             ly += 10;
         }
+        if (!stats.isEmpty()) {
+            // Shift: stats panel in the same style, stacked under the info panel (above it when the screen ends)
+            int sh = stats.size() * 10 + 8;
+            int sy = y + h + 4 + sh <= height - 4 ? y + h + 4 : Math.max(4, y - sh - 4);
+            g.fill(x, sy, x + W + 12, sy + sh, withAlpha(0xFF0A0A12, a));
+            g.fill(x, sy, x + 2, sy + sh, withAlpha(col, a));
+            g.fill(x, sy, x + W + 12, sy + 1, withAlpha(col, a / 2));
+            g.fill(x, sy + sh - 1, x + W + 12, sy + sh, withAlpha(col, a / 2));
+            int ty = sy + 5;
+            for (FormattedCharSequence l : stats) {
+                g.drawString(font, l, x + 7, ty, 0xFFFFFFFF, true);
+                ty += 10;
+            }
+        }
+    }
+
+    /** Stats of a public power (tier-2 nodes never carry any). */
+    private static StoneTree.Stats statsOf(StoneTree.Node n) {
+        return n.upper() ? null : n.stats();
+    }
+
+    private List<FormattedCharSequence> statLines(StoneTree.Node n, int width) {
+        StoneTree.Stats s = statsOf(n);
+        List<FormattedCharSequence> out = new ArrayList<>();
+        if (s == null) return out;
+        int col = color(n.stone().ordinal());
+        out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.title", "Stats").withStyle(st -> st.withColor(col & 0xFFFFFF).withBold(true)), width));
+        out.addAll(font.split(statRow("infinity.wheel.stats.damage", "Damage", statText(s.damage())), width));
+        out.addAll(font.split(statRow("infinity.wheel.stats.range", "Range", statText(s.range())), width));
+        out.addAll(font.split(statRow("infinity.wheel.stats.duration", "Duration", statText(s.duration())), width));
+        out.addAll(font.split(statRow("infinity.wheel.stats.area", "Area", statText(s.area())), width));
+        Component players = s.players() == null ? Component.literal("\u2014").withStyle(ChatFormatting.WHITE)
+                : s.players() ? Component.translatableWithFallback("infinity.wheel.stats.yes", "Yes").withStyle(ChatFormatting.RED)
+                : Component.translatableWithFallback("infinity.wheel.stats.no", "No").withStyle(ChatFormatting.GREEN);
+        out.addAll(font.split(statRow("infinity.wheel.stats.players", "Hits players", players), width));
+        out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.cooldown", "Cooldown: none").withStyle(ChatFormatting.DARK_GRAY), width));
+        out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.cost", "Magicule cost: 0.001 per use").withStyle(ChatFormatting.DARK_GRAY), width));
+        return out;
+    }
+
+    private static Component statRow(String key, String fallback, Component value) {
+        return Component.translatableWithFallback(key, fallback).withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(": ").withStyle(ChatFormatting.DARK_GRAY)).append(value);
+    }
+
+    /** Stat values are short literal texts; "@lang.key" translates. Missing = em dash. */
+    private static Component statText(String v) {
+        if (v == null || v.isBlank()) return Component.literal("\u2014").withStyle(ChatFormatting.WHITE);
+        return (v.startsWith("@") ? Component.translatable(v.substring(1)) : Component.literal(v)).withStyle(ChatFormatting.WHITE);
     }
 
     private void drawCentre(GuiGraphics g, int cx, int cy, Slice focus) {
@@ -323,7 +437,9 @@ public final class WheelScreen extends Screen {
             else line2 = kind(e); // full description + buttons are in the side panel
         } else {
             title = Component.translatable("infinity.skill." + Stone.values()[focus.stone()].key + "_stone").withStyle(s -> s.withColor(color & 0xFFFFFF));
-            line2 = Component.translatable("infinity.wheel.state.pick").withStyle(ChatFormatting.GRAY);
+            line2 = hubHover && focus.hasPage2()
+                    ? Component.translatableWithFallback("infinity.wheel.page.hint", "Scroll: switch page").withStyle(ChatFormatting.GRAY)
+                    : Component.translatable("infinity.wheel.state.pick").withStyle(ChatFormatting.GRAY);
         }
         List<FormattedCharSequence> lines = font.split(title, 70);
         int y = cy - 6 - (lines.size() - 1) * 5;
@@ -334,6 +450,21 @@ public final class WheelScreen extends Screen {
         g.pose().scale(0.75F, 0.75F, 1);
         int sy = 0;
         for (FormattedCharSequence l : sub) { g.drawCenteredString(font, l, 0, sy, 0xFFFFFFFF); sy += 10; }
+        g.pose().popPose();
+    }
+
+    /** "1 • 2" under the hub: the number of the page on show glows in the stone's colour (follows the slide). */
+    private void drawPageDots(GuiGraphics g, int cx, int cy, Slice focus, float scale, float open, float pos) {
+        int col = lighten(color(focus.stone()), 0.5F), dim = 0xFF6A6A72;
+        int a = (int) (255 * open);
+        int w1 = font.width("1 "), w2 = font.width("1 \u2022 "), total = font.width("1 \u2022 2");
+        g.pose().pushPose();
+        g.pose().translate(cx, cy + 29 * scale, 0);
+        g.pose().scale(0.8F, 0.8F, 1);
+        float x = -total / 2F;
+        g.drawString(font, "1", (int) x, 0, withAlpha(mix(dim, col, 1 - pos), a), true);
+        g.drawString(font, "\u2022", (int) x + w1, 0, withAlpha(dim, a), true);
+        g.drawString(font, "2", (int) x + w2, 0, withAlpha(mix(dim, col, pos), a), true);
         g.pose().popPose();
     }
 
@@ -378,7 +509,7 @@ public final class WheelScreen extends Screen {
         String mid = e.stone() < 0 ? "" : Stone.values()[e.stone()].key + "." + e.node();
         boolean menuOk = e.unlocked() && button == 2 && DualModes.hasDestination(mid); // the menu also holds "bring it back"
         if (!menuOk && (!e.unlocked() || e.cooldownLeft() > 0)) {
-            pulses.add(new Pulse(now, focus.stone(), hoveredEntry, true));
+            pulses.add(new Pulse(now, focus.stone(), page, hoveredEntry, true));
             burst(focus, hoveredEntry, 0xFF8A8A92, false, 10, 0.6F);
             playUi(SoundEvents.NOTE_BLOCK_BASS.value(), 0.7F, 0.2F);
             return true;
@@ -419,7 +550,7 @@ public final class WheelScreen extends Screen {
     private void playChoiceFx(Slice focus, int entry, boolean alt, long now) {
         int col = color(focus.stone());
         int fx = alt ? lighten(col, 0.35F) : col;
-        pulses.add(new Pulse(now, focus.stone(), entry, false));
+        pulses.add(new Pulse(now, focus.stone(), page, entry, false));
         waves.add(new Wave(now, fx, OUTER_IN, OUTER_OUT + 70, 520));
         waves.add(new Wave(now + 70, lighten(fx, 0.6F), INNER_IN, OUTER_OUT + 30, 420));
         hubFlash = now; hubFlashColor = fx;
@@ -482,6 +613,17 @@ public final class WheelScreen extends Screen {
     @Override public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (scrollY == 0 || closingAt >= 0) return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         Slice focus = slices().stream().filter(s -> s.stone() == focusedStone).findFirst().orElse(null);
+        if (focus != null && Math.hypot(mouseX - width / 2D, mouseY - height / 2D) < (INNER_IN - 4) * lastScale) {
+            // scroll over the hub: slide to the other page of this stone
+            long now = System.currentTimeMillis();
+            if (!focus.hasPage2() || !pageSettled(now)) return true;
+            setPage(1 - page, now, true);
+            int col = color(focus.stone());
+            waves.add(new Wave(now, lighten(col, 0.4F), INNER_IN, OUTER_OUT + 12, 320));
+            hubFlash = now; hubFlashColor = col;
+            playUi(SoundEvents.AMETHYST_BLOCK_CHIME, 1.3F + 0.5F * page, 0.25F);
+            return true;
+        }
         if (focus == null || hoveredEntry < 0 || hoveredEntry >= focus.entries().size()) return true;
         WheelPayloads.Entry e = focus.entries().get(hoveredEntry);
         StoneTree.Node n = node(e);
@@ -622,10 +764,10 @@ public final class WheelScreen extends Screen {
 
     // ------------------------------------------------------------ effects
 
-    private float pulseAmount(long time, int stone, int entry) {
+    private float pulseAmount(long time, int stone, int pg, int entry) {
         float best = 0;
         for (Pulse p : pulses) {
-            if (p.denied() || p.stone() != stone || p.entry() != entry) continue;
+            if (p.denied() || p.stone() != stone || p.page() != pg || p.entry() != entry) continue;
             float t = (time - p.start()) / 420F;
             if (t < 0 || t > 1) continue;
             // fast punch out, elastic settle
@@ -635,9 +777,9 @@ public final class WheelScreen extends Screen {
         return best;
     }
 
-    private float denyShake(long time, int stone, int entry) {
+    private float denyShake(long time, int stone, int pg, int entry) {
         for (Pulse p : pulses) {
-            if (!p.denied() || p.stone() != stone || p.entry() != entry) continue;
+            if (!p.denied() || p.stone() != stone || p.page() != pg || p.entry() != entry) continue;
             float t = (time - p.start()) / 260F;
             if (t >= 0 && t <= 1) return 0.035F * (1 - t) * Mth.sin(t * 40);
         }

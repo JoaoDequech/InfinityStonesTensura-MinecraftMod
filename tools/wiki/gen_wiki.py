@@ -66,7 +66,7 @@ def load_tree(stone):
     nodes = {}
     order = []
     skipped = set()
-    for sub in ("", "extras/", "extras/port/"):
+    for sub in ("", "extras/", "extras/port/", "extras/v2a/", "extras/v2b/", "extras/v2c/", "extras/v2d/"):
         p = TREES / sub / f"{stone}.json"
         if not p.exists():
             continue
@@ -116,6 +116,23 @@ def stone_names(ids):
     return ", ".join(names.get(i.replace("_stone", "").split(":")[-1], i) for i in ids)
 
 
+def stats_line(stone, n):
+    """Compact stats of a public power (tier 2 never reaches here: load_tree skips it)."""
+    s = n.get("stats")
+    if not isinstance(s, dict) or (n.get("tier") or 1) >= 2:
+        return ""
+    parts = []
+    for key, label in (("damage", "Dano"), ("range", "Alcance"), ("duration", "Duração"), ("area", "Área")):
+        v = s.get(key)
+        if v:
+            parts.append(f"{label}: {text(v, stone, n['id'], key) if v.startswith('@') else v}")
+    if isinstance(s.get("players"), bool):
+        parts.append("Atinge jogadores: " + ("sim" if s["players"] else "não"))
+    if not parts:
+        return ""
+    return "**Atributos:** " + " · ".join(parts) + " · sem recarga · magícula 0,001 por uso"
+
+
 def ability_md(stone, n):
     mode = f"{stone}.{n['id']}"
     pub = PUBLIC.get(mode, {})
@@ -159,6 +176,10 @@ def ability_md(stone, n):
             buttons.append(f"Scroll (em cima do poder na roda ou durante o uso): {label} de {s.get('min')} a {s.get('cap1', s.get('max'))} (inicial {s.get('default', s.get('min'))})")
     lines.append("**Botões:** " + " · ".join(buttons))
     lines.append("")
+    stats = stats_line(stone, n)
+    if stats:
+        lines.append(stats)
+        lines.append("")
     return "\n".join(lines)
 
 
