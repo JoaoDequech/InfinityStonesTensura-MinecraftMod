@@ -77,7 +77,6 @@ public final class EssenceHarvest implements Ability {
     private boolean harvest(ServerPlayer p) {
         LivingEntity t = Aim.living(p, 24, e -> Rules.canHarm(p, e) && Rules.foreignOwner(p, e) == null);
         if (t == null) return Fx.fail(p, K + "no_target");
-        if (t instanceof ServerPlayer tp && ClaimsCompat.isProtected(tp, p)) return Fx.fail(p, K + "claimed");
         int want = ExtraSettings.get(p, MODE, 5, 1, 30, 1);
         UUID owner = p.getUUID(), target = t.getUUID();
         ServerLevel l = p.serverLevel();
@@ -93,7 +92,6 @@ public final class EssenceHarvest implements Ability {
                 Entity te = l.getEntity(target);
                 if (pl == null || !pl.isAlive() || pl.serverLevel() != l || !(te instanceof LivingEntity victim) || !victim.isAlive()
                         || victim.distanceToSqr(pl) > 32 * 32) return false;
-                if (age % 20 == 0 && victim instanceof ServerPlayer vp && ClaimsCompat.isProtected(vp, pl)) return false;
                 strands(l, victim.position().add(0, victim.getBbHeight() * 0.6, 0), anchor(pl, age), age, false);
                 ring(l, victim, age);
                 if (age % 5 == 0) V2CNet.near(l, pl.position(), 64, V2CNet.msg(V2CNet.ORB, pl.getId(), 1, 12, orbSize(pl) + age / 120F, pl.position(), 0));

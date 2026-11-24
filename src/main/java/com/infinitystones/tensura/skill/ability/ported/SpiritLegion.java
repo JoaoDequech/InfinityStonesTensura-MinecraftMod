@@ -140,7 +140,7 @@ public final class SpiritLegion implements Ported {
 
     private static boolean validTarget(ServerPlayer caster, LivingEntity e) {
         return !isSpirit(e) && e.isAlive() && !e.isSpectator()
-                && !caster.isAlliedTo(e) && !e.isAlliedTo(caster) && PortFx.canAffect(caster, e)
+                && PortFx.canAffect(caster, e)
                 && caster.distanceToSqr(e) <= 16D * 16D && caster.hasLineOfSight(e);
     }
 

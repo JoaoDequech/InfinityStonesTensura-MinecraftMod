@@ -1,0 +1,15 @@
+{
+  "infinity.wheel.gauntlet": "Manopla do Infinito",
+  "infinity.wheel.gauntlet.gems": "Joias",
+  "infinity.wheel.gauntlet.gems.kind": "Encaixar / remover joias",
+  "infinity.gauntlet.gems.insert_all": "Inserir todas",
+  "infinity.gauntlet.gems.remove_all": "Remover todas",
+  "infinity.gauntlet.gems.loose": "Joias que você carrega",
+  "infinity.gauntlet.gems.insert_hint": "Inserir joias",
+  "infinity.gauntlet.gems.none": "Você não carrega uma Manopla",
+  "infinity.gauntlet.gems.click_remove": "clique: remover",
+  "infinity.gauntlet.gems.click_insert": "clique: inserir",
+  "infinity.gauntlet.nothing_to_remove": "Nenhuma joia encaixada",
+  "infinity.gauntlet.need_complete": "Precisa de uma Manopla com as seis joias, carregada ou equipada",
+  "infinity.dest.map": "Mapa"
+}

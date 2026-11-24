@@ -17,7 +17,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * Shared rules of the gauntlet powers. Every one needs a COMPLETE gauntlet worn (hand or Curios). The original's
+ * Shared rules of the gauntlet powers. Every one needs a COMPLETE gauntlet carried or worn (hands, inventory, accessory slot). The original's
  * world-scale powers (Snap, Bring Back, Kill Players, Kill Hostiles, Destroy Stones, Eternity's Convergence) keep
  * the original "burn": after Snap / Kill Players / Kill Hostiles / Destroy Stones the arm is burned for one
  * Minecraft day (20 min) and those six cannot be used until it heals.

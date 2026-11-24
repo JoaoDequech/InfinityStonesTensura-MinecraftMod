@@ -47,7 +47,7 @@ public final class PaintedSky implements Ability {
         if (alt) return MenuNet.open(p, Stone.REALITY, NODE, this) || Fx.fail(p, K + "no_menu");
         ServerLevel l = p.serverLevel();
         if (!l.dimensionType().hasSkyLight()) return Fx.fail(p, K + "no_sky");
-        float r = ExtraSettings.get(p, MODE, 64, 32, 128, 8);
+        float r = ExtraSettings.get(p, MODE, 64, 32, 256, 8);
         int theme = Mth.clamp(ExtraSettings.choice(p, MODE, 0), 0, THEMES.length - 1);
         var hit = Aim.block(p, 128);
         Vec3 c = hit.getType() == HitResult.Type.MISS ? p.position() : hit.getLocation();

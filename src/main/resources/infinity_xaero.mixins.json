@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.infinitystones.tensura.mixin.xaero",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "XaeroMapMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

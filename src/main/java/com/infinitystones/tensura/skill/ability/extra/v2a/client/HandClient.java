@@ -1,6 +1,13 @@
 package com.infinitystones.tensura.skill.ability.extra.v2a.client;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.client.wheel.AimMode;
+import com.infinitystones.tensura.skill.Stone;
+import com.infinitystones.tensura.wheel.WheelPayloads;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.lwjgl.glfw.GLFW;
 import com.infinitystones.tensura.skill.ability.extra.v2a.V2aAnim;
 import com.infinitystones.tensura.skill.ability.extra.v2a.V2aNet;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -65,7 +72,10 @@ import java.util.Map;
 public final class HandClient {
     // ------------------------------------------------------------------ lock state
 
-    private static int mode, ttl, held;
+    private static int mode, ttl, held, force = 5, ready, holdTicks;
+    private static double sx, sy, sz;
+    private static boolean sInit;
+    private static long lastMs;
     private static float shotYaw, dist, bars, barsPrev;
     private static CameraType saved;
 
@@ -77,8 +87,12 @@ public final class HandClient {
         ttl = 55;
         shotYaw = m.shotYaw();
         dist = m.dist();
+        force = m.force();
+        ready = m.ready();
         if (fresh) {
             held = 0;
+            sInit = false;
+            holdTicks = 0;
             if (mode == 1) {
                 if (saved == null) saved = mc.options.getCameraType();
                 mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -89,6 +103,8 @@ public final class HandClient {
 
     private static void release(Minecraft mc) {
         mode = 0;
+        sInit = false;
+        holdTicks = 0;
         if (saved != null) {
             if (mc.options != null) mc.options.setCameraType(saved);
             saved = null;
@@ -118,6 +134,7 @@ public final class HandClient {
         if (mode != 0 && --ttl <= 0) release(mc);
         if (mode == 0) return;
         held++;
+        if (mode == 2) { casterTick(mc); return; }
         if (mode != 1) return;
         if (mc.options.getCameraType() != CameraType.THIRD_PERSON_BACK) mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         for (KeyMapping k : mc.options.keyMappings) {
@@ -140,6 +157,27 @@ public final class HandClient {
         physics(mc.level);
     }
 
+    private static Minecraft mc0() { return Minecraft.getInstance(); }
+    private static void send(int action) { PacketDistributor.sendToServer(new V2aNet.Input(action)); }
+    private static boolean physDown(KeyMapping k) {
+        long win = Minecraft.getInstance().getWindow().getWindow();
+        InputConstants.Key key = k.getKey();
+        if (key.getType() == InputConstants.Type.MOUSE) return GLFW.glfwGetMouseButton(win, key.getValue()) == GLFW.GLFW_PRESS;
+        return InputConstants.isKeyDown(win, key.getValue());
+    }
+    /** The caster while the fist holds: left/right are swallowed (squeeze / release), the held button keeps squeezing. */
+    private static void casterTick(Minecraft mc) {
+        if (mc.screen != null || AimMode.active() || ready == 0) { holdTicks = 0; return; }
+        boolean left = physDown(mc.options.keyAttack);
+        for (KeyMapping k : new KeyMapping[]{mc.options.keyAttack, mc.options.keyUse}) {
+            while (k.consumeClick()) { }
+            k.setDown(false);
+        }
+        if (left && (ready & 1) != 0) {
+            holdTicks++;
+            if (holdTicks >= 8 && holdTicks % 3 == 0) send(1);
+        } else holdTicks = 0;
+    }
     /** The held player faces the camera and cannot turn. */
     private static void face(LocalPlayer p) {
         float yaw = shotYaw + 180F;
@@ -168,14 +206,33 @@ public final class HandClient {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void interaction(InputEvent.InteractionKeyMappingTriggered e) {
+        if (mode == 2 && ready != 0 && mc0().screen == null && !AimMode.active()) {
+         if (e.isAttack()) {
+          if ((ready & 1) != 0) send(1);
+          e.setCanceled(true); e.setSwingHand(false);
+         } else if (e.isUseItem()) {
+          send(2);
+          e.setCanceled(true); e.setSwingHand(false);
+         }
+         return;
+        }
         if (mode != 1) return;
         e.setCanceled(true);
         e.setSwingHand(false);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void scroll(InputEvent.MouseScrollingEvent e) {
-        if (mode == 1 && Minecraft.getInstance().screen == null) e.setCanceled(true);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen != null) return;
+        if (mode == 1) { e.setCanceled(true); return; }
+        if (mode == 2 && (ready & 1) != 0 && !AimMode.active() && e.getScrollDeltaY() != 0) {
+         e.setCanceled(true);
+         int dir = e.getScrollDeltaY() > 0 ? 1 : -1;
+         force = Mth.clamp(force + dir, 1, 10);
+         PacketDistributor.sendToServer(new WheelPayloads.Setting(Stone.POWER.ordinal(), "creator_hand", dir));
+         mc.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 0.8F + 0.08F * force, 0.4F));
+        }
     }
 
     @SubscribeEvent
@@ -199,6 +256,7 @@ public final class HandClient {
 
     @SubscribeEvent
     public static void bars(RenderGuiEvent.Post e) {
+        if (mode == 2 && ready != 0) hint(e.getGuiGraphics());
         float k = Mth.lerp(e.getPartialTick().getGameTimeDeltaPartialTick(true), barsPrev, bars);
         if (k <= 0.01F) return;
         GuiGraphics g = e.getGuiGraphics();
@@ -210,13 +268,38 @@ public final class HandClient {
         g.fill(0, h - bar, w, h, 0xFF000000);
     }
 
+    private static void hint(GuiGraphics g) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.options.hideGui) return;
+        int w = g.guiWidth(), h = g.guiHeight(), y = h - 74;
+        var font = mc.font;
+        Component line = (ready & 1) != 0 ? Component.translatable("infinity.v2a.hand.hint", force)
+                : Component.translatable("infinity.v2a.hand.hint.wait");
+        int tw = font.width(line);
+        g.fill(w / 2 - tw / 2 - 6, y - 4, w / 2 + tw / 2 + 6, y + 12, 0x88000000);
+        g.drawString(font, line, w / 2 - tw / 2, y, 0xFFE9A8, true);
+        if ((ready & 1) != 0) {
+            int bx = w / 2 - 50;
+            for (int i = 0; i < 10; i++) {
+                int c = i < force ? (i >= 9 ? 0xFFE23B3B : 0xFFF2C14A) : 0x66333333;
+                g.fill(bx + i * 10, y + 15, bx + i * 10 + 8, y + 20, c);
+            }
+        }
+    }
     /** Camera of the held player: over the caster's shoulder, a few blocks back and up, looking at the fist. */
     public static double[] cameraShot(float pt) {
         if (mode != 1) return null;
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer p = mc.player;
         if (p == null || mc.level == null) return null;
-        double fx = Mth.lerp(pt, p.xo, p.getX()), fy = Mth.lerp(pt, p.yo, p.getY()) + p.getBbHeight() * 0.55, fz = Mth.lerp(pt, p.zo, p.getZ());
+        double tx = Mth.lerp(pt, p.xo, p.getX()), ty = Mth.lerp(pt, p.yo, p.getY()) + p.getBbHeight() * 0.55, tz = Mth.lerp(pt, p.zo, p.getZ());
+        long now = net.minecraft.Util.getMillis();
+        if (!sInit) { sx = tx; sy = ty; sz = tz; sInit = true; lastMs = now; }
+        double dt = Mth.clamp((now - lastMs) / 1000.0, 0, 0.1);
+        lastMs = now;
+        double f = 1 - Math.exp(-dt * 4.5);
+        sx += (tx - sx) * f; sy += (ty - sy) * f; sz += (tz - sz) * f;
+        double fx = sx, fy = sy, fz = sz;
         float tt = held + pt;
         double d = dist * (1.14 - 0.14 * V2aAnim.ease(tt / 70F));
         double sy = Math.toRadians(shotYaw) + Math.sin(tt * 0.02) * 0.05;
@@ -235,7 +318,7 @@ public final class HandClient {
 
     private static final class Piece {
         double x, y, z, px, py, pz, vx, vy, vz;
-        float half, rx, ry, srx, sry, u0, v0, u1, v1, cr, cg, cb;
+        float half, hx, hy, hz, rx, ry, srx, sry, u0, v0, u1, v1, cr, cg, cb;
         int age, life;
         boolean trail;
         ResourceLocation tex;
@@ -272,7 +355,8 @@ public final class HandClient {
 
         RandomSource rnd = lv.random;
         float size = Math.max(g.w(), g.h());
-        int n = Mth.clamp((int) (36 + g.w() * g.w() * g.h() * 10), 36, 150);
+        int n = Mth.clamp((int) (24 + g.w() * g.w() * g.h() * 6), 24, 90);
+        bodyParts(lv, g, ent, tex, skin);
         float base = Mth.clamp(size * 0.1F, 0.07F, 0.5F);
         for (int i = 0; i < n && PIECES.size() < 700; i++) {
             Piece p = new Piece();
@@ -286,6 +370,7 @@ public final class HandClient {
             p.vy = dir.y * sp + 0.12;
             p.vz = dir.z * sp + (p.z - g.z()) * 0.06;
             p.half = base * (0.5F + rnd.nextFloat()) * 0.5F;
+            p.hx = p.hy = p.hz = p.half;
             p.rx = rnd.nextFloat() * 360F; p.ry = rnd.nextFloat() * 360F;
             p.srx = (rnd.nextFloat() - 0.5F) * 40F; p.sry = (rnd.nextFloat() - 0.5F) * 40F;
             p.life = 70 + rnd.nextInt(40);
@@ -317,6 +402,12 @@ public final class HandClient {
             lv.addParticle(i % 3 == 0 ? dark : blood, g.x() + d.x * 2, g.y() + d.y * 2, g.z() + d.z * 2, d.x, d.y + 0.05, d.z);
         }
         lv.addParticle(ParticleTypes.EXPLOSION, g.x(), g.y(), g.z(), 0, 0, 0);
+        DustParticleOptions gold = new DustParticleOptions(new Vector3f(1F, 0.78F, 0.2F), 2.2F);
+        for (int i = 0; i < 60; i++) {
+         Vec3 d = new Vec3(rnd.nextGaussian(), rnd.nextGaussian() * 0.8, rnd.nextGaussian()).scale(0.3);
+         lv.addParticle(gold, g.x(), g.y(), g.z(), d.x, d.y, d.z);
+        }
+        for (int i = 0; i < 12; i++) lv.addParticle(ParticleTypes.END_ROD, g.x(), g.y(), g.z(), rnd.nextGaussian() * 0.25, rnd.nextGaussian() * 0.25 + 0.1, rnd.nextGaussian() * 0.25);
         lv.addParticle(ParticleTypes.FLASH, g.x(), g.y(), g.z(), 0, 0, 0);
         for (int i = 0; i < 14; i++)
             lv.addParticle(ParticleTypes.LARGE_SMOKE, g.x() + (rnd.nextDouble() - 0.5) * g.w(), g.y() + (rnd.nextDouble() - 0.5) * g.h(),
@@ -324,6 +415,55 @@ public final class HandClient {
         lv.playLocalSound(g.x(), g.y(), g.z(), SoundEvents.PLAYER_ATTACK_CRIT, SoundSource.PLAYERS, 0.5F, 0.5F, false);
     }
 
+    private static void part(RandomSource rnd, V2aNet.Gore g, ResourceLocation tex, double ox, double oy, double oz,
+            float hx, float hy, float hz, float u0, float v0, float u1, float v1, float yaw, float power) {
+        Piece p = new Piece();
+        p.x = p.px = g.x() + ox; p.y = p.py = g.y() + oy; p.z = p.pz = g.z() + oz;
+        Vec3 dir = new Vec3(ox, oy * 0.5, oz).scale(1.5).add(rnd.nextGaussian() * 0.45, 0.45 + rnd.nextDouble() * 0.55, rnd.nextGaussian() * 0.45);
+        dir = dir.lengthSqr() < 1e-4 ? new Vec3(0, 1, 0) : dir.normalize();
+        double sp = (0.32 + rnd.nextDouble() * 0.3) * power;
+        p.vx = dir.x * sp; p.vy = dir.y * sp + 0.12; p.vz = dir.z * sp;
+        p.hx = hx; p.hy = hy; p.hz = hz;
+        p.half = Math.max(hx, Math.max(hy, hz));
+        p.ry = yaw;
+        p.srx = (rnd.nextFloat() - 0.5F) * 34F; p.sry = (rnd.nextFloat() - 0.5F) * 34F;
+        p.life = 90 + rnd.nextInt(30);
+        p.trail = true;
+        p.tex = tex;
+        p.u0 = u0; p.v0 = v0; p.u1 = u1; p.v1 = v1;
+        p.cr = 1F; p.cg = 0.86F; p.cb = 0.86F;
+        PIECES.add(p);
+    }
+    /** The body itself bursts in chunks: head, torso, arms and legs of a player (cut out of the skin), big pieces of its texture otherwise. */
+    private static void bodyParts(ClientLevel lv, V2aNet.Gore g, Entity ent, ResourceLocation tex, boolean skin) {
+        RandomSource rnd = lv.random;
+        float yaw = ent == null ? rnd.nextFloat() * 360F : -ent.getYRot();
+        float power = 0.8F + Math.min(1F, Math.max(g.w(), g.h()) * 0.15F);
+        if (skin && tex != null) {
+            float k = g.h() / 1.8F;
+            float s = 1F / 64F;
+            // head, torso, two arms, two legs: {ox, oy, hx, hy, hz, u, v, w, h}
+            float[][] parts = {
+                {0, 0.735F, 0.235F, 0.235F, 0.235F, 8, 8, 8, 8},
+                {0, 0.15F, 0.235F, 0.35F, 0.12F, 20, 20, 8, 12},
+                {0.34F, 0.15F, 0.1F, 0.35F, 0.1F, 44, 20, 4, 12},
+                {-0.34F, 0.15F, 0.1F, 0.35F, 0.1F, 44, 20, 4, 12},
+                {0.12F, -0.55F, 0.1F, 0.35F, 0.1F, 4, 20, 4, 12},
+                {-0.12F, -0.55F, 0.1F, 0.35F, 0.1F, 4, 20, 4, 12}};
+            for (float[] q : parts)
+                part(rnd, g, tex, q[0] * k, q[1] * k, 0, q[2] * k, q[3] * k, q[4] * k, q[5] * s, q[6] * s, (q[5] + q[7]) * s, (q[6] + q[8]) * s, yaw, power);
+            return;
+        }
+        int n = 7;
+        for (int i = 0; i < n; i++) {
+            ResourceLocation t = tex != null && i % 4 != 3 ? tex : FLESH[rnd.nextInt(FLESH.length)];
+            float u = tex != null && t == tex ? rnd.nextFloat() * 0.7F : 0F, v = tex != null && t == tex ? rnd.nextFloat() * 0.7F : 0F;
+            float w = tex != null && t == tex ? 0.25F : 0.5F;
+            float hx = g.w() * (0.14F + rnd.nextFloat() * 0.14F), hy = g.h() * (0.1F + rnd.nextFloat() * 0.14F);
+            part(rnd, g, t, (rnd.nextDouble() - 0.5) * g.w() * 0.6, (rnd.nextDouble() - 0.5) * g.h() * 0.7, (rnd.nextDouble() - 0.5) * g.w() * 0.6,
+                hx, hy, hx, u, v, u + w, v + w, yaw, power);
+        }
+    }
     private static boolean solid(ClientLevel lv, double x, double y, double z) {
         BlockPos bp = BlockPos.containing(x, y, z);
         return !lv.getBlockState(bp).getCollisionShape(lv, bp).isEmpty();
@@ -351,7 +491,11 @@ public final class HandClient {
                 p.rx += p.srx; p.ry += p.sry;
                 if (p.trail && (p.age & 1) == 0) lv.addParticle(trail, p.x, p.y, p.z, 0, 0, 0);
             } else {
-                lv.addParticle(ParticleTypes.POOF, p.x, p.y, p.z, 0, 0.02, 0);
+                int puffs = 1 + (int) (p.half * 10);
+                for (int q = 0; q < puffs; q++) {
+                 lv.addParticle(ParticleTypes.POOF, p.x + rnd.nextGaussian() * p.half, p.y + rnd.nextGaussian() * p.half * 0.5, p.z + rnd.nextGaussian() * p.half, 0, 0.03, 0);
+                 if (q % 2 == 0) lv.addParticle(ParticleTypes.LARGE_SMOKE, p.x, p.y, p.z, rnd.nextGaussian() * 0.02, 0.04, rnd.nextGaussian() * 0.02);
+                }
                 if (rnd.nextInt(3) == 0) lv.addParticle(blood, p.x, p.y, p.z, 0, 0.02, 0);
                 if (rnd.nextInt(5) == 0) lv.playLocalSound(p.x, p.y, p.z, SoundEvents.SLIME_SQUISH_SMALL, SoundSource.PLAYERS, 0.25F, 0.5F + rnd.nextFloat() * 0.4F, false);
                 PIECES.remove(i);
@@ -386,7 +530,7 @@ public final class HandClient {
                 ps.translate(ix, iy, iz);
                 ps.mulPose(Axis.YP.rotationDegrees(p.ry + p.sry * pt));
                 ps.mulPose(Axis.XP.rotationDegrees(p.rx + p.srx * pt));
-                Geo.uvCube(ps, vc, p.half, p.u0, p.v0, p.u1, p.v1, light, p.cr, p.cg, p.cb);
+                Geo.uvBox(ps, vc, p.hx, p.hy, p.hz, p.u0, p.v0, p.u1, p.v1, light, p.cr, p.cg, p.cb);
                 ps.popPose();
             }
             buf.endBatch(RenderType.entityCutoutNoCull(en.getKey()));

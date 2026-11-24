@@ -135,7 +135,9 @@ public final class DestinationScreen extends Screen {
         g.fill(x0, y0 + 24, x0 + W, y0 + 25, a(0xFF, col, open));
         g.drawString(font, title.copy().withStyle(st -> st.withColor(lighten(col, 0.35F) & 0xFFFFFF)), x0 + 10, y0 + 8, 0xFFFFFFFF, true);
         Component who = Component.translatable(movesTarget ? "infinity.dest.who_target" : "infinity.dest.who_self");
-        g.drawString(font, who, x0 + W - 10 - font.width(who), y0 + 8, 0xFF9AA0B0, false);
+        boolean map = XaeroPick.available() && !backView;
+        g.drawString(font, who, x0 + W - 10 - (map ? 70 : 0) - font.width(who), y0 + 8, 0xFF9AA0B0, false);
+        if (map) pill(g, x0 + W - 10 - 62, y0 + 4, 62, Component.translatable("infinity.dest.map"), false, mouseX, mouseY, open);
 
         // dimension list
         int lx = x0 + 8, ly = y0 + 32;
@@ -298,6 +300,11 @@ public final class DestinationScreen extends Screen {
             return true;
         }
         int rx = x0 + LIST_W + 22;
+        if (XaeroPick.available() && !backView && inside(mouseX, mouseY, x0 + W - 10 - 62, y0 + 4, 62, 16)) {
+            click(1.5F);
+            XaeroPick.open(stone, node, movesTarget);
+            return true;
+        }
         if (movesTarget && inside(mouseX, mouseY, x0 + 8, y0 + H - 30, LIST_W, 20)) {
             backView = !backView; updateBoxes(); click(1.2F);
             if (backView) PacketDistributor.sendToServer(new WheelPayloads.BanishAction(0, 0));

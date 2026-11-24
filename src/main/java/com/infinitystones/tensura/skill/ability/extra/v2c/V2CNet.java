@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** One small generic payload shared by the v2c visuals (painted sky, wisp, soul orb). */
 @EventBusSubscriber(modid = InfinityStones.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public final class V2CNet {
-    public static final int SKY = 0, SKY_END = 1, WISP = 2, WISP_END = 3, ORB = 4;
+    public static final int SKY = 0, SKY_END = 1, WISP = 2, WISP_END = 3, ORB = 4, GENESIS = 5, GENESIS_END = 6;
 
     private static final AtomicInteger IDS = new AtomicInteger(1);
     public static int newId() { return IDS.getAndIncrement(); }

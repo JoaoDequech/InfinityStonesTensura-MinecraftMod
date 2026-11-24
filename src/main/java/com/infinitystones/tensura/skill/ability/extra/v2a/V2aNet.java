@@ -48,14 +48,24 @@ public final class V2aNet {
      * 2 = the caster (rooted, can still look and use the wheel). shotYaw = direction the shot looks along (degrees),
      * dist = camera distance from the fist. The server repeats it every second; the client frees itself when it stops.
      */
-    public record Lock(int mode, int id, float shotYaw, float dist, float scale) implements CustomPacketPayload {
+    public record Lock(int mode, int id, float shotYaw, float dist, float scale, int force, int ready) implements CustomPacketPayload {
         public static final Type<Lock> TYPE = new Type<>(InfinityStones.id("v2a_hand_lock"));
-        public static final StreamCodec<ByteBuf, Lock> CODEC = StreamCodec.composite(
-                ByteBufCodecs.VAR_INT, Lock::mode, ByteBufCodecs.VAR_INT, Lock::id, ByteBufCodecs.FLOAT, Lock::shotYaw,
-                ByteBufCodecs.FLOAT, Lock::dist, ByteBufCodecs.FLOAT, Lock::scale, Lock::new);
+        public static final StreamCodec<ByteBuf, Lock> CODEC = StreamCodec.of((buf, m) -> {
+            ByteBufCodecs.VAR_INT.encode(buf, m.mode); ByteBufCodecs.VAR_INT.encode(buf, m.id);
+            buf.writeFloat(m.shotYaw); buf.writeFloat(m.dist); buf.writeFloat(m.scale);
+            ByteBufCodecs.VAR_INT.encode(buf, m.force); ByteBufCodecs.VAR_INT.encode(buf, m.ready);
+        }, buf -> new Lock(ByteBufCodecs.VAR_INT.decode(buf), ByteBufCodecs.VAR_INT.decode(buf),
+                buf.readFloat(), buf.readFloat(), buf.readFloat(),
+                ByteBufCodecs.VAR_INT.decode(buf), ByteBufCodecs.VAR_INT.decode(buf)));
         @Override public Type<Lock> type() { return TYPE; }
     }
 
+    /** Caster controls while holding (client → server): 1 = squeeze (repeated while the button stays down), 2 = release. */
+    public record Input(int action) implements CustomPacketPayload {
+     public static final Type<Input> TYPE = new Type<>(InfinityStones.id("v2a_hand_input"));
+     public static final StreamCodec<ByteBuf, Input> CODEC = StreamCodec.composite(ByteBufCodecs.VAR_INT, Input::action, Input::new);
+     @Override public Type<Input> type() { return TYPE; }
+    }
     /** Gore burst of an executed body (entity id = the client entity whose texture the pieces use). */
     public record Gore(int entity, double x, double y, double z, float w, float h) implements CustomPacketPayload {
         public static final Type<Gore> TYPE = new Type<>(InfinityStones.id("v2a_hand_gore"));
@@ -96,6 +106,9 @@ public final class V2aNet {
                 (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.HandClient.gore(msg)));
         r.playToClient(Targets.TYPE, Targets.CODEC,
                 (msg, ctx) -> ctx.enqueueWork(() -> com.infinitystones.tensura.skill.ability.extra.v2a.client.HandClient.targets(msg)));
+        r.playToServer(Input.TYPE, Input.CODEC, (msg, ctx) -> ctx.enqueueWork(() -> {
+         if (ctx.player() instanceof ServerPlayer sp) CreatorHand.input(sp, msg.action());
+        }));
         r.playToServer(Pick.TYPE, Pick.CODEC, (msg, ctx) -> ctx.enqueueWork(() -> {
             if (ctx.player() instanceof ServerPlayer sp) CreatorHand.pick(sp, msg.id());
         }));

@@ -117,7 +117,6 @@ public final class TimeBomb implements Ability {
                 Vec3 mid = e.getBoundingBox().getCenter();
                 double d = mid.distanceTo(c);
                 if (d > RADIUS) continue;
-                if (e instanceof ServerPlayer vp && com.infinitystones.tensura.compat.ClaimsCompat.isProtected(vp, owner)) continue;
                 double k = 1 - d / RADIUS;
                 Vec3 dir = mid.subtract(c);
                 dir = dir.lengthSqr() < 1e-4 ? new Vec3(0, 1, 0) : dir.normalize();

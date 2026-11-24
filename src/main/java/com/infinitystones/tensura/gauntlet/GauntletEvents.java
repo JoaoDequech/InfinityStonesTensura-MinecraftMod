@@ -12,10 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,23 +20,19 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /**
- * Inserting / removing stones (the original gauntlet function). Right click with the gauntlet = socket screen;
- * crouch + right click = set every loose gem from your inventory into its empty socket at once.
+ * Inserting / removing stones (the original gauntlet function). The socket screen lives on the wheel's gauntlet page
+ * (see {@link GauntletGems}); crouch + right click with the gauntlet still sets every loose gem from your inventory
+ * into its empty socket at once.
  */
 @EventBusSubscriber(modid = InfinityStones.MOD_ID)
 public final class GauntletEvents {
     @SubscribeEvent
     public static void use(PlayerInteractEvent.RightClickItem event) {
         ItemStack stack = event.getItemStack();
-        if (!GauntletStones.isGauntlet(stack)) return;
+        if (!GauntletStones.isGauntlet(stack) || !event.getEntity().isShiftKeyDown()) return;
         event.setCanceled(true);
         event.setCancellationResult(InteractionResult.SUCCESS);
-        if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (p.isShiftKeyDown()) { quickInsert(p, stack); return; }
-        InteractionHand hand = event.getHand();
-        p.openMenu(new SimpleMenuProvider((id, inv, pl) -> new GauntletMenu(id, inv, hand),
-                Component.translatable("infinity.gauntlet.title")), buf -> buf.writeEnum(hand));
-        Fx.sound(p.serverLevel(), p.position(), SoundEvents.ARMOR_EQUIP_GOLD.value(), 0.6F, 0.9F);
+        if (event.getEntity() instanceof ServerPlayer p) quickInsert(p, stack);
     }
 
     private static void quickInsert(ServerPlayer p, ItemStack gauntlet) {

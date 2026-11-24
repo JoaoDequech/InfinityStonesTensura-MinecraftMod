@@ -73,7 +73,7 @@ public final class SoulSight implements Ability {
         if (s == null) { start(p); return; }
         if (p.tickCount % 10 != 0) return;
         ServerLevel l = p.serverLevel();
-        double r = com.infinitystones.tensura.skill.ability.extra.ExtraSettings.get(p, MODE, 40, 16, 64, 4);
+        double r = com.infinitystones.tensura.skill.ability.extra.ExtraSettings.get(p, MODE, 40, 16, 128, 4);
         List<LivingEntity> near = new ArrayList<>(l.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(r),
                 e -> e != p && e.isAlive() && !e.isSpectator() && e.distanceToSqr(p) <= r * r));
         near.sort(Comparator.comparingDouble(e -> e.distanceToSqr(p)));

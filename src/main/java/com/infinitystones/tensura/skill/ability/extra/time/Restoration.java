@@ -44,7 +44,7 @@ public final class Restoration implements Ability {
     @Override
     public boolean press(ServerPlayer p, boolean alt) {
         if (!Stone.REALITY.isHeldBy(p)) return Fx.fail(p, "infinity.extra.time.restore.need_reality");
-        int r = ExtraSettings.get(p, MODE, 16, 8, 32, 1);
+        int r = ExtraSettings.get(p, MODE, 16, 8, 64, 1);
         ServerLevel l = p.serverLevel();
         Vec3 c = p.position();
         List<ExplosionLog.Entry> list = ExplosionLog.take(l, c, r);

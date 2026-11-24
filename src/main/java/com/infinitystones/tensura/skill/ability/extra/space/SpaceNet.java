@@ -29,7 +29,7 @@ public final class SpaceNet {
      */
     public record HeistState(int mode, boolean hasA, int ax, int ay, int az, boolean hasB, int bx, int by, int bz,
                              int rot, boolean mirror, int dist, boolean blocks, int sx, int sy, int sz, int[] states,
-                             int index, int count) implements CustomPacketPayload {
+                             int index, int count, int side, int px, int py, int pz) implements CustomPacketPayload {
         public static final Type<HeistState> TYPE = new Type<>(InfinityStones.id("extra_space_heist_state"));
         public static final StreamCodec<FriendlyByteBuf, HeistState> CODEC = StreamCodec.of((buf, s) -> {
             buf.writeByte(s.mode);
@@ -43,6 +43,7 @@ public final class SpaceNet {
                 for (int v : s.states) buf.writeVarInt(v + 1);
             }
             buf.writeVarInt(s.index); buf.writeVarInt(s.count);
+            buf.writeVarInt(s.side); buf.writeInt(s.px); buf.writeInt(s.py); buf.writeInt(s.pz);
         }, buf -> {
             int mode = buf.readByte();
             boolean hasA = buf.readBoolean(); int ax = buf.readInt(), ay = buf.readInt(), az = buf.readInt();
@@ -52,20 +53,22 @@ public final class SpaceNet {
             int sx = buf.readVarInt(), sy = buf.readVarInt(), sz = buf.readVarInt();
             int[] states = new int[0];
             if (blocks) {
-                int n = Math.min(buf.readVarInt(), 16 * 16 * 16);
+                int n = Math.min(buf.readVarInt(), 120_000);
                 states = new int[n];
                 for (int i = 0; i < n; i++) states[i] = buf.readVarInt() - 1;
             }
             int index = buf.readVarInt(), count = buf.readVarInt();
-            return new HeistState(mode, hasA, ax, ay, az, hasB, bx, by, bz, rot, mirror, dist, blocks, sx, sy, sz, states, index, count);
+            int side = buf.readVarInt(), px = buf.readInt(), py = buf.readInt(), pz = buf.readInt();
+            return new HeistState(mode, hasA, ax, ay, az, hasB, bx, by, bz, rot, mirror, dist, blocks, sx, sy, sz, states, index, count, side, px, py, pz);
         });
         @Override public Type<HeistState> type() { return TYPE; }
     }
 
     /**
-     * Client → server Area Heist input while the mode is on. action: 0 left, 1 right, 2 shift+right, 3 Alt+scroll
-     * (value = direction), 4 cancel (middle click). x/y/z = the block the client aims at (selecting) or the ghost
-     * anchor (placing); has = false when nothing is aimed.
+     * Client → server Area Heist input while the mode is on. action: 0 left click, 1 right click (selecting: discard;
+     * placing: value = tool 0 deploy / 1 print / 2 delete), 4 cancel, 5 Ctrl+scroll on a selection face (value = direction,
+     * x = face), 6 Ctrl+scroll tool while placing (value = tool &lt;&lt; 2 | direction bit; move sends its axis in x/z).
+     * x/y/z = the block the client aims at (selecting) or the deploy anchor; has = false when nothing is aimed.
      */
     public record HeistInput(int action, int value, boolean has, int x, int y, int z) implements CustomPacketPayload {
         public static final Type<HeistInput> TYPE = new Type<>(InfinityStones.id("extra_space_heist_input"));

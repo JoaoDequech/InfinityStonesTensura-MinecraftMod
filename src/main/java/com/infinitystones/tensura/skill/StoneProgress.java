@@ -82,7 +82,8 @@ public final class StoneProgress {
             Stone other = Stone.byOriginalPower(power);
             if (other != null && !held.contains(other)) return false;
         }
-        return true;
+        // powers of the complete gauntlet need the gauntlet itself, not just six loose stones
+        return depth > 0 || !GauntletStones.isGauntletPower(node) || GauntletStones.wearsComplete(player);
     }
 
     public enum BuyResult { OK, UNKNOWN_NODE, NOT_BUYABLE, ALREADY_OWNED, NEED_STONE, LOCKED_PARENT, NEED_OTHER_STONES, NOT_ENOUGH }

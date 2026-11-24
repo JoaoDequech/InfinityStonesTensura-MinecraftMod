@@ -148,6 +148,7 @@ public final class Possession {
 
     /** A player was picked in the menu. */
     static void pick(ServerPlayer p, String uuid) {
+        if (com.infinitystones.tensura.gauntlet.GauntletAbilities.pick(p, uuid)) return;
         Long until = MENU_TOKEN.remove(p.getUUID());
         if (until == null || p.serverLevel().getGameTime() > until || isPossessing(p) || isGhost(p)) return;
         UUID id;

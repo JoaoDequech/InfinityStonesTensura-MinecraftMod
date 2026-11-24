@@ -27,7 +27,7 @@
       "aim": true,
       "settings": {
         "min": 32,
-        "max": 128,
+        "max": 256, "cap1": 128,
         "step": 8,
         "default": 64,
         "label": "infinity.setting.reality.sky_radius"

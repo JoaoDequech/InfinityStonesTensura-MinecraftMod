@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
+import com.infinitystones.tensura.skill.ability.extra.MenuNet;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 
 import java.util.ArrayList;
@@ -48,9 +49,10 @@ import java.util.UUID;
 @EventBusSubscriber(modid = InfinityStones.MOD_ID)
 public final class PaintWorld implements Ability {
     public static final PaintWorld INSTANCE = new PaintWorld();
-    private static final String MODE = "reality.paint_world", K = "infinity.extra.paint.";
+    private static final String MODE = "reality.paint_world", NODE = "paint_world", K = "infinity.extra.paint.";
+    private static final String[] ICONS = {"minecraft:cake", "minecraft:gold_ingot", "minecraft:amethyst_shard", "minecraft:redstone"};
     private static final float R = 9F;
-    private static final int MAX_BLOCKS = 1800, HOLD = 1200, GROW = 28, MAX_PER_TICK = 160, FLAGS = 2 | 16;
+    private static final int MAX_BLOCKS = 1800, GROW = 28, MAX_PER_TICK = 160, FLAGS = 2 | 16;
     private static final int RED = Stone.REALITY.color() & 0xFFFFFF;
     private static final int[] THEME_COLOR = {0xFF7EC8, 0xFFC83A, 0x6FE8FF, 0xC01830};
     private static final Block[][] PAL = {
@@ -69,6 +71,7 @@ public final class PaintWorld implements Ability {
         final Map<BlockPos, Painted> done = new LinkedHashMap<>();
         int cursor, phase, holdStart, back;
         boolean revert;
+        int nextTheme = -1;
         Job(UUID owner, ServerLevel level, Vec3 c, int theme) { this.owner = owner; this.level = level; this.c = c; this.theme = theme; }
     }
 
@@ -80,17 +83,45 @@ public final class PaintWorld implements Ability {
 
     @Override
     public boolean press(ServerPlayer p, boolean alt) {
+        if (alt) return MenuNet.open(p, Stone.REALITY, NODE, this) || wipe(p);
+        if (JOBS.containsKey(p.getUUID())) return Fx.fail(p, K + "busy");
+        return start(p, ExtraSettings.get(p, MODE, 1, 1, 4, 1) - 1, Aim.point(p, 40));
+    }
+
+    @Override
+    public List<MenuNet.Option> menu(ServerPlayer p) {
         Job live = JOBS.get(p.getUUID());
-        if (alt) {
-            if (live == null) return Fx.fail(p, K + "none");
-            live.revert = true;
-            Fx.bar(p, Stone.REALITY, K + "wipe");
-            return true;
-        }
-        if (live != null) return Fx.fail(p, K + "busy");
+        int cur = live != null ? live.theme : -1;
+        List<MenuNet.Option> o = new ArrayList<>();
+        for (int i = 0; i < ICONS.length; i++) o.add(MenuNet.opt(K + "theme" + (i + 1), ICONS[i], i == cur));
+        o.add(MenuNet.opt(K + "restore", "minecraft:water_bucket", false));
+        return o;
+    }
+
+    @Override
+    public void pick(ServerPlayer p, int index) {
+        if (index == ICONS.length) { wipe(p); return; }
+        if (index < 0 || index > ICONS.length) return;
+        ExtraSettings.set(p, MODE, index + 1);
+        Job live = JOBS.get(p.getUUID());
+        if (live == null) { start(p, index, Aim.point(p, 40)); return; }
+        if (live.theme == index && !live.revert) return;
+        live.nextTheme = index;
+        live.revert = true;
+        Fx.bar(p, Stone.REALITY, K + "on", Component.translatable(K + "theme" + (index + 1)), live.order.size());
+    }
+
+    private static boolean wipe(ServerPlayer p) {
+        Job live = JOBS.get(p.getUUID());
+        if (live == null) return Fx.fail(p, K + "none");
+        live.nextTheme = -1;
+        live.revert = true;
+        Fx.bar(p, Stone.REALITY, K + "wipe");
+        return true;
+    }
+
+    private static boolean start(ServerPlayer p, int theme, Vec3 c) {
         ServerLevel l = p.serverLevel();
-        int theme = ExtraSettings.get(p, MODE, 1, 1, 4, 1) - 1;
-        Vec3 c = Aim.point(p, 40);
         Job job = new Job(p.getUUID(), l, c, theme);
         scan(p, job);
         if (job.order.isEmpty()) return Fx.fail(p, K + "nothing");
@@ -103,7 +134,6 @@ public final class PaintWorld implements Ability {
         Fx.bar(p, Stone.REALITY, K + "on", Component.translatable(K + "theme" + (theme + 1)), job.order.size());
         return true;
     }
-
     // ------------------------------------------------------------------ scan
 
     private static void scan(ServerPlayer p, Job job) {
@@ -211,7 +241,7 @@ public final class PaintWorld implements Ability {
         }
         if (job.phase == 1) {
             ServerPlayer owner = l.getServer().getPlayerList().getPlayer(job.owner);
-            if (job.revert || age - job.holdStart >= HOLD || owner == null && age - job.holdStart > 40) {
+            if (job.revert || owner == null && age - job.holdStart > 40) {
                 job.phase = 2;
                 job.back = job.order.size() - 1;
                 FxNet.shockwave(l, Ground.below(l, job.c, 10).add(0, 0.1, 0), R * 1.5F, RED, 20);
@@ -270,6 +300,10 @@ public final class PaintWorld implements Ability {
         for (BlockPos pos : new ArrayList<>(job.done.keySet())) unpaint(job, pos);
         Fx.at(job.level, Fx.light(Stone.REALITY, 1.2F), job.c, 24, 2.5, 0.02);
         Fx.sound(job.level, job.c, SoundEvents.BEACON_POWER_SELECT, 0.5F, 1.5F);
+        if (job.nextTheme >= 0) {
+            ServerPlayer owner = job.level.getServer().getPlayerList().getPlayer(job.owner);
+            if (owner != null && owner.serverLevel() == job.level) start(owner, job.nextTheme, job.c);
+        }
     }
 
     @SubscribeEvent

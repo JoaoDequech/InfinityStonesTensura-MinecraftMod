@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Original "Destroy Stones" (toggle): a 17.5 s ritual (350 ticks, like the original animation timer) with the six
  * colours spiralling into the gauntlet; turning it off before the end cancels it. At the end the six stones set in the
- * gauntlet in your hand are destroyed for good, your arm is burned and you are thrown into the Soulworld.
+ * gauntlet you carry are destroyed for good, your arm is burned and you are thrown into the Soulworld.
  */
 public final class DestroyStones {
     public static final String MODE = "reality.gauntlet_destroy";
@@ -29,8 +29,7 @@ public final class DestroyStones {
     private static final Map<UUID, Integer> RITUAL = new HashMap<>();
 
     public static void start(ServerPlayer p) {
-        if (!GauntletPowers.ready(p, true) || !GauntletStones.isComplete(GauntletStones.inHand(p))) {
-            if (GauntletStones.wearsComplete(p)) Fx.barGray(p, "infinity.gauntlet.destroy.in_hand");
+        if (!GauntletPowers.ready(p, true)) {
             Rules.forceToggleOff(p, MODE);
             return;
         }
@@ -41,8 +40,8 @@ public final class DestroyStones {
     public static void tick(ServerPlayer p) {
         Integer t = RITUAL.get(p.getUUID());
         if (t == null) return;
-        ItemStack g = GauntletStones.inHand(p);
-        if (!GauntletStones.isComplete(g)) { RITUAL.remove(p.getUUID()); Rules.forceToggleOff(p, MODE); return; }
+        ItemStack g = GauntletStones.completeGauntlet(p);
+        if (g.isEmpty()) { RITUAL.remove(p.getUUID()); Rules.forceToggleOff(p, MODE); return; }
         RITUAL.put(p.getUUID(), ++t);
         ServerLevel l = p.serverLevel();
         p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 100, false, false));

@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.animal.Chicken;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
- * Client half of Harmless Form: draws a chicken proxy instead of any mob the server marked as transformed
+ * Client half of Harmless Form: draws a (scaled, nameless) chicken proxy instead of any player the server marked as transformed
  * (see {@link HarmlessForm#CLIENT_FORMS}). The proxy is never added to the world. No mixin needed: the
  * cancellable {@link RenderLivingEvent.Pre} replaces the mob's own model render.
  */
@@ -32,7 +32,7 @@ public final class HarmlessFormRenderer {
     public static void preRender(RenderLivingEvent.Pre<?, ?> e) {
         if (rendering) return;
         LivingEntity entity = e.getEntity();
-        if (!(entity instanceof Mob) || !HarmlessForm.CLIENT_FORMS.contains(entity.getId())) {
+        if (!(entity instanceof Player) || !HarmlessForm.CLIENT_FORMS.contains(entity.getId())) {
             if (!PROXIES.isEmpty()) PROXIES.remove(entity);
             return;
         }
@@ -51,14 +51,17 @@ public final class HarmlessFormRenderer {
         proxy.xRotO = entity.xRotO;
         proxy.hurtTime = entity.hurtTime;
         proxy.deathTime = entity.deathTime;
-        proxy.setCustomName(entity.getCustomName());
-        proxy.setCustomNameVisible(entity.isCustomNameVisible());
+        proxy.setCustomName(null);
+        proxy.setCustomNameVisible(false);
         float partial = e.getPartialTick();
         float yaw = Mth.lerp(partial, entity.yRotO, entity.getYRot());
         rendering = true;
         try {
+            e.getPoseStack().pushPose();
+            e.getPoseStack().scale(2.1F, 2.1F, 2.1F);
             Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(proxy)
                     .render(proxy, yaw, partial, e.getPoseStack(), e.getMultiBufferSource(), e.getPackedLight());
+            e.getPoseStack().popPose();
         } finally {
             rendering = false;
         }

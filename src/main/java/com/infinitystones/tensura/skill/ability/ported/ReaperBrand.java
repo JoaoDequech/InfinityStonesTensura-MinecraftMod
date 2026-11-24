@@ -107,8 +107,7 @@ public final class ReaperBrand implements Ported {
         return b.owner.isAlive() && !b.owner.isRemoved() && b.target.isAlive() && !b.target.isRemoved()
                 && !b.owner.hasDisconnected()
                 && b.owner.level() == b.level && b.target.level() == b.level
-                && b.owner.distanceToSqr(b.target) <= 96D * 96D
-                && !b.owner.isAlliedTo(b.target) && !b.target.isAlliedTo(b.owner);
+                && b.owner.distanceToSqr(b.target) <= 96D * 96D;
     }
 
     private static @Nullable LivingEntity aimedTarget(ServerLevel level, ServerPlayer owner) {

@@ -66,6 +66,7 @@ public final class Abilities {
         com.infinitystones.tensura.skill.ability.extra.v2b.V2B.register(Abilities::r);
         com.infinitystones.tensura.skill.ability.extra.v2c.V2C.register(Abilities::r);
         com.infinitystones.tensura.skill.ability.extra.v2d.V2D.register(Abilities::r);
+        com.infinitystones.tensura.skill.ability.extra.v2e.V2E.register(Abilities::r);
     }
 
     private static void r(String type, Ability a) { ALL.put(type, a); }

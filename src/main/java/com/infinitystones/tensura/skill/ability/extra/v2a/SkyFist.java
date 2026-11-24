@@ -42,15 +42,15 @@ public final class SkyFist implements Ability {
         Vec3 aim = Aim.point(p, 48);
         Vec3 ground = Ground.below(l, aim.add(0, 0.3, 0), 24);
         if (!l.hasChunkAt(BlockPos.containing(ground))) return Fx.fail(p, "infinity.v2a.far");
-        double yC = Math.min(l.getMaxBuildHeight() - 6, ground.y + 34 + 2 * size);
+        float scale = size == 1 ? 5F : size == 2 ? 7F : 10F;
+        double yC = Math.min(l.getMaxBuildHeight() - 6, ground.y + Math.max(34, 3.8 * scale + 18));
         Vec3 sky = new Vec3(ground.x, yC, ground.z);
-        float scale = 1.8F + 0.5F * (size - 1);
+        float r1 = 2.7F * scale;
         double dx = p.getX() - ground.x, dz = p.getZ() - ground.z;
         float yaw = dx * dx + dz * dz < 1 ? (float) Math.toRadians(-p.getYRot() + 180) : (float) Math.atan2(dx, dz);
         int id = V2aNet.newId();
         V2aNet.send(l, ground, 200, V2aNet.msg(V2aNet.ARM, id, alt ? 1 : 0, V2aAnim.FIST_LIFE, scale, ground, yaw, yC, ground.y, 0, size));
 
-        float r1 = 9 + 2 * size;
         Vec3 up = new Vec3(0, 1, 0);
         int life = V2aAnim.FIST_LIFE - 6;
         PowerNet.circle(l, PowerNet.newId(), sky, up, r1, Bits.PURPLE, Bits.ACCENT, life, 3F, PowerNet.RAYS);
@@ -58,15 +58,15 @@ public final class SkyFist implements Ability {
         PowerNet.circle(l, PowerNet.newId(), sky.add(0, -0.6, 0), up, r1 * 0.3F, Bits.HOT, Bits.PURPLE, life, 6F, PowerNet.SIMPLE);
         Bits.farSound(l, ground, SoundEvents.BEACON_ACTIVATE, 0.5F, 0.55F, 120);
         Bits.farSound(l, ground, SoundEvents.RESPAWN_ANCHOR_CHARGE, 0.45F, 0.7F, 120);
-        Tasks.add(new Fist(p, l, ground, yC, size, alt, r1));
+        Tasks.add(new Fist(p, l, ground, yC, size, alt, r1, scale));
         return true;
     }
 
     private static final class Fist implements Tasks.Task {
-        final ServerPlayer p; final ServerLevel l; final Vec3 ground; final double yC; final int size; final boolean palm; final float r1;
+        final ServerPlayer p; final ServerLevel l; final Vec3 ground; final double yC; final int size; final boolean palm; final float r1, sc;
 
-        Fist(ServerPlayer p, ServerLevel l, Vec3 ground, double yC, int size, boolean palm, float r1) {
-            this.p = p; this.l = l; this.ground = ground; this.yC = yC; this.size = size; this.palm = palm; this.r1 = r1;
+        Fist(ServerPlayer p, ServerLevel l, Vec3 ground, double yC, int size, boolean palm, float r1, float sc) {
+            this.p = p; this.l = l; this.ground = ground; this.yC = yC; this.size = size; this.palm = palm; this.r1 = r1; this.sc = sc;
         }
 
         @Override
@@ -81,19 +81,19 @@ public final class SkyFist implements Ability {
                 float k = V2aAnim.easeIn((age - V2aAnim.FIST_START) / (float) (V2aAnim.FIST_IMPACT - V2aAnim.FIST_START));
                 double fy = ground.y + (yC - ground.y) * (1 - k);
                 Vec3 at = new Vec3(ground.x, fy, ground.z);
-                FxNet.pillar(l, 0, at, 0.6F + 0.2F * size, 16F, Bits.PURPLE, 3);
-                l.sendParticles(Fx.dust(Bits.PURPLE, 2.4F), at.x, at.y + 1, at.z, 6, 1.2, 1.5, 1.2, 0);
-                l.sendParticles(ParticleTypes.END_ROD, at.x, at.y + 3, at.z, 2, 0.8, 2, 0.8, 0.02);
+                FxNet.pillar(l, 0, at, 0.5F * sc, 16F, Bits.PURPLE, 3);
+                l.sendParticles(Fx.dust(Bits.PURPLE, 2.4F), at.x, at.y + 1, at.z, 8, sc * 0.4, sc * 0.5, sc * 0.4, 0);
+                l.sendParticles(ParticleTypes.END_ROD, at.x, at.y + sc, at.z, 3, sc * 0.3, sc * 0.6, sc * 0.3, 0.02);
                 if (age == V2aAnim.FIST_START + 2) Bits.farSound(l, at, SoundEvents.WIND_CHARGE_BURST, 0.6F, 0.5F, 100);
                 if (age == V2aAnim.FIST_START + 14) Bits.farSound(l, ground, SoundEvents.BREEZE_WIND_CHARGE_BURST, 0.6F, 0.45F, 100);
                 if (age == V2aAnim.FIST_IMPACT - 8) {
                     Bits.farSound(l, ground, SoundEvents.ENDER_DRAGON_GROWL, 0.35F, 1.7F, 100);
-                    FxNet.shake(l, ground, 36, 0.8F, 10);
+                    FxNet.shake(l, ground, 60, 1F + 0.1F * sc, 14);
                 }
             }
             if (age == V2aAnim.FIST_IMPACT) impact();
             if (age > V2aAnim.FIST_IMPACT && age < V2aAnim.FIST_STAY && age % 3 == 0) {
-                double rr = (age - V2aAnim.FIST_IMPACT) * 0.7 + 1;
+                double rr = (age - V2aAnim.FIST_IMPACT) * 0.35 * (1 + sc * 0.15) + 1;
                 for (int k = 0; k < 6; k++) {
                     double a = rnd.nextDouble() * Math.PI * 2;
                     Vec3 s = ground.add(Math.cos(a) * rr, 0.3, Math.sin(a) * rr);
@@ -108,24 +108,24 @@ public final class SkyFist implements Ability {
             float s = 1 + 0.35F * (size - 1);
             BlockState st = Bits.surface(l, ground);
             float flat = palm ? 1.5F : 1F;
-            FxNet.shockwave(l, ground.add(0, 0.1, 0), 7F * s * flat, Bits.PURPLE, 22);
-            FxNet.shockwave(l, ground.add(0, 0.12, 0), 4.2F * s * flat, Bits.ACCENT, 16);
-            FxNet.shockwave(l, ground.add(0, 0.14, 0), 11F * s * flat, 0xFFFFFF, 30);
-            FxNet.flare(l, ground.add(0, 0.5, 0), 5F * s, Bits.ACCENT, 10);
-            FxNet.shake(l, ground, 48, 3.4F + size, 24);
-            FxNet.flashAround(l, ground, 10, Bits.PURPLE, 0.35F, 8);
-            l.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, st), ground.x, ground.y + 0.3, ground.z, 70, 2.0 * s, 0.2, 2.0 * s, 0.45);
-            Fx.burstRing(l, ground.add(0, 0.2, 0), 42, new BlockParticleOption(ParticleTypes.BLOCK, st), 0.9 * flat);
-            Fx.burstRing(l, ground.add(0, 0.3, 0), 30, ParticleTypes.CLOUD, 0.7 * flat);
-            Fx.burstRing(l, ground.add(0, 0.4, 0), 24, ParticleTypes.WITCH, 0.6 * flat);
+            FxNet.shockwave(l, ground.add(0, 0.1, 0), 2.4F * sc * flat, Bits.PURPLE, 24);
+            FxNet.shockwave(l, ground.add(0, 0.12, 0), 1.4F * sc * flat, Bits.ACCENT, 18);
+            FxNet.shockwave(l, ground.add(0, 0.14, 0), 3.8F * sc * flat, 0xFFFFFF, 34);
+            FxNet.flare(l, ground.add(0, 0.5, 0), 1.3F * sc, Bits.ACCENT, 12);
+            FxNet.shake(l, ground, 40 + 8 * sc, 2.4F + 0.5F * sc, 30);
+            FxNet.flashAround(l, ground, 14 + sc, Bits.PURPLE, 0.35F, 8);
+            l.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, st), ground.x, ground.y + 0.3, ground.z, 120 + 8 * (int) sc, sc * 0.5, 0.2, sc * 0.5, 0.5);
+            Fx.burstRing(l, ground.add(0, 0.2, 0), 64, new BlockParticleOption(ParticleTypes.BLOCK, st), (0.5 + 0.16 * sc) * flat);
+            Fx.burstRing(l, ground.add(0, 0.3, 0), 48, ParticleTypes.CLOUD, (0.4 + 0.14 * sc) * flat);
+            Fx.burstRing(l, ground.add(0, 0.4, 0), 32, ParticleTypes.WITCH, (0.35 + 0.12 * sc) * flat);
             Bits.farSound(l, ground, SoundEvents.GENERIC_EXPLODE, 0.7F, 0.5F, 100);
             Bits.farSound(l, ground, SoundEvents.WARDEN_ATTACK_IMPACT, 0.7F, 0.55F, 100);
             Bits.farSound(l, ground, SoundEvents.ANVIL_LAND, 0.5F, 0.45F, 100);
             Bits.farSound(l, ground, SoundEvents.LIGHTNING_BOLT_THUNDER, 0.4F, 0.6F, 120);
 
-            int count = 8 + 4 * size;
+            int count = 16 + 6 * size;
             for (int k = 0; k < count; k++) {
-                double a = rnd.nextDouble() * Math.PI * 2, rr = 0.8 + rnd.nextDouble() * 2.2 * s;
+                double a = rnd.nextDouble() * Math.PI * 2, rr = 0.8 + rnd.nextDouble() * 0.7 * sc;
                 Vec3 at = ground.add(Math.cos(a) * rr, 0.6, Math.sin(a) * rr);
                 double sp = 0.25 + rnd.nextDouble() * 0.5;
                 Vec3 vel = new Vec3(Math.cos(a) * sp, 0.55 + rnd.nextDouble() * 0.7, Math.sin(a) * sp);

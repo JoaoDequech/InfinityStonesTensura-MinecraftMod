@@ -85,7 +85,6 @@ public final class TemporalLag implements Ability {
     private boolean lag(ServerPlayer p) {
         LivingEntity t = Aim.living(p, 40, e -> Rules.canControl(p, e));
         if (t == null) return Fx.fail(p, "infinity.extra.v2d.lag.no_target");
-        if (t instanceof ServerPlayer vp && ClaimsCompat.isProtected(vp, p)) return Fx.fail(p, "infinity.extra.v2d.lag.protected");
         long mine = LAGS.values().stream().filter(l -> l.caster.equals(p.getUUID())).count();
         Lag old = LAGS.get(t.getUUID());
         if (old == null && mine >= MAX_PER_CASTER) return Fx.fail(p, "infinity.extra.v2d.lag.max");

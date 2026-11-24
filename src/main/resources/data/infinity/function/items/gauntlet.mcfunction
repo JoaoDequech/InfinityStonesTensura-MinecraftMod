@@ -1,9 +1,8 @@
+# Dropped items are NOT turned into ground props any more: the prop could not keep the stack's data
+# (gauntlet sockets, emptied artifact, name). Relics placed by structures still work through the stands below.
 # one NBT scan, distance-limited to players, tag the matches
-execute as @a at @s run tag @e[type=item,distance=..8,nbt={Item:{id:"infinity:infinity_gauntlet"}}] add gauntlet_found
 
 # act on the tag from here on -- no more NBT comparisons
-execute as @e[tag=gauntlet_found] at @s run summon armor_stand ~ ~ ~ {DisabledSlots:4144959,ShowArms:1b,Invisible:1b,NoBasePlate:1b,Small:1b,Invulnerable:1b,Tags:["gauntlet_ground"],Passengers:[{id:"minecraft:interaction",width:0.4f,height:-0.7f,Tags:["gauntlet_ground_interaction"]}]}
-execute as @e[tag=gauntlet_found] at @s run kill @s
 
 execute as @e[type=armor_stand,tag=gauntlet_ground] at @s run infinity_ground_display infinity:infinity_gauntlet
 execute as @e[type=armor_stand,tag=gauntlet_ground] at @s if entity @p[distance=..0.5] run tp @s ~ ~ ~ facing entity @p[distance=..1] feet

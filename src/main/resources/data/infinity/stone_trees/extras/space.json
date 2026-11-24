@@ -15,7 +15,7 @@
       "in_bar": true,
       "gui_position": [2, -2],
       "aim": true,
-      "settings": { "min": 3, "max": 48, "step": 1, "default": 10, "label": "infinity.extra.area_heist.setting" },
+      "settings": { "min": 3, "max": 128, "cap1": 48, "step": 1, "default": 10, "label": "infinity.extra.area_heist.setting" },
       "commands": [],
       "first_tick_commands": [],
       "last_tick_commands": []

@@ -78,14 +78,9 @@ public final class CommandPorts {
                 return false;
             }
         });
-        // original exit_soulworld only worked inside the soul world (tag in_soul); otherwise the original commands replay
-        byMode.put("soul.exit_soulworld", new Ported() {
-            @Override public Boolean press(ServerPlayer p, StoneTree.Node n, boolean alt) {
-                if (p.getTags().contains("in_soul")) return null;
-                msg(p, "not_in_soulworld", ChatFormatting.GOLD);
-                return false;
-            }
-        });
+        // enter/exit remember each entity's exact spot (the original dropped everybody at y=72 on the way back)
+        byMode.put("soul.enter_soulworld", new SoulWorldTravel.Enter());
+        byMode.put("soul.exit_soulworld", new SoulWorldTravel.Exit());
         byMode.put("mind.intangibility_effects", new Ported() {});
         byMode.put("mind.intangibility_flight", new Ported() {});
         byMode.put("mind.intangibility_ground", new Ported() {});

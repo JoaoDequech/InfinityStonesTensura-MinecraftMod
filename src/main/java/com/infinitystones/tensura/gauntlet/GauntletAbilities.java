@@ -34,28 +34,70 @@ public final class GauntletAbilities {
 
     // ------------------------------------------------------------ Execution (original "Kill Other Players")
 
-    /** Left: execute the aimed player. Right: every other player on the server (PvP rules and teams respected). */
-    public static boolean execute(ServerPlayer p, boolean everyone) {
+    private static final java.util.Map<java.util.UUID, Long> EXEC_MENU = new java.util.HashMap<>();
+    private static final int MENU_MOBS = 40;
+    private static final double MENU_RANGE = 64;
+
+    /** Left: execute whatever you aim at, player or any mob. Right: pick the victim from a list (players, then mobs nearby). */
+    public static boolean execute(ServerPlayer p, boolean menu) {
         if (!GauntletPowers.ready(p, true)) return false;
-        List<ServerPlayer> victims = new ArrayList<>();
-        if (everyone) {
-            for (ServerPlayer o : p.server.getPlayerList().getPlayers()) if (o != p && Rules.canHarm(p, o)) victims.add(o);
-        } else {
-            ServerPlayer t = Aim.entity(p, 256, ServerPlayer.class, o -> Rules.canHarm(p, o));
-            if (t != null) victims.add(t);
+        if (menu) return openExecutionMenu(p);
+        LivingEntity t = Aim.living(p, 256, e -> Rules.canHarm(p, e));
+        if (t == null) return Fx.fail(p, "infinity.extra.no_target");
+        strike(p, t);
+        return true;
+    }
+
+    private static boolean openExecutionMenu(ServerPlayer p) {
+        List<String> names = new ArrayList<>(), ids = new ArrayList<>();
+        for (ServerPlayer o : p.server.getPlayerList().getPlayers()) {
+            if (o == p || !Rules.canHarm(p, o)) continue;
+            names.add(o.getGameProfile().getName());
+            ids.add(o.getUUID().toString());
         }
-        if (victims.isEmpty()) return Fx.fail(p, p.server.isPvpAllowed() ? "infinity.extra.no_target" : "infinity.gauntlet.execute.no_pvp");
-        for (ServerPlayer v : victims) {
-            ServerLevel vl = v.serverLevel();
-            LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(vl);
-            if (bolt != null) { bolt.moveTo(v.position()); bolt.setVisualOnly(true); vl.addFreshEntity(bolt); }
-            vl.sendParticles(Fx.dust(0xFFD24A, 1.6F), v.getX(), v.getY() + 1, v.getZ(), 40, 0.4, 0.8, 0.4, 0.05);
-            com.infinitystones.tensura.skill.ability.extra.Executions.kill(v);
+        List<LivingEntity> mobs = new ArrayList<>(p.serverLevel().getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(MENU_RANGE),
+                e -> !(e instanceof Player) && Rules.canHarm(p, e)));
+        mobs.sort(java.util.Comparator.comparingDouble(p::distanceToSqr));
+        for (LivingEntity m : mobs.subList(0, Math.min(MENU_MOBS, mobs.size()))) {
+            names.add(m.getDisplayName().getString() + " (" + (int) Math.sqrt(p.distanceToSqr(m)) + " m)");
+            ids.add(m.getUUID().toString());
         }
+        if (names.isEmpty()) return Fx.fail(p, "infinity.extra.no_target");
+        EXEC_MENU.put(p.getUUID(), p.serverLevel().getGameTime() + 20 * 60);
+        net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(p, new com.infinitystones.tensura.soul.SoulNet.Players(names, ids));
+        return true;
+    }
+
+    /** A row of the shared list screen was picked. True when it answered an open execution menu (so possession must ignore it). */
+    public static boolean pick(ServerPlayer p, String uuid) {
+        Long until = EXEC_MENU.remove(p.getUUID());
+        if (until == null) return false;
+        if (p.serverLevel().getGameTime() > until || !GauntletPowers.ready(p, true)) return true;
+        java.util.UUID id;
+        try { id = java.util.UUID.fromString(uuid); } catch (IllegalArgumentException e) { return true; }
+        Entity t = null;
+        ServerPlayer online = p.server.getPlayerList().getPlayer(id);
+        if (online != null) t = online;
+        else for (ServerLevel l : p.server.getAllLevels()) { t = l.getEntity(id); if (t != null) break; }
+        if (!(t instanceof LivingEntity target) || !Rules.canHarm(p, target)
+                || (!(target instanceof ServerPlayer) && (target.level() != p.level() || target.distanceToSqr(p) > (MENU_RANGE + 16) * (MENU_RANGE + 16)))) {
+            Fx.fail(p, "infinity.extra.no_target");
+            return true;
+        }
+        strike(p, target);
+        return true;
+    }
+
+    /** The kill itself: the robust path (generic kill, setHealth, die, discard fallback; no death message). */
+    private static void strike(ServerPlayer p, LivingEntity v) {
+        ServerLevel vl = (ServerLevel) v.level();
+        LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(vl);
+        if (bolt != null) { bolt.moveTo(v.position()); bolt.setVisualOnly(true); vl.addFreshEntity(bolt); }
+        vl.sendParticles(Fx.dust(0xFFD24A, 1.6F), v.getX(), v.getY() + v.getBbHeight() * 0.5, v.getZ(), 40, 0.4, 0.8, 0.4, 0.05);
+        com.infinitystones.tensura.skill.ability.extra.Executions.kill(v);
         GauntletPowers.global(p, SoundEvents.CONDUIT_ACTIVATE, 0.6F, 1F);
         GauntletPowers.global(p, SoundEvents.ENDER_DRAGON_DEATH, 0.4F, 1F);
         GauntletPowers.burn(p);
-        return true;
     }
 
     // ------------------------------------------------------------ Eternity's Convergence (original)

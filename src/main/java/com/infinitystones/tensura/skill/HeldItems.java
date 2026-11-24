@@ -2,7 +2,6 @@ package com.infinitystones.tensura.skill;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
 
 import java.util.function.Predicate;
 
@@ -12,7 +11,7 @@ public final class HeldItems {
         for (ItemStack s : player.getInventory().items) if (!s.isEmpty() && test.test(s)) return true;
         for (ItemStack s : player.getInventory().offhand) if (!s.isEmpty() && test.test(s)) return true;
         for (ItemStack s : player.getInventory().armor) if (!s.isEmpty() && test.test(s)) return true;
-        return ModList.get().isLoaded("curios") && CuriosCompat.has(player, test);
+        return CuriosCompat.has(player, test);
     }
 
     private HeldItems() {}

@@ -115,7 +115,7 @@ public final class StoneTree {
             root.getAsJsonArray("nodes").forEach(all::add);
             // new powers (not in the original mod) live in extras/<stone>.json so regenerating the original trees never drops them
             // extras/port/<stone>.json = ported/new abilities (port-originals); same id as an original node = override
-            for (String extra : new String[]{"extras/", "extras/port/", "extras/v2a/", "extras/v2b/", "extras/v2c/", "extras/v2d/"}) {
+            for (String extra : new String[]{"extras/", "extras/port/", "extras/v2a/", "extras/v2b/", "extras/v2c/", "extras/v2d/", "extras/v2e/"}) {
                 try (var ex = StoneTree.class.getResourceAsStream("/data/infinity/stone_trees/" + extra + stone.key + ".json")) {
                     if (ex != null) JsonParser.parseReader(new InputStreamReader(ex, StandardCharsets.UTF_8)).getAsJsonObject()
                             .getAsJsonArray("nodes").forEach(all::add);

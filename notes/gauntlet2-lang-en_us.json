@@ -1,0 +1,15 @@
+{
+  "infinity.wheel.gauntlet": "Infinity Gauntlet",
+  "infinity.wheel.gauntlet.gems": "Stones",
+  "infinity.wheel.gauntlet.gems.kind": "Set / remove stones",
+  "infinity.gauntlet.gems.insert_all": "Insert all",
+  "infinity.gauntlet.gems.remove_all": "Remove all",
+  "infinity.gauntlet.gems.loose": "Stones you carry",
+  "infinity.gauntlet.gems.insert_hint": "Insert stones",
+  "infinity.gauntlet.gems.none": "You are not carrying a Gauntlet",
+  "infinity.gauntlet.gems.click_remove": "click: remove",
+  "infinity.gauntlet.gems.click_insert": "click: insert",
+  "infinity.gauntlet.nothing_to_remove": "No stone is set",
+  "infinity.gauntlet.need_complete": "Needs a Gauntlet with all six stones, carried or equipped",
+  "infinity.dest.map": "Map"
+}

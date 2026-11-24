@@ -11,6 +11,7 @@ import com.infinitystones.tensura.skill.ability.extra.MenuNet;
 import com.infinitystones.tensura.skill.ability.extra.Tasks;
 import com.infinitystones.tensura.skill.ability.extra.fx.FxNet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -46,10 +47,11 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Roubo de Área / Area Heist (Create-schematic style). Selecting: left marks corner A, corner B, then steals the box
- * (≤ 16³): the REAL blocks (states + block-entity NBT) leave the world in waves and are stored on the player (≤ 8
- * heists, persisted). Menu (right click in the wheel): pick a heist → placing mode with an owner-only translucent ghost
- * following the aim; Alt+scroll = distance, right = rotate 90°, Shift+right = mirror, left = place. Placing only
+ * Roubo de Área / Area Heist (Create-schematic style controls, see {@code HeistClient}). Selecting: left marks corner A,
+ * corner B, then steals the box (≤ 16 per edge, more with the secret tier): the REAL blocks (states + block-entity NBT)
+ * leave the world in time-budgeted waves and are stored on the player (≤ 8 heists, persisted). Menu (right click in the
+ * wheel): pick a heist → placing mode with an owner-only translucent ghost fixed where it was deployed; the client sends
+ * Deploy / Move / Rotate / Flip / Print / Delete and the server validates each. Placing only
  * replaces air / fluids / replaceable plants; blocks are moved, never copied (a cell is cleared when its block lands).
  * Unbreakable blocks (hardness &lt; 0, portals) are never taken; block-break protection (claims) is respected.
  */
@@ -58,6 +60,8 @@ public final class AreaHeist implements Ability {
     static final String NODE = "area_heist", MODE = "space.area_heist", K = "infinity.extra.area_heist.";
     static final int OFF = 0, SELECT = 1, PLACE = 2;
     static final double RANGE = 64;
+    /** Per-tick time budget of the batched capture / paste (the server keeps its tick rate on huge areas). */
+    private static final long BUDGET_NS = 12_000_000L;
     private static final int TAKE_FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS;
     private static final int PLACE_FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
@@ -72,6 +76,7 @@ public final class AreaHeist implements Ability {
         @Nullable BlockPos a, b;
         long heist;
         int rot, dist = 10;
+        @Nullable BlockPos anchor;
         boolean mirror;
         ResourceKey<Level> dim;
         int idle;
@@ -121,7 +126,7 @@ public final class AreaHeist implements Ability {
 
     private static void sync(ServerPlayer p, @Nullable Session s, boolean blocks) {
         if (s == null || s.mode == OFF) {
-            SpaceNet.to(p, new SpaceNet.HeistState(OFF, false, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, 0, new int[0], 0, 0));
+            SpaceNet.to(p, new SpaceNet.HeistState(OFF, false, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, 0, new int[0], 0, 0, maxSide(p), 0, 0, 0));
             return;
         }
         HeistData h = s.cache;
@@ -130,7 +135,8 @@ public final class AreaHeist implements Ability {
                 s.a != null, s.a == null ? 0 : s.a.getX(), s.a == null ? 0 : s.a.getY(), s.a == null ? 0 : s.a.getZ(),
                 s.b != null, s.b == null ? 0 : s.b.getX(), s.b == null ? 0 : s.b.getY(), s.b == null ? 0 : s.b.getZ(),
                 s.rot, s.mirror, s.dist, send, h == null ? 0 : h.sx, h == null ? 0 : h.sy, h == null ? 0 : h.sz,
-                send ? h.stateIds() : new int[0], HeistData.list(p).size(), h == null ? 0 : h.count()));
+                send ? h.stateIds() : new int[0], HeistData.list(p).size(), h == null ? 0 : h.count(),
+                maxSide(p), s.anchor == null ? 0 : s.anchor.getX(), s.anchor == null ? 0 : s.anchor.getY(), s.anchor == null ? 0 : s.anchor.getZ()));
     }
 
     // ================================================================== wheel
@@ -214,12 +220,20 @@ public final class AreaHeist implements Ability {
         s.cache = h;
         s.rot = 0;
         s.mirror = false;
-        s.dist = ExtraSettings.get(p, MODE, 10, 3, 48, 1);
+        s.dist = ExtraSettings.get(p, MODE, 10, 3, 128, 1);
+        s.anchor = defaultAnchor(p, s.dist);
         sync(p, s, true);
         Fx.bar(p, Stone.SPACE, K + "placing");
         ServerLevel l = p.serverLevel();
         Fx.sound(l, p.position(), SoundEvents.BEACON_ACTIVATE, 0.5F, 1.7F);
         FxNet.spiral(l, p.position(), 0.9F, 2.4F, color(), 24, p.getId());
+    }
+
+    /** Where a freshly deployed structure appears: on the face aimed at, else straight ahead at the placement distance. */
+    private static BlockPos defaultAnchor(ServerPlayer p, int dist) {
+        BlockHitResult hit = Aim.block(p, dist);
+        if (hit.getType() == HitResult.Type.BLOCK) return hit.getBlockPos().relative(hit.getDirection());
+        return BlockPos.containing(p.getEyePosition().add(p.getLookAngle().scale(dist)));
     }
 
     // ================================================================== in-world input
@@ -231,10 +245,12 @@ public final class AreaHeist implements Ability {
         s.idle = 0;
         ServerLevel l = p.serverLevel();
         BlockPos at = new BlockPos(in.x(), in.y(), in.z());
-        boolean aimOk = in.has() && p.getEyePosition().distanceToSqr(Vec3.atCenterOf(at)) <= (RANGE + 8) * (RANGE + 8);
-        if (in.action() == 4) { exit(p); Fx.barGray(p, K + "cancelled"); return; }
+        double reach = Math.max(RANGE, s.dist) + 8;
+        boolean aimOk = in.has() && p.getEyePosition().distanceToSqr(Vec3.atCenterOf(at)) <= reach * reach;
+        int act = in.action();
+        if (act == 4) { exit(p); Fx.barGray(p, K + "cancelled"); return; }
         if (s.mode == SELECT) {
-            switch (in.action()) {
+            switch (act) {
                 case 0 -> {
                     if (s.a != null && s.b != null) { steal(p, s); return; }
                     if (!aimOk) { Fx.fail(p, K + "aim_block"); return; }
@@ -244,8 +260,8 @@ public final class AreaHeist implements Ability {
                         Fx.bar(p, Stone.SPACE, K + "corner_a");
                     } else {
                         int dx = Math.abs(at.getX() - s.a.getX()) + 1, dy = Math.abs(at.getY() - s.a.getY()) + 1, dz = Math.abs(at.getZ() - s.a.getZ()) + 1;
-                        if (dx > HeistData.MAX_SIDE || dy > HeistData.MAX_SIDE || dz > HeistData.MAX_SIDE) {
-                            Fx.fail(p, K + "too_big", dx, dy, dz);
+                        if (!sizeOk(p, dx, dy, dz)) {
+                            Fx.fail(p, K + "too_big2", dx, dy, dz, maxSide(p));
                             return;
                         }
                         s.b = at;
@@ -254,39 +270,103 @@ public final class AreaHeist implements Ability {
                     }
                     sync(p, s, false);
                 }
-                case 1, 2 -> {
-                    if (s.b != null) s.b = null;
-                    else if (s.a != null) s.a = null;
-                    else { exit(p); Fx.barGray(p, K + "cancelled"); return; }
+                case 1 -> {
+                    if (s.a == null && s.b == null) { exit(p); Fx.barGray(p, K + "cancelled"); return; }
+                    s.a = s.b = null;
                     Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_HIT, 0.5F, 0.8F);
+                    Fx.barGray(p, K + "discarded");
                     sync(p, s, false);
                 }
+                case 5 -> resize(p, s, in);
                 default -> { }
             }
             return;
         }
-        // PLACE
-        switch (in.action()) {
-            case 0 -> { if (!aimOk) Fx.fail(p, K + "aim_place"); else place(p, s, at); }
+        // PLACE (Create-style): right click runs the tool in value (0 deploy, 1 print, 2 delete); action 6 = Ctrl+scroll tools
+        switch (act) {
             case 1 -> {
-                s.rot = (s.rot + 1) & 3;
-                Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F, 1.0F + s.rot * 0.15F);
-                sync(p, s, false);
+                switch (in.value()) {
+                    case 0 -> {
+                        if (!aimOk) { Fx.fail(p, K + "aim_place"); return; }
+                        s.anchor = at;
+                        Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F, 1.3F);
+                        sync(p, s, false);
+                    }
+                    case 1 -> place(p, s);
+                    case 2 -> discardStored(p, s);
+                    default -> { }
+                }
             }
-            case 2 -> {
-                s.mirror = !s.mirror;
-                Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F, s.mirror ? 1.6F : 0.9F);
-                sync(p, s, false);
-            }
-            case 3 -> {
-                s.dist = Math.max(3, Math.min(48, s.dist + Integer.signum(in.value())));
-                ExtraSettings.set(p, MODE, s.dist);
-                var node = com.infinitystones.tensura.skill.StoneTree.of(Stone.SPACE).nodes.get(NODE);
-                if (node != null) com.infinitystones.tensura.wheel.AbilitySettings.set(p, node, s.dist);
-                sync(p, s, false);
-            }
+            case 6 -> tool(p, s, in);
             default -> { }
         }
+    }
+
+    // ------------------------------------------------------------------ limits
+
+    /** Longest edge of a capture: 16 for everybody, more with the secret tier. */
+    static int maxSide(ServerPlayer p) { return com.infinitystones.tensura.skill.StoneTier.has(p, Stone.SPACE) ? HeistData.HIDDEN_SIDE : HeistData.MAX_SIDE; }
+
+    static boolean sizeOk(ServerPlayer p, int sx, int sy, int sz) {
+        boolean hidden = com.infinitystones.tensura.skill.StoneTier.has(p, Stone.SPACE);
+        int side = hidden ? HeistData.HIDDEN_SIDE : HeistData.MAX_SIDE;
+        long vol = hidden ? HeistData.HIDDEN_VOLUME : HeistData.MAX_VOLUME;
+        return sx <= side && sy <= side && sz <= side && (long) sx * sy * sz <= vol;
+    }
+
+    /** Ctrl+scroll on a face of the fixed selection box: pushes or pulls that face by one block. */
+    private static void resize(ServerPlayer p, Session s, SpaceNet.HeistInput in) {
+        if (s.a == null || s.b == null || in.x() < 0 || in.x() > 5) return;
+        Direction dir = Direction.from3DDataValue(in.x());
+        int delta = Integer.signum(in.value());
+        if (delta == 0) return;
+        int[] lo = {Math.min(s.a.getX(), s.b.getX()), Math.min(s.a.getY(), s.b.getY()), Math.min(s.a.getZ(), s.b.getZ())};
+        int[] hi = {Math.max(s.a.getX(), s.b.getX()), Math.max(s.a.getY(), s.b.getY()), Math.max(s.a.getZ(), s.b.getZ())};
+        int ax = dir.getAxis().ordinal();
+        if (dir.getAxisDirection() == Direction.AxisDirection.POSITIVE) hi[ax] += delta; else lo[ax] -= delta;
+        if (hi[ax] < lo[ax]) return;
+        ServerLevel l = p.serverLevel();
+        if (lo[1] < l.getMinBuildHeight() || hi[1] >= l.getMaxBuildHeight()) return;
+        int sx = hi[0] - lo[0] + 1, sy = hi[1] - lo[1] + 1, sz = hi[2] - lo[2] + 1;
+        if (!sizeOk(p, sx, sy, sz)) { Fx.fail(p, K + "too_big2", sx, sy, sz, maxSide(p)); return; }
+        s.a = new BlockPos(lo[0], lo[1], lo[2]);
+        s.b = new BlockPos(hi[0], hi[1], hi[2]);
+        Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.4F, delta > 0 ? 1.5F : 0.9F);
+        Fx.bar(p, Stone.SPACE, K + "corner_b", sx, sy, sz);
+        sync(p, s, false);
+    }
+
+    /** Ctrl+scroll tools of the deployed structure: 1 move (along the axis sent in x/y/z), 2 move vertically, 3 rotate, 4 flip. */
+    private static void tool(ServerPlayer p, Session s, SpaceNet.HeistInput in) {
+        if (s.anchor == null) return;
+        int tool = in.value() >> 2, dir = (in.value() & 1) != 0 ? 1 : -1;
+        ServerLevel l = p.serverLevel();
+        BlockPos next = s.anchor;
+        switch (tool) {
+            case 1 -> {
+                int dx = in.x(), dz = in.z();
+                if (in.y() != 0 || Math.abs(dx) + Math.abs(dz) != 1) return;
+                next = s.anchor.offset(dx * dir, 0, dz * dir);
+            }
+            case 2 -> next = s.anchor.above(dir);
+            case 3 -> { s.rot = (s.rot + dir) & 3; Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F, 1.0F + s.rot * 0.15F); sync(p, s, false); return; }
+            case 4 -> { s.mirror = !s.mirror; Fx.sound(l, p.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.6F, s.mirror ? 1.6F : 0.9F); sync(p, s, false); return; }
+            default -> { return; }
+        }
+        double far = Math.max(RANGE, s.dist) + 72;
+        if (!l.isInWorldBounds(next) || p.getEyePosition().distanceToSqr(Vec3.atCenterOf(next)) > far * far) return;
+        s.anchor = next;
+        sync(p, s, false);
+    }
+
+    private static void discardStored(ServerPlayer p, Session s) {
+        List<HeistData> all = HeistData.all(p);
+        int idx = 0;
+        for (int i = 0; i < all.size(); i++) if (all.get(i).id == s.heist) idx = i + 1;
+        HeistData.remove(p, s.heist);
+        exit(p);
+        Fx.barGray(p, K + "deleted", idx);
+        Fx.sound(p.serverLevel(), p.position(), SoundEvents.FIRE_EXTINGUISH, 0.5F, 0.8F);
     }
 
     private static void cornerFx(ServerLevel l, BlockPos pos, boolean second) {
@@ -313,7 +393,7 @@ public final class AreaHeist implements Ability {
         if (HeistData.list(p).size() >= HeistData.MAX) { Fx.fail(p, K + "full", HeistData.MAX); return; }
         int x0 = Math.min(s.a.getX(), s.b.getX()), y0 = Math.min(s.a.getY(), s.b.getY()), z0 = Math.min(s.a.getZ(), s.b.getZ());
         int sx = Math.abs(s.a.getX() - s.b.getX()) + 1, sy = Math.abs(s.a.getY() - s.b.getY()) + 1, sz = Math.abs(s.a.getZ() - s.b.getZ()) + 1;
-        if (sx > HeistData.MAX_SIDE || sy > HeistData.MAX_SIDE || sz > HeistData.MAX_SIDE) { Fx.fail(p, K + "too_big", sx, sy, sz); return; }
+        if (!sizeOk(p, sx, sy, sz)) { Fx.fail(p, K + "too_big2", sx, sy, sz, maxSide(p)); return; }
         // candidates top-down (fragile things on top leave first)
         List<long[]> order = new ArrayList<>();
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
@@ -337,7 +417,7 @@ public final class AreaHeist implements Ability {
         int col = color();
         int orbId = FxNet.newId(), tetherId = FxNet.newId(), portalId = FxNet.newId(), runeId = FxNet.newId();
         int n = order.size();
-        int wave = Math.max(16, Math.min(400, (n + 9) / 10));
+        int wave = Math.max(16, Math.min(1500, (n + 9) / 10));
         int perWaveFx = 40;
 
         FxNet.runes(l, runeId, new Vec3(centre.x, y0 + 0.02, centre.z), Math.max(sx, sz) * 0.75F + 1, col, 80, 1.6F);
@@ -373,15 +453,18 @@ public final class AreaHeist implements Ability {
                 int step = Math.max(1, (end - cursor) / perWaveFx);
                 BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
                 double sumY = 0; int cnt = 0;
+                long t0 = System.nanoTime();
+                int k = cursor;
                 try {
-                    for (int k = cursor; k < end; k++) {
+                    for (; k < end; k++) {
+                        if ((k & 31) == 31 && System.nanoTime() - t0 > BUDGET_NS) break;
                         pos.set(order.get(k)[0]);
                         int idx = (int) order.get(k)[1];
                         if (!l.isLoaded(pos)) { skipped++; continue; }
                         BlockState st = l.getBlockState(pos);
                         if (!canTake(l, pos, st)) { skipped++; continue; }
                         BlockPos imm = pos.immutable();
-                        if (NeoForge.EVENT_BUS.post(new BlockEvent.BreakEvent(l, imm, st, p)).isCanceled()) { skipped++; continue; }
+                        if (!com.infinitystones.tensura.skill.ability.extra.Terrain.may(p, l, imm)) { skipped++; continue; }
                         BlockEntity be = l.getBlockEntity(imm);
                         CompoundTag nbt = be == null ? null : be.saveWithFullMetadata(l.registryAccess());
                         h.set(idx, st, nbt);
@@ -394,7 +477,7 @@ public final class AreaHeist implements Ability {
                         else if (k % 3 == 0) l.sendParticles(Fx.dust(Stone.SPACE, 1.1F), imm.getX() + 0.5, imm.getY() + 0.5, imm.getZ() + 0.5, 1, 0.25, 0.25, 0.25, 0);
                     }
                 } finally {
-                    cursor = end;
+                    cursor = k;
                     h.store(p);
                 }
                 if (cnt > 0) {
@@ -427,40 +510,60 @@ public final class AreaHeist implements Ability {
 
     static boolean replaceable(BlockState s) { return s.isAir() || s.canBeReplaced(); }
 
-    private static void place(ServerPlayer p, Session s, BlockPos anchor) {
+    /** Print: the cells are validated over several ticks (huge structures), then pasted by the usual animation. */
+    private static void place(ServerPlayer p, Session s) {
         ServerLevel l = p.serverLevel();
         HeistData h = HeistData.find(p, s.heist);
         if (h == null || h.count() == 0) { exit(p); Fx.fail(p, K + "none"); return; }
-        int rot = s.rot; boolean mirror = s.mirror;
-        int[] dims = h.size(rot);
-        BlockPos origin = anchor.offset(-dims[0] / 2, 0, -dims[2] / 2);
-        List<int[]> cells = new ArrayList<>(); // cell index, x, y, z (world)
-        int blocked = 0;
-        List<BlockPos> bad = new ArrayList<>();
-        for (int y = 0; y < h.sy; y++)
-            for (int z = 0; z < h.sz; z++)
-                for (int x = 0; x < h.sx; x++) {
-                    int i = h.index(x, y, z);
-                    if (h.cells[i] < 0) continue;
-                    BlockPos w = origin.offset(h.offset(x, y, z, rot, mirror));
-                    boolean ok = l.isInWorldBounds(w) && l.getWorldBorder().isWithinBounds(w) && l.isLoaded(w)
-                            && Terrain.may(p, l, w) && replaceable(l.getBlockState(w));
-                    if (!ok) { blocked++; if (bad.size() < 40) bad.add(w); continue; }
-                    cells.add(new int[]{i, w.getX(), w.getY(), w.getZ()});
-                }
-        if (blocked > 0) {
-            for (BlockPos b : bad) l.sendParticles(p, Fx.dust(0xFF3030, 1.4F), true, b.getX() + 0.5, b.getY() + 0.5, b.getZ() + 0.5, 4, 0.3, 0.3, 0.3, 0);
-            Fx.sound(l, p.position(), SoundEvents.NOTE_BLOCK_BASS.value(), 0.6F, 0.6F);
-            Fx.fail(p, K + "obstructed", blocked);
-            return;
-        }
-        cells.sort((a, b) -> Integer.compare(a[2], b[2]));
-        exit(p);
-        UUID id = p.getUUID();
+        if (s.anchor == null) return;
+        final int rot = s.rot; final boolean mirror = s.mirror;
+        final int[] dims = h.size(rot);
+        final BlockPos origin = s.anchor.offset(-dims[0] / 2, 0, -dims[2] / 2);
+        final UUID id = p.getUUID();
+        final int total = h.cells.length;
+        final Terrain.Session claims = new Terrain.Session(p);
+        final List<int[]> cells = new ArrayList<>();
+        final List<BlockPos> bad = new ArrayList<>();
         BUSY.add(id);
+        Tasks.add(new Tasks.Task() {
+            int cursor, blocked;
+            boolean handed;
+            @Override public void end() { if (!handed) BUSY.remove(id); }
+            @Override public boolean tick(int age) {
+                if (p.isRemoved() || p.hasDisconnected() || !p.isAlive()) { BUSY.remove(id); return false; }
+                long t0 = System.nanoTime();
+                while (cursor < total) {
+                    int i = cursor++;
+                    if (h.cells[i] >= 0) {
+                        int x = i % h.sx, z = (i / h.sx) % h.sz, y = i / (h.sx * h.sz);
+                        BlockPos w = origin.offset(h.offset(x, y, z, rot, mirror));
+                        boolean ok = l.isInWorldBounds(w) && l.isLoaded(w) && claims.may(w) && replaceable(l.getBlockState(w));
+                        if (!ok) { blocked++; if (bad.size() < 40) bad.add(w); }
+                        else cells.add(new int[]{i, w.getX(), w.getY(), w.getZ()});
+                    }
+                    if ((cursor & 127) == 0 && System.nanoTime() - t0 > BUDGET_NS) break;
+                }
+                if (cursor < total) return true;
+                if (blocked > 0) {
+                    BUSY.remove(id);
+                    for (BlockPos b : bad) l.sendParticles(p, Fx.dust(0xFF3030, 1.4F), true, b.getX() + 0.5, b.getY() + 0.5, b.getZ() + 0.5, 4, 0.3, 0.3, 0.3, 0);
+                    Fx.sound(l, p.position(), SoundEvents.NOTE_BLOCK_BASS.value(), 0.6F, 0.6F);
+                    Fx.fail(p, K + "obstructed", blocked);
+                    return false;
+                }
+                exit(p);
+                handed = true;
+                startPlace(p, l, h, cells, rot, mirror, dims, origin);
+                return false;
+            }
+        });
+    }
+
+    private static void startPlace(ServerPlayer p, ServerLevel l, HeistData h, List<int[]> cells, int rot, boolean mirror, int[] dims, BlockPos origin) {
+        UUID id = p.getUUID();
 
         int n = cells.size();
-        int wave = Math.max(16, Math.min(400, (n + 9) / 10));
+        int wave = Math.max(16, Math.min(1500, (n + 9) / 10));
         int col = color();
         Vec3 centre = new Vec3(origin.getX() + dims[0] / 2.0, origin.getY(), origin.getZ() + dims[2] / 2.0);
         Vec3 source = p.getEyePosition().add(0, 1.6, 0).add(p.getLookAngle().scale(0.8));
@@ -474,7 +577,7 @@ public final class AreaHeist implements Ability {
         final int FLY = 8;
         Animator anim = new Animator();
         Tasks.add(new Tasks.Task() {
-            int announced, placed, kept;
+            int announced, landed, placed, kept;
             boolean aborted;
 
             @Override
@@ -500,18 +603,20 @@ public final class AreaHeist implements Ability {
                 }
                 // ...and land FLY ticks later
                 if (!aborted && age >= FLY && (age - FLY) % 2 == 0) {
-                    int start = ((age - FLY) / 2) * wave, end = Math.min(Math.min(n, announced), start + wave);
-                    if (start < end) land(start, end);
+                    int end = Math.min(announced, landed + wave);
+                    if (landed < end) landed = land(landed, end);
                 }
                 anim.tick(l);
-                int landedUpTo = age < FLY ? 0 : Math.min(n, ((age - FLY) / 2 + 1) * wave);
-                return (!aborted && landedUpTo < n) || anim.busy();
+                return (!aborted && landed < n) || anim.busy();
             }
 
-            private void land(int start, int end) {
+            private int land(int start, int end) {
                 double sumY = 0; int cnt = 0;
+                long t0 = System.nanoTime();
+                int k = start;
                 try {
-                    for (int k = start; k < end; k++) {
+                    for (; k < end; k++) {
+                        if ((k & 31) == 31 && System.nanoTime() - t0 > BUDGET_NS) break;
                         int[] c = cells.get(k);
                         BlockState st = h.get(c[0]);
                         if (st == null) continue;
@@ -542,6 +647,7 @@ public final class AreaHeist implements Ability {
                     FxNet.shockwave(l, layer, Math.max(dims[0], dims[2]) * 0.65F + 1, col, 12);
                     Fx.sound(l, layer, SoundEvents.AMETHYST_BLOCK_PLACE, 0.6F, 0.8F + (float) end / n * 0.8F);
                 }
+                return k;
             }
 
             @Override

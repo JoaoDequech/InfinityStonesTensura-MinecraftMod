@@ -12,15 +12,15 @@ import net.minecraft.world.phys.Vec3;
 final class ZoneFx {
     private static final int GREEN = TimeClient.GREEN;
 
-    private static float hash(int a, int b, int s) {
+    static float hash(int a, int b, int s) {
         int h = a * 73856093 ^ b * 19349663 ^ s * 83492791;
         h ^= h >>> 13; h *= 0x5bd1e995; h ^= h >>> 15;
         return (h & 0xFFFFFF) / (float) 0x1000000;
     }
 
-    private static float zoneAge(TimeClient.Inst i, float pt) { return (float) i.f.bx() + i.age + pt; }
+    static float zoneAge(TimeClient.Inst i, float pt) { return (float) i.f.bx() + i.age + pt; }
 
-    private static float heightAt(TimeClient.ZoneCache c, double x, double z) {
+    static float heightAt(TimeClient.ZoneCache c, double x, double z) {
         int i = Mth.clamp((int) Math.round((x - (c.cx - c.r)) / c.cell), 0, c.n - 1), j = Mth.clamp((int) Math.round((z - (c.cz - c.r)) / c.cell), 0, c.n - 1);
         return c.h[i * c.n + j];
     }
@@ -58,12 +58,12 @@ final class ZoneFx {
                 sand(d, c, f.id(), a, time);
                 mist(d, c, a, time, 0xC09A5A, 0.12F);
             }
-            default -> { }
+            default -> ZoneFx2.translucent(d, level, i, c, pt, time, cl, a);
         }
     }
 
     /** Stylised cloud layer: shaded low-poly puffs rotating slowly over the area, bobbing. */
-    private static void clouds(TDraw d, TimeClient.ZoneCache c, float a, float time, int top, int bottom, float alpha, float spin, boolean storm) {
+    static void clouds(TDraw d, TimeClient.ZoneCache c, float a, float time, int top, int bottom, float alpha, float spin, boolean storm) {
         double rot = time * spin;
         double cs = Math.cos(rot), sn = Math.sin(rot);
         for (int k = 0; k < c.px.length; k++) {
@@ -80,7 +80,7 @@ final class ZoneFx {
     }
 
     /** Rain streaks falling from the cloud to the terrain, only near the camera. */
-    private static void streaks(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, int drops, float speed, float len, int col, float alpha, double slant) {
+    static void streaks(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, int drops, float speed, float len, int col, float alpha, double slant) {
         Vec3 cam = d.cam;
         double range = 34;
         int i0 = Math.max(0, (int) ((cam.x - range - (c.cx - c.r)) / c.cell)), i1 = Math.min(c.n - 1, (int) ((cam.x + range - (c.cx - c.r)) / c.cell) + 1);
@@ -98,7 +98,8 @@ final class ZoneFx {
             float fall = top - gy;
             if (fall < 2) continue;
             float near = (float) Mth.clamp(Math.sqrt(cd2) / 1.5, 0.15, 1);
-            for (int k = 0; k < drops; k++) {
+            int dd = Math.max(1, Math.round(drops * c.scale * c.scale));
+            for (int k = 0; k < dd; k++) {
                 float ph = (time * speed / fall + hash(i, j, k * 31 + seed)) % 1F;
                 double y = top - ph * fall;
                 Vec3 lo = new Vec3(x, y, z), hi = new Vec3(x + slant, y + len, z + slant * 0.4);
@@ -108,7 +109,7 @@ final class ZoneFx {
         }
     }
 
-    private static void flakes(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time) {
+    static void flakes(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time) {
         Vec3 cam = d.cam;
         double range = 30;
         int i0 = Math.max(0, (int) ((cam.x - range - (c.cx - c.r)) / c.cell)), i1 = Math.min(c.n - 1, (int) ((cam.x + range - (c.cx - c.r)) / c.cell) + 1);
@@ -123,7 +124,8 @@ final class ZoneFx {
             float gy = c.h[i * c.n + j];
             float fall = top - gy;
             if (fall < 2) continue;
-            for (int k = 0; k < 3; k++) {
+            int dd = Math.max(1, Math.round(3 * c.scale * c.scale));
+            for (int k = 0; k < dd; k++) {
                 float hs = hash(i, j, k * 17 + seed);
                 float ph = (time * 2.2F / fall + hs) % 1F;
                 double y = top - ph * fall;
@@ -143,7 +145,7 @@ final class ZoneFx {
     }
 
     /** Soft cylinder curtains following the outline (mist / dust wall seen from outside). */
-    private static void walls(TDraw d, TimeClient.ZoneCache c, float a, int col, float alpha, float height, int layers) {
+    static void walls(TDraw d, TimeClient.ZoneCache c, float a, int col, float alpha, float height, int layers) {
         int segs = 64;
         for (int l = 0; l < layers; l++) {
             float r = c.r * (1 - l * 0.24F);
@@ -157,7 +159,7 @@ final class ZoneFx {
         }
     }
 
-    private static void mist(TDraw d, TimeClient.ZoneCache c, float a, float time, int col, float alpha) {
+    static void mist(TDraw d, TimeClient.ZoneCache c, float a, float time, int col, float alpha) {
         for (int k = 0; k < c.px.length; k++) {
             double ang = time * 0.05 + c.ph[k];
             double x = c.cx + c.px[k] + Math.cos(ang) * 1.2, z = c.cz + c.pz[k] + Math.sin(ang) * 1.2;
@@ -201,7 +203,7 @@ final class ZoneFx {
             case TimeNet.C_SUN -> sun(d, c, f.id(), sky, time, ps, buf, textured);
             case TimeNet.C_AURORA -> { if (!textured) aurora(d, c, f.id(), sky, time); }
             case TimeNet.C_SNOW -> { if (!textured) d.ring(new Vec3(c.cx, c.cy + 0.06, c.cz), c.r, 0.5F, 0xCFF4FF, sky * 0.25F, 0); }
-            default -> { }
+            default -> ZoneFx2.glow(d, level, i, c, cl, sky, time, pt, ps, buf, textured);
         }
         if (textured && intro < 1) TimeClient.ground(ps, buf, GlowFx.HALO, new Vec3(c.cx, c.cy + 0.05, c.cz), c.r * 1.2F * grow, GREEN, a * (1 - intro) * 0.8F, 0);
     }
@@ -268,7 +270,7 @@ final class ZoneFx {
         }
     }
 
-    private static void storm(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, PoseStack ps, MultiBufferSource buf, boolean textured) {
+    static void storm(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, PoseStack ps, MultiBufferSource buf, boolean textured) {
         if (c.px.length == 0) return;
         int slot = (int) (time * 2.5F);
         float h = hash(slot, seed, 5);
@@ -295,7 +297,7 @@ final class ZoneFx {
         }
     }
 
-    private static void sun(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, PoseStack ps, MultiBufferSource buf, boolean textured) {
+    static void sun(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time, PoseStack ps, MultiBufferSource buf, boolean textured) {
         Vec3 sun = new Vec3(c.cx, c.cloudY + 14, c.cz);
         if (textured) {
             TimeClient.flare(ps, buf, sun, c.r * 0.9F, 0xFF9A2A, a * 0.85F, time * 0.2F);
@@ -331,7 +333,7 @@ final class ZoneFx {
         d.ring(new Vec3(c.cx, c.cy + 0.07, c.cz), c.r, 0.8F, 0xFF8A2A, a * 0.18F, 0);
     }
 
-    private static void aurora(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time) {
+    static void aurora(TDraw d, TimeClient.ZoneCache c, int seed, float a, float time) {
         int bands = 3;
         for (int b = 0; b < bands; b++) {
             double dirA = 0.4 + b * 1.05 + Math.sin(time * 0.03 + b) * 0.2;

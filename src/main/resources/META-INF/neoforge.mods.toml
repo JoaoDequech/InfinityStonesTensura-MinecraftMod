@@ -88,3 +88,6 @@ config = "infinity_v2b.mixins.json"
 
 [[mixins]]
 config = "infinity_v2a.mixins.json"
+
+[[mixins]]
+config = "infinity_xaero.mixins.json"

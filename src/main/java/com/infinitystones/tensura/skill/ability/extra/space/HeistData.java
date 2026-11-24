@@ -27,7 +27,7 @@ import java.util.Map;
  */
 final class HeistData {
     static final String KEY = "infinity_area_heist";
-    static final int MAX = 8, MAX_SIDE = 16;
+    static final int MAX = 8, MAX_SIDE = 16, HIDDEN_SIDE = 64, MAX_VOLUME = 16 * 16 * 16, HIDDEN_VOLUME = 120_000;
 
     final long id;
     final int sx, sy, sz;
@@ -114,7 +114,11 @@ final class HeistData {
         ListTag pal = new ListTag();
         for (BlockState s : palette) pal.add(NbtUtils.writeBlockState(s));
         t.put("palette", pal);
-        t.putIntArray("cells", cells);
+        if (palette.size() <= 127) {
+            byte[] cb = new byte[cells.length];
+            for (int i = 0; i < cb.length; i++) cb[i] = (byte) cells[i];
+            t.putByteArray("cb", cb);
+        } else t.putIntArray("cells", cells);
         ListTag be = new ListTag();
         for (var e : bes.entrySet()) {
             CompoundTag c = new CompoundTag();
@@ -128,7 +132,7 @@ final class HeistData {
 
     static @Nullable HeistData load(CompoundTag t) {
         int sx = t.getInt("sx"), sy = t.getInt("sy"), sz = t.getInt("sz");
-        if (sx < 1 || sy < 1 || sz < 1 || sx > MAX_SIDE || sy > MAX_SIDE || sz > MAX_SIDE) return null;
+        if (sx < 1 || sy < 1 || sz < 1 || sx > HIDDEN_SIDE || sy > HIDDEN_SIDE || sz > HIDDEN_SIDE || (long) sx * sy * sz > HIDDEN_VOLUME) return null;
         HeistData h = new HeistData(t.getLong("id"), sx, sy, sz);
         ListTag pal = t.getList("palette", Tag.TAG_COMPOUND);
         for (int i = 0; i < pal.size(); i++) {
@@ -137,6 +141,11 @@ final class HeistData {
             h.lookup.putIfAbsent(s, i);
         }
         int[] c = t.getIntArray("cells");
+        if (t.contains("cb")) {
+            byte[] cb = t.getByteArray("cb");
+            c = new int[cb.length];
+            for (int i = 0; i < cb.length; i++) c[i] = cb[i];
+        }
         if (c.length == h.cells.length)
             for (int i = 0; i < c.length; i++) h.cells[i] = c[i] >= 0 && c[i] < h.palette.size() ? c[i] : -1;
         ListTag be = t.getList("bes", Tag.TAG_COMPOUND);

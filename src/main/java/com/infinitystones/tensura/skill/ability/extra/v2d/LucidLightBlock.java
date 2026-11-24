@@ -27,7 +27,7 @@ import org.joml.Vector3f;
  * server restarts (scheduled ticks are saved with the chunk).
  */
 public final class LucidLightBlock extends Block {
-    public static final int LIFETIME = 20 * 60;
+    public static final int LIFETIME = 20 * 120;
     public static final ResourceLocation ID = InfinityStones.id("lucid_light");
     private static final DustParticleOptions GOLD = new DustParticleOptions(new Vector3f(1F, 0.72F, 0.2F), 0.9F);
     private static final DustParticleOptions RED = new DustParticleOptions(new Vector3f(1F, 0.22F, 0.12F), 0.9F);
@@ -74,7 +74,7 @@ public final class LucidLightBlock extends Block {
         public static void register(RegisterEvent e) {
             e.register(Registries.BLOCK, helper -> {
                 instance = new LucidLightBlock(BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).strength(0.4F, 3600000F)
-                        .sound(SoundType.AMETHYST).lightLevel(s -> 13).noLootTable().pushReaction(PushReaction.DESTROY).isValidSpawn((s, g, p, t) -> false));
+                        .sound(SoundType.AMETHYST).lightLevel(s -> 15).noLootTable().pushReaction(PushReaction.DESTROY).isValidSpawn((s, g, p, t) -> false));
                 helper.register(ID, instance);
             });
         }

@@ -1,0 +1,34 @@
+{
+  "nodes": [
+    {
+      "id": "enchanter",
+      "tier": 2,
+      "original_type": "infinity:enchanter",
+      "title": "@ability.infinity.reality_stone.enchanter.title",
+      "description": "@ability.infinity.reality_stone.enchanter.description",
+      "icon": "minecraft:enchanting_table",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [
+        "greed"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "page": 2,
+      "gui_position": [
+        -6,
+        -6.5
+      ],
+      "aim": false,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

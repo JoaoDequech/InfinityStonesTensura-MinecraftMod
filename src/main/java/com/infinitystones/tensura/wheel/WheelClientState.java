@@ -4,7 +4,7 @@ import java.util.List;
 
 /** Latest wheel state received from the server (safe to load on a dedicated server: plain data only). */
 public final class WheelClientState {
-    private static volatile WheelPayloads.State state = new WheelPayloads.State(List.of(), "", 0);
+    private static volatile WheelPayloads.State state = new WheelPayloads.State(List.of(), "", 0, -1);
     private static volatile long receivedAt;
 
     static void accept(WheelPayloads.State s) {

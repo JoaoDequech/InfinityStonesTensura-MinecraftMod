@@ -40,6 +40,10 @@ import java.util.List;
 public final class WheelScreen extends Screen {
     private static final float INNER_IN = 44, INNER_OUT = 84, OUTER_IN = 94, OUTER_OUT = 148;
     private static final long CLOSE_MS = 170;
+    /** Ring index of the gauntlet page (after the six stones); its entries keep the real owner stone of each power. */
+    public static final int GAUNT = Stone.values().length;
+    /** Node id of the gauntlet page's "Joias" action entry (never sent to the server as a power). */
+    private static final String GEMS = "@gems";
     private static int focusedStone = -1;
 
     private final long openedAt = System.currentTimeMillis();
@@ -95,9 +99,18 @@ public final class WheelScreen extends Screen {
     private List<Slice> slices() {
         List<Slice> out = new ArrayList<>();
         WheelPayloads.State st = WheelClientState.get();
+        boolean gauntlet = st.gauntlet() >= 0;
+        if (gauntlet) {
+            // top of the ring: the gauntlet and every complete-gauntlet power, after the "Joias" action
+            List<WheelPayloads.Entry> list = new ArrayList<>();
+            list.add(new WheelPayloads.Entry(GAUNT, GEMS, true, false, 0, 1, 0));
+            for (Stone s : Stone.values())
+                for (WheelPayloads.Entry e : st.entries()) if (e.stone() == s.ordinal() && isGauntletPower(e)) list.add(e);
+            out.add(new Slice(GAUNT, list, List.of(list, new ArrayList<>())));
+        }
         for (Stone s : Stone.values()) {
             List<WheelPayloads.Entry> list = new ArrayList<>();
-            for (WheelPayloads.Entry e : st.entries()) if (e.stone() == s.ordinal()) list.add(e);
+            for (WheelPayloads.Entry e : st.entries()) if (e.stone() == s.ordinal() && !(gauntlet && isGauntletPower(e))) list.add(e);
             if (s == Stone.SOUL) for (WheelPayloads.Entry e : st.entries()) if (e.stone() == -1) list.add(e);
             if (list.isEmpty()) continue;
             List<WheelPayloads.Entry> p1 = new ArrayList<>(), p2 = new ArrayList<>();
@@ -107,6 +120,16 @@ public final class WheelScreen extends Screen {
             out.add(new Slice(s.ordinal(), second ? p2 : p1, List.of(p1, p2)));
         }
         return out;
+    }
+
+    private static boolean isGauntletPower(WheelPayloads.Entry e) {
+        StoneTree.Node n = node(e);
+        return n != null && com.infinitystones.tensura.skill.GauntletStones.isGauntletPower(n);
+    }
+
+    /** Segment offset of the stone ring: with the gauntlet segment first it is centred on the top (north). */
+    private static float ringShift(List<Slice> slices) {
+        return !slices.isEmpty() && slices.get(0).stone() == GAUNT ? -Mth.PI / slices.size() : 0F;
     }
 
     /** 0 = main page, 1 = page 2 (nodes flagged "page": 2). */
@@ -174,7 +197,8 @@ public final class WheelScreen extends Screen {
         if (closingAt < 0) {
             hoveredStone = -1; hoveredEntry = -1;
             if (dist >= INNER_IN - 6 && dist <= INNER_OUT + 4) {
-                int i = (int) (ang / (Math.PI * 2 / slices.size()));
+                double shifted = (ang - ringShift(slices) + Math.PI * 2) % (Math.PI * 2);
+                int i = (int) (shifted / (Math.PI * 2 / slices.size()));
                 hoveredStone = slices.get(Mth.clamp(i, 0, slices.size() - 1)).stone();
                 if (hoveredStone != focusedStone) {
                     focusedStone = hoveredStone;
@@ -228,11 +252,12 @@ public final class WheelScreen extends Screen {
 
         // inner ring: stones
         float seg = Mth.TWO_PI / slices.size();
+        float shift = ringShift(slices);
         for (int i = 0; i < slices.size(); i++) {
             Slice s = slices.get(i);
             boolean hot = s.stone() == focusedStone;
             float grow = hot ? 5 + Mth.sin(time / 180F) * 1.2F : 0;
-            float a0 = i * seg + 0.035F, a1 = (i + 1) * seg - 0.035F;
+            float a0 = i * seg + 0.035F + shift, a1 = (i + 1) * seg - 0.035F + shift;
             ring(g, 0, 0, INNER_IN, INNER_OUT + grow, a0, a1, withAlpha(darken(color(s.stone()), hot ? 0.95F : 0.45F), (int) (225 * open)));
             ring(g, 0, 0, INNER_OUT + grow, INNER_OUT + grow + 2, a0, a1, withAlpha(color(s.stone()), (int) (255 * open)));
             if (hot) {
@@ -242,6 +267,7 @@ public final class WheelScreen extends Screen {
             }
             float mid = (a0 + a1) / 2 - Mth.HALF_PI, r = (INNER_IN + INNER_OUT) / 2 + grow / 2;
             item(g, stoneItem(s.stone()), Mth.cos(mid) * r - 8, Mth.sin(mid) * r - 8);
+            if (s.stone() == GAUNT) gauntletPips(g, mid, INNER_IN + 6 + grow / 2, open);
         }
 
         // outer ring: powers of the focused stone; page changes slide the ring sideways while it fades
@@ -315,7 +341,7 @@ public final class WheelScreen extends Screen {
             if (isDual(e)) dualMarker(g, mid, OUTER_OUT + grow - 7, e.unlocked() ? lighten(col, 0.5F) : 0xFF6A6A70, open);
             StoneTree.Node sn = node(e);
             if (sn != null && sn.isPassiveToggle()) switchMarker(g, mid, OUTER_IN + 7, e.toggled(), col, open);
-            int fav = e.stone() < 0 ? -1 : WheelActions.favoriteSlot(e.stone(), e.node());
+            int fav = e.stone() < 0 || e.stone() >= GAUNT ? -1 : WheelActions.favoriteSlot(e.stone(), e.node());
             if (fav >= 0) {
                 float fx = Mth.cos(mid) * (OUTER_OUT + grow - 9), fy = Mth.sin(mid) * (OUTER_OUT + grow - 9);
                 disc(g, fx, fy, 5F, withAlpha(0xFF000000, (int) (190 * open)));
@@ -436,7 +462,8 @@ public final class WheelScreen extends Screen {
             if (!e.unlocked()) line2 = Component.translatable("infinity.wheel.state.locked").withStyle(ChatFormatting.DARK_GRAY);
             else line2 = kind(e); // full description + buttons are in the side panel
         } else {
-            title = Component.translatable("infinity.skill." + Stone.values()[focus.stone()].key + "_stone").withStyle(s -> s.withColor(color & 0xFFFFFF));
+            title = (focus.stone() == GAUNT ? Component.translatable("infinity.wheel.gauntlet")
+                    : Component.translatable("infinity.skill." + Stone.values()[focus.stone()].key + "_stone")).withStyle(s -> s.withColor(color & 0xFFFFFF));
             line2 = hubHover && focus.hasPage2()
                     ? Component.translatableWithFallback("infinity.wheel.page.hint", "Scroll: switch page").withStyle(ChatFormatting.GRAY)
                     : Component.translatable("infinity.wheel.state.pick").withStyle(ChatFormatting.GRAY);
@@ -471,6 +498,7 @@ public final class WheelScreen extends Screen {
     private Component kind(WheelPayloads.Entry e) {
         if (e.stone() < 0) return Component.translatable(e.toggled() ? "infinity.wheel.state.on" : "infinity.wheel.state.off")
                 .withStyle(e.toggled() ? ChatFormatting.GOLD : ChatFormatting.GRAY);
+        if (isGems(e)) return Component.translatable("infinity.wheel.gauntlet.gems.kind").withStyle(ChatFormatting.GOLD);
         StoneTree.Node n = node(e);
         if (n == null) return Component.empty();
         if (n.isPassiveToggle()) return Component.translatableWithFallback("infinity.wheel.kind.passive", "Passive")
@@ -500,12 +528,19 @@ public final class WheelScreen extends Screen {
             // centre hub → the stone's tree
             usedSomething = true;
             playUi(SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 0.3F);
-            if (minecraft != null) minecraft.setScreen(new StoneTreeScreen(Stone.values()[focus.stone()]));
+            if (minecraft != null) minecraft.setScreen(focus.stone() == GAUNT ? new GauntletGemsScreen() : new StoneTreeScreen(Stone.values()[focus.stone()]));
             return true;
         }
         if (focus == null || hoveredEntry < 0 || hoveredEntry >= focus.entries().size()) return true;
         WheelPayloads.Entry e = focus.entries().get(hoveredEntry);
         long now = System.currentTimeMillis();
+        if (isGems(e)) {
+            if (button != 0) return true;
+            usedSomething = true;
+            playUi(SoundEvents.AMETHYST_BLOCK_RESONATE, 1.2F, 0.3F);
+            if (minecraft != null) minecraft.setScreen(new GauntletGemsScreen());
+            return true;
+        }
         String mid = e.stone() < 0 ? "" : Stone.values()[e.stone()].key + "." + e.node();
         boolean menuOk = e.unlocked() && button == 2 && DualModes.hasDestination(mid); // the menu also holds "bring it back"
         if (!menuOk && (!e.unlocked() || e.cooldownLeft() > 0)) {
@@ -900,23 +935,32 @@ public final class WheelScreen extends Screen {
     // ------------------------------------------------------------ helpers
 
     /** Has extra inputs (right click and/or middle click) — shows the two-dot marker and the input hint. */
+    private static boolean isGems(WheelPayloads.Entry e) { return e.stone() == GAUNT && GEMS.equals(e.node()); }
+
     private static boolean isDual(WheelPayloads.Entry e) {
-        if (e.stone() < 0) return false;
+        if (e.stone() < 0 || e.stone() >= GAUNT) return false;
         String id = Stone.values()[e.stone()].key + "." + e.node();
         return DualModes.isDual(id) || DualModes.hasDestination(id);
     }
 
     private static StoneTree.Node node(WheelPayloads.Entry e) {
-        return e.stone() < 0 ? null : StoneTree.of(Stone.values()[e.stone()]).nodes.get(e.node());
+        return e.stone() < 0 || e.stone() >= GAUNT ? null : StoneTree.of(Stone.values()[e.stone()]).nodes.get(e.node());
     }
 
     private static Component name(WheelPayloads.Entry e) {
         if (e.stone() < 0) return Component.translatable("infinity.skill." + WheelService.IMMORTALITY);
+        if (isGems(e)) return Component.translatable("infinity.wheel.gauntlet.gems");
         StoneTree.Node n = node(e);
         return n == null ? Component.literal(e.node()) : n.displayName();
     }
 
     private void icon(GuiGraphics g, WheelPayloads.Entry e, float x, float y, boolean lit) {
+        if (isGems(e)) {
+            if (!lit) RenderSystem.setShaderColor(0.45F, 0.45F, 0.5F, 1F);
+            item(g, stoneItem(GAUNT), x, y);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            return;
+        }
         String icon = e.stone() < 0 ? "infinity:soul_stone" : node(e) == null ? null : node(e).icon();
         if (!lit) RenderSystem.setShaderColor(0.45F, 0.45F, 0.5F, 1F);
         if (icon != null && icon.contains("textures/")) {
@@ -937,10 +981,23 @@ public final class WheelScreen extends Screen {
     }
 
     private static ItemStack stoneItem(int stone) {
+        if (stone >= GAUNT) return new ItemStack(com.infinitystones.tensura.skill.GauntletStones.gauntletItem());
         return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("infinity", Stone.values()[stone].key + "_stone")));
     }
 
-    static int color(int stone) { return Stone.values()[stone].color(); }
+    static int color(int stone) { return stone >= GAUNT ? 0xFFE9C25A : Stone.values()[stone].color(); }
+
+    /** Six small lights under the gauntlet icon: lit in the stone's colour when that stone is set in the gauntlet. */
+    private void gauntletPips(GuiGraphics g, float mid, float r, float open) {
+        int mask = Math.max(0, WheelClientState.get().gauntlet());
+        for (int i = 0; i < 6; i++) {
+            float a = mid + (i - 2.5F) * 0.085F;
+            float px = Mth.cos(a) * r, py = Mth.sin(a) * r;
+            boolean on = (mask >> i & 1) != 0;
+            disc(g, px, py, 2.4F, withAlpha(0xFF000000, (int) (200 * open)));
+            disc(g, px, py, 1.7F, withAlpha(on ? Stone.values()[i].color() : 0xFF33333A, (int) (255 * open)));
+        }
+    }
 
     private float openProgress() {
         long now = System.currentTimeMillis();

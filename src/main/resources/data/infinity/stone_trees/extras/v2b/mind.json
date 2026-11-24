@@ -11,18 +11,13 @@
         "item": "infinity:aspects_of_existance",
         "amount": 14
       },
-      "parents": [
-        "psionic_mastery"
-      ],
+      "parents": ["psionic_mastery"],
       "requires_stones": [],
       "activation": "press",
       "cooldown_ticks": 0,
       "in_tree": true,
       "in_bar": true,
-      "gui_position": [
-        0,
-        0
-      ],
+      "gui_position": [1, 2],
       "aim": true,
       "page": 2,
       "settings": {

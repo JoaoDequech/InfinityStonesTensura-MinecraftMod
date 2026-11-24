@@ -121,7 +121,33 @@ public final class V2aClient {
         return LightTexture.pack(Math.max(LightTexture.block(real), 6), Math.max(LightTexture.sky(real), 10));
     }
 
-    private static float pulse(float t, float speed) { return 0.5F + 0.5F * Mth.sin(t * speed); }
+    private static int lightMax(Minecraft mc, double x, double y0, double y1, double z) {
+  int a = light(mc, x, y0, z), b = light(mc, x, y1, z);
+  return LightTexture.pack(Math.max(LightTexture.block(a), LightTexture.block(b)), Math.max(LightTexture.sky(a), LightTexture.sky(b)));
+ }
+ private static float darkOf(Inst i, float pt) {
+  float t = i.age + pt;
+  if (i.m.kind() == V2aNet.ARM) return Mth.clamp(t / 16F, 0, 1) * Mth.clamp((V2aAnim.FIST_LIFE - t) / 16F, 0, 1);
+  return Mth.clamp(t / 14F, 0, 1) * Mth.clamp((i.end - t) / 20F, 0, 1);
+ }
+ /** The sky darkens (screen tint) while a giant arm is near. */
+ @SubscribeEvent
+ public static void skyDark(net.neoforged.neoforge.client.event.RenderGuiEvent.Pre e) {
+  Minecraft mc = Minecraft.getInstance();
+  if (mc.player == null || ALL.isEmpty()) return;
+  float pt = e.getPartialTick().getGameTimeDeltaPartialTick(true), best = 0;
+  for (Inst i : ALL.values()) {
+   if (i.m.kind() != V2aNet.ARM && i.m.kind() != V2aNet.GAUNTLET) continue;
+   double d = mc.player.position().distanceTo(new Vec3(i.m.x(), mc.player.getY(), i.m.z()));
+   float k = darkOf(i, pt) * Mth.clamp((float) (1 - d / 170), 0, 1) * (i.m.kind() == V2aNet.ARM ? 0.34F : 0.2F);
+   best = Math.max(best, k);
+  }
+  if (best <= 0.01F) return;
+  var g = e.getGuiGraphics();
+  int a = (int) (best * 255) << 24;
+  g.fillGradient(0, 0, g.guiWidth(), g.guiHeight(), a | 0x08001A, (int) (best * 0.5F * 255) << 24 | 0x08001A);
+ }
+ private static float pulse(float t, float speed) { return 0.5F + 0.5F * Mth.sin(t * speed); }
 
     // ------------------------------------------------------------------ Sky Fist
 
@@ -132,7 +158,7 @@ public final class V2aClient {
         float t = i.age + pt, s = m.scale();
         double yC = m.y0(), gY = m.y1();
         boolean palm = m.state() == 1;
-        float dark = Mth.clamp(t / 12F, 0, 1) * Mth.clamp((V2aAnim.FIST_LIFE - t) / 12F, 0, 1);
+        float dark = darkOf(i, pt);
         double yb;
         if (t < V2aAnim.FIST_START) yb = yC;
         else if (t < V2aAnim.FIST_IMPACT) yb = V2aAnim.lerp(yC, gY, V2aAnim.easeIn((t - V2aAnim.FIST_START) / (V2aAnim.FIST_IMPACT - V2aAnim.FIST_START)));
@@ -140,13 +166,15 @@ public final class V2aClient {
         else yb = V2aAnim.lerp(gY, yC, V2aAnim.ease((t - V2aAnim.FIST_STAY) / (V2aAnim.FIST_END - V2aAnim.FIST_STAY)));
         double originY = palm ? yb : yb + 0.25 * s;
         double wristY = palm ? 1.3 : 2.9;
-        float armLen = (float) Math.max(0, (yC - (originY + wristY * s)) / s);
-        boolean show = t >= V2aAnim.FIST_START && originY < yC - 0.05;
+        float f = grow(yC - originY, s);
+        float sg = s * Math.max(f, 0.001F);
+        float armLen = (float) Math.max(0, (yC - (originY + wristY * sg)) / sg);
+        boolean show = t >= V2aAnim.FIST_START && originY < yC - 0.05 && f > 0.04F;
 
         if (pass == 1) {
             VertexConsumer vc = buf.getBuffer(RenderType.entityTranslucent(Hands.RUNE_STONE.gem()));
             float a = 0.3F * dark;
-            float r = 4.2F * s;
+            float r = 3.1F * s;
             Geo.discDown(ps, vc, m.x(), yC - 0.4, m.z(), r, a);
             Geo.discDown(ps, vc, m.x(), yC - 0.42, m.z(), r * 0.78F, a);
             Geo.discDown(ps, vc, m.x(), yC - 0.44, m.z(), r * 0.52F, a);
@@ -154,12 +182,12 @@ public final class V2aClient {
         }
         if (pass == 0) {
             if (!show) return;
-            int light = light(mc, m.x(), originY + 3, m.z());
-            float curl = palm ? 0F : V2aAnim.ease((t - V2aAnim.FIST_CURL) / (float) (V2aAnim.FIST_IMPACT - V2aAnim.FIST_CURL));
+            int light = lightMax(mc, m.x(), originY + 3, yC - 3, m.z());
+            float curl = palm ? 0F : V2aAnim.ease((t - V2aAnim.FIST_CURL) / (float) (V2aAnim.FIST_IMPACT - 8 - V2aAnim.FIST_CURL));
             ps.pushPose();
             ps.translate(m.x(), originY, m.z());
             ps.mulPose(Axis.YP.rotation(m.yaw()));
-            ps.scale(s, s, s);
+            ps.scale(sg, sg, sg);
             Hands.solid(ps, buf, Hands.SKY, light, curl, palm ? 0.6F : 0F, armLen, palm, 0, pulse(t, 0.4F), t, 0F);
             ps.popPose();
             return;
@@ -180,9 +208,9 @@ public final class V2aClient {
                 ps.pushPose();
                 ps.translate(m.x(), originY, m.z());
                 ps.mulPose(Axis.YP.rotation(m.yaw()));
-                ps.scale(s, s, s);
+                ps.scale(sg, sg, sg);
                 Hands.glow(ps, buf, Hands.SKY, 0, pulse(t, 0.4F), flash, palm, armLen,
-                        palm ? 0F : V2aAnim.ease((t - V2aAnim.FIST_CURL) / (float) (V2aAnim.FIST_IMPACT - V2aAnim.FIST_CURL)), palm ? 0.6F : 0F, t);
+                        palm ? 0F : V2aAnim.ease((t - V2aAnim.FIST_CURL) / (float) (V2aAnim.FIST_IMPACT - 8 - V2aAnim.FIST_CURL)), palm ? 0.6F : 0F, t);
                 ps.popPose();
             }
         }
@@ -242,59 +270,101 @@ public final class V2aClient {
 
     // ------------------------------------------------------------------ Creator's gauntlet
 
+    /** 0 at the circle (the arm is still folded into it) .. 1 once it is well out: the arm grows out of / shrinks back into the circle. */
+    private static float grow(double belowCircle, float s) {
+        float k = Mth.clamp((float) (belowCircle / (3.4F * s)), 0F, 1F);
+        return k * k * (3F - 2F * k);
+    }
     private static void gauntlet(PoseStack ps, MultiBufferSource buf, Inst i, float pt, int pass, Glow gl) {
         V2aNet.Msg m = i.m;
         Minecraft mc = Minecraft.getInstance();
-        float t = i.age + pt, s = m.scale();
+        float t = i.age + pt, s0 = m.scale();
         float tt = t - i.sAge;
         int st = m.state();
         double yb = V2aAnim.lerp(m.y0(), m.y1(), V2aAnim.ease(tt / Math.max(1F, m.dur())));
         double yC = i.yTop;
-        float dark = Mth.clamp(t / 14F, 0, 1) * Mth.clamp((i.end - t) / 20F, 0, 1);
+        float dark = darkOf(i, pt);
         if (pass == 1) {
             VertexConsumer vc = buf.getBuffer(RenderType.entityTranslucent(Hands.RUNE_STONE.gem()));
-            float a = 0.3F * dark, r = 5.2F * s;
+            float a = 0.3F * dark, r = 3.1F * s0;
             Geo.discDown(ps, vc, m.x(), yC - 0.4, m.z(), r, a);
             Geo.discDown(ps, vc, m.x(), yC - 0.42, m.z(), r * 0.78F, a);
             Geo.discDown(ps, vc, m.x(), yC - 0.44, m.z(), r * 0.52F, a);
             return;
         }
         if (yb >= yC - 0.05) return;
-        float curl = switch (st) {
-            case V2aAnim.G_CLOSE -> V2aAnim.ease(tt / V2aAnim.G_CLOSE_TICKS);
-            case V2aAnim.G_RISE, V2aAnim.G_HOLD, V2aAnim.G_SQUEEZE -> 1F;
-            case V2aAnim.G_RELEASE -> 1F - V2aAnim.ease(tt / 16F);
-            default -> 0F;
-        };
-        int lit = st == V2aAnim.G_DESC ? 0 : st == V2aAnim.G_OPEN ? Math.min(6, (int) (tt / 3F)) : 6;
+        float f = grow(yC - yb, s0);
+        if (f < 0.04F) return;
+        float curl, sq = 0F, spread = 0.2F, shake = 0F, breathe = 1F;
+        switch (st) {
+            case V2aAnim.G_DESC -> { curl = 0F; spread = 0.5F + 0.3F * V2aAnim.ease(tt / Math.max(1F, m.dur())); }
+            case V2aAnim.G_OPEN -> { curl = 0F; spread = 0.8F + 0.2F * V2aAnim.ease(tt / Math.max(1F, m.dur())); }
+            case V2aAnim.G_CLOSE -> {
+                float k = Mth.clamp(tt / V2aAnim.G_CLOSE_TICKS, 0F, 1F);
+                curl = V2aAnim.ease(k);
+                spread = 1F - 0.8F * curl;
+                sq = 1.1F * Mth.sin((float) Math.PI * Mth.clamp((k - 0.6F) / 0.4F, 0F, 1F));
+            }
+            case V2aAnim.G_RISE -> { curl = 1F; sq = 0.25F; }
+            case V2aAnim.G_HOLD -> {
+                curl = 1F;
+                float b = Mth.sin(t * 0.13F);
+                sq = 0.5F + 0.3F * b;
+                breathe = 1F + 0.012F * b;
+            }
+            case V2aAnim.G_SQUEEZE -> {
+                curl = 1F;
+                if (m.extra() >= 10F) {
+                    float k = Mth.clamp(tt / 10F, 0F, 1F);
+                    sq = 0.6F + 2.4F * k * k;
+                    shake = 0.06F * k;
+                    breathe = 1F - 0.035F * k;
+                } else {
+                    float p = tt < 4 ? V2aAnim.ease(tt / 4F) : Math.max(0F, 1F - (tt - 4F) / 8F);
+                    sq = 0.5F + 1.7F * p;
+                    shake = 0.03F * p;
+                    breathe = 1F - 0.03F * p;
+                }
+            }
+            case V2aAnim.G_RELEASE -> {
+                float k = V2aAnim.ease(tt / 16F);
+                curl = 1F - k;
+                spread = 0.2F + 0.6F * k;
+            }
+            default -> curl = 0F;
+        }
+        int lit = st == V2aAnim.G_DESC ? Math.min(6, (int) (tt * 8F / Math.max(1F, m.dur()))) : 6;
         int mask = (1 << lit) - 1;
-        float flash = st == V2aAnim.G_SQUEEZE ? Math.max(0, 1 - (tt % 10) / 6F) : 0;
-        double sx = 0, sz = 0;
-        if (st == V2aAnim.G_SQUEEZE) {
-            sx = Math.sin(t * 2.9) * 0.05 * s;
-            sz = Math.cos(t * 3.7) * 0.05 * s;
+        float s = s0 * f * breathe;
+        double ox = 0, oz = 0;
+        if (shake > 0) {
+            ox = Math.sin(t * 2.9) * shake * s0;
+            oz = Math.cos(t * 3.7) * shake * s0;
         }
         float armLen = (float) Math.max(0, (yC - (yb + 2.9 * s)) / s);
         float pulse = pulse(t, 0.45F);
         ps.pushPose();
-        ps.translate(m.x() + sx, yb, m.z() + sz);
+        ps.translate(m.x() + ox, yb, m.z() + oz);
         ps.mulPose(Axis.YP.rotation(m.yaw()));
         ps.scale(s, s, s);
         if (pass == 0) {
-            int light = light(mc, m.x(), yb + 2, m.z());
-            Hands.solid(ps, buf, Hands.GOLD, light, curl, st == V2aAnim.G_OPEN ? 0.7F : 0.2F, armLen, false, mask, pulse, t, flash);
+            int light = lightMax(mc, m.x(), yb + 2 * s, yC - 3, m.z());
+            Hands.solid(ps, buf, Hands.GOLD, light, curl, spread, armLen, false, mask, pulse, t, sq);
         } else {
-            Hands.glow(ps, buf, Hands.GOLD, mask, pulse, flash, false, armLen, curl, st == V2aAnim.G_OPEN ? 0.7F : 0.2F, t);
+            Hands.glow(ps, buf, Hands.GOLD, mask, pulse, sq, false, armLen, curl, spread, t);
         }
         ps.popPose();
-        if (pass == 2 && st == V2aAnim.G_DESC) {
+        if (pass == 2 && (st == V2aAnim.G_DESC || st == V2aAnim.G_RELEASE)) {
             gl.color(0xFFC64A);
             Vec3 top = new Vec3(m.x(), yC, m.z()), bot = new Vec3(m.x(), yb, m.z());
             gl.ribbon(top, bot, 1.2F * s, 0.07F, 0);
             gl.ribbon(top, bot, 0.5F * s, 0.16F, 0.4F);
         }
+        if (pass == 2 && st == V2aAnim.G_SQUEEZE && tt < 6 && m.extra() < 10F) {
+            float k = tt / 6F;
+            GlowFx.billboard(ps, buf, GlowFx.HALO, true, (float) m.x(), (float) (yb + 1.0 * s), (float) m.z(), 5F * s * (0.5F + k), 0xFFD66B, 0.7F * (1 - k), 0);
+        }
     }
-
     // ------------------------------------------------------------------ Wish: rainbow
 
     private static final int[] RAINBOW = {0xFF2A2A, 0xFF8A1A, 0xFFE82A, 0x3CE04A, 0x2A9BFF, 0x4A36D8, 0xA43CE6};

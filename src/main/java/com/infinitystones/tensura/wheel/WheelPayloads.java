@@ -56,18 +56,23 @@ public final class WheelPayloads {
         @Override public Type<Setting> type() { return TYPE; }
     }
 
-    /** Server → client: what the wheel shows. holding = mode id of the channel in progress ("" if none). */
-    public record State(List<Entry> entries, String holding, int tiers) implements CustomPacketPayload {
+    /**
+     * Server → client: what the wheel shows. holding = mode id of the channel in progress ("" if none).
+     * gauntlet = stones set in the gauntlet the player carries (bit per stone ordinal), -1 when none is carried.
+     */
+    public record State(List<Entry> entries, String holding, int tiers, int gauntlet) implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(InfinityStones.id("wheel_state"));
         public static final StreamCodec<ByteBuf, State> CODEC = StreamCodec.of((buf, s) -> {
             Entry.CODEC.apply(ByteBufCodecs.list()).encode(buf, s.entries);
             ByteBufCodecs.STRING_UTF8.encode(buf, s.holding);
             ByteBufCodecs.VAR_INT.encode(buf, s.tiers);
+            ByteBufCodecs.VAR_INT.encode(buf, s.gauntlet + 1);
         }, buf -> {
             List<Entry> entries = Entry.CODEC.apply(ByteBufCodecs.list()).decode(buf);
             String holding = ByteBufCodecs.STRING_UTF8.decode(buf);
             int tiers = buf.isReadable() ? ByteBufCodecs.VAR_INT.decode(buf) : 0;
-            return new State(entries, holding, tiers);
+            int gauntlet = buf.isReadable() ? ByteBufCodecs.VAR_INT.decode(buf) - 1 : -1;
+            return new State(entries, holding, tiers, gauntlet);
         });
         @Override public Type<State> type() { return TYPE; }
     }

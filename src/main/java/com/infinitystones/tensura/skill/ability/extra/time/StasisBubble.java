@@ -79,7 +79,7 @@ public final class StasisBubble implements Ability {
             return true;
         }
         if (old != null) old.handle.cancel();
-        float r = ExtraSettings.get(p, MODE, 5, 3, 8, 1);
+        float r = ExtraSettings.get(p, MODE, 5, 3, 24, 1);
         Vec3 c = Aim.ground(p, 48);
         ServerLevel l = p.serverLevel();
         Bubble b = new Bubble(p.getUUID(), l, c, r);

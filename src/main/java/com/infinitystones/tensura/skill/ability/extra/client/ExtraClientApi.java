@@ -13,7 +13,7 @@ import java.util.Set;
 public final class ExtraClientApi {
     /** Mode ids ("stone.node") whose middle click should open our menu. */
     public static final Set<String> MENU_POWERS = Set.of(
-            "mind.suggestion", "reality.reality_pet", "reality.local_decree", "reality.reality_shatter", "time.climate_zone", "space.area_heist", "power.creator_hand");
+            "mind.suggestion", "reality.reality_pet", "reality.local_decree", "reality.reality_shatter", "time.climate_zone", "space.area_heist", "power.creator_hand", "reality.paint_world");
 
     /** v2d: the right click of these opens the menu. */
     private static final Set<String> MENU_POWERS_V2D = Set.of("time.time_race", "reality.reincarnate_pet");

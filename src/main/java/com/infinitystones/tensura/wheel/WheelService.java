@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.wheel;
 
 import com.infinitystones.tensura.InfinityStones;
+import com.infinitystones.tensura.skill.GauntletStones;
 import com.infinitystones.tensura.skill.ImmortalitySkill;
 import com.infinitystones.tensura.skill.InfinitySkills;
 import com.infinitystones.tensura.skill.NodeEffects;
@@ -255,17 +256,24 @@ public final class WheelService {
     /** Sends the wheel contents (carried stones, their slottable nodes, lock/toggle/cooldown) when it changed. */
     public static void sync(ServerPlayer p, boolean force) {
         Set<Stone> held = StoneProgress.heldStones(p);
+        int gauntlet = GauntletStones.carriedMask(p);
         List<WheelPayloads.Entry> entries = new ArrayList<>();
-        for (Stone s : held) {
-            if (StoneProgress.instance(p, s).isEmpty()) continue;
+        for (Stone s : Stone.values()) {
+            boolean carried = held.contains(s);
+            // with a gauntlet the wheel's gauntlet page lists every complete-gauntlet power, even of a stone that is not set yet
+            if (!carried && gauntlet < 0) continue;
+            boolean learned = StoneProgress.instance(p, s).isPresent();
+            if (carried && !learned) continue;
             for (StoneTree.Node n : StoneTree.of(s).wheelNodes) { // powers + passive switches (immortality included)
+                if (!carried && !GauntletStones.isGauntletPower(n)) continue;
                 if (StoneTier.hidden(p, n)) continue;
-                entries.add(new WheelPayloads.Entry(s.ordinal(), n.id(), StoneProgress.isUnlocked(p, s, n.id(), held),
+                boolean unlocked = carried && learned && StoneProgress.isUnlocked(p, s, n.id(), held);
+                entries.add(new WheelPayloads.Entry(s.ordinal(), n.id(), unlocked,
                         NodeEffects.isToggled(p, n), 0, 1, AbilitySettings.get(p, n)));
             }
         }
         StoneTree.Node h = HOLDING.get(p.getUUID());
-        WheelPayloads.State state = new WheelPayloads.State(entries, h == null ? "" : h.modeId(), StoneTier.mask(p));
+        WheelPayloads.State state = new WheelPayloads.State(entries, h == null ? "" : h.modeId(), StoneTier.mask(p), gauntlet);
         int hash = state.hashCode();
         if (!force && Integer.valueOf(hash).equals(LAST_SYNC.get(p.getUUID()))) return;
         LAST_SYNC.put(p.getUUID(), hash);

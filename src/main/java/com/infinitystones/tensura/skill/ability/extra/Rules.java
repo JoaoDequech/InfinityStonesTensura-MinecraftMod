@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 /**
- * Who the new abilities may affect (user decision 18/11): offensive powers hit players ALWAYS (no server-PvP check),
- * but never allies — yourself, your team, your pets and tamed animals — nor creative/spectator players.
+ * Who the new abilities may affect (user decision 18/11, revised 24/11): offensive powers hit players and mobs ALWAYS: no PvP, team,
+ * party or claim check. Only the caster himself, his own pets and creative/spectator players are skipped.
  * Bosses are immune to control (pet, metamorphosis, suggestion, containment).
  */
 public final class Rules {
@@ -33,6 +33,15 @@ public final class Rules {
         return e instanceof EnderDragon || e instanceof WitherBoss || e.getType().is(Tags.EntityTypes.BOSSES);
     }
 
+    /** The caster himself or something that belongs to him (tamed pets, Reality pets, ghosts): the only things harmful powers skip. */
+    public static boolean isSelfOrPet(ServerPlayer caster, Entity e) {
+        if (e == caster) return true;
+        if (caster.getUUID().equals(RealityPet.ownerOf(e))) return true;
+        if (caster.getUUID().equals(com.infinitystones.tensura.skill.ability.extra.soul.Ghosts.ownerOf(e))) return true;
+        return e instanceof OwnableEntity o && caster.getUUID().equals(o.getOwnerUUID());
+    }
+
+    /** Friendly for BENEFICIAL effects (buffs, links): the caster, his team, his OPAC party and his pets. Harmful powers use {@link #isSelfOrPet}. */
     public static boolean isAlly(ServerPlayer caster, Entity e) {
         if (e == caster) return true;
         if (caster.isAlliedTo(e)) return true;
@@ -51,14 +60,9 @@ public final class Rules {
 
     /** May the caster harm this entity? */
     public static boolean canHarm(ServerPlayer caster, @Nullable Entity e) {
-        if (e == null || e == caster || !e.isAlive() || e.isSpectator() || isAlly(caster, e)) return false;
+        if (e == null || e == caster || !e.isAlive() || e.isSpectator() || isSelfOrPet(caster, e)) return false;
         if (e instanceof ArmorStand) return false;
-        if (e instanceof Player other) {
-            if (other.isCreative()) return false;
-            // Open Parties and Claims: a player inside somebody else's claim is untouchable (no damage, no push, no effects)
-            return !(other instanceof ServerPlayer victim && com.infinitystones.tensura.compat.ClaimsCompat.isProtected(victim, caster));
-        }
-        return true;
+        return !(e instanceof Player other && other.isCreative());
     }
 
     /** May the caster take control of this entity (pet, metamorphosis, containment...)? */
@@ -88,7 +92,7 @@ public final class Rules {
     public static DamageSource source(ServerPlayer caster, @Nullable Entity target, boolean hidden) {
         var type = caster.serverLevel().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(io.github.manasmods.tensura.damage.TensuraDamageTypes.MAGIC_GENERIC);
-        boolean noOwner = target instanceof Player other && (!caster.server.isPvpAllowed() || !caster.canHarmPlayer(other));
+        boolean noOwner = target instanceof Player other && (!caster.server.isPvpAllowed() || !caster.canHarmPlayer(other) || com.infinitystones.tensura.compat.ClaimsCompat.opacLoaded());
         // without a causing entity ServerPlayer.hurt skips its PvP check; the caster stays the direct entity so claims can still tell who did it
         DamageSource s = noOwner ? new DamageSource(type, caster, null) : new DamageSource(type, caster, caster);
         if (hidden) {
@@ -146,7 +150,7 @@ public final class Rules {
     public static DamageSource trueSource(ServerPlayer caster, @Nullable Entity target) {
         var type = caster.serverLevel().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE)
                 .getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.GENERIC_KILL);
-        boolean noOwner = target instanceof Player other && (!caster.server.isPvpAllowed() || !caster.canHarmPlayer(other));
+        boolean noOwner = target instanceof Player other && (!caster.server.isPvpAllowed() || !caster.canHarmPlayer(other) || com.infinitystones.tensura.compat.ClaimsCompat.opacLoaded());
         DamageSource s = noOwner ? new DamageSource(type, caster, null) : new DamageSource(type, caster, caster);
         var t = (io.github.manasmods.tensura.damage.TensuraDamageSource) s;
         t.tensura$setResistanceBypassLevel(2F);

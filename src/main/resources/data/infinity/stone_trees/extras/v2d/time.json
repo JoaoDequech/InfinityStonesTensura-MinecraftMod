@@ -11,18 +11,13 @@
         "item": "infinity:aspects_of_existance",
         "amount": 18
       },
-      "parents": [
-        "alternate_timeline"
-      ],
+      "parents": ["eras"],
       "requires_stones": [],
       "activation": "press",
       "cooldown_ticks": 0,
       "in_tree": true,
       "in_bar": true,
-      "gui_position": [
-        6,
-        -4.5
-      ],
+      "gui_position": [6, -4],
       "page": 2,
       "aim": true,
       "settings": {

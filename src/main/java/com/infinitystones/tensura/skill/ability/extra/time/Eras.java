@@ -81,13 +81,14 @@ public final class Eras implements Ability {
         BlockHitResult hit = Aim.block(p, 40);
         if (hit.getType() == HitResult.Type.MISS) return Fx.fail(p, "infinity.extra.time.eras.no_target");
         boolean aging = !alt;
-        int r = ExtraSettings.get(p, MODE, 3, 2, 6, 1);
+        int r = ExtraSettings.get(p, MODE, 3, 2, 16, 1);
         ServerLevel l = p.serverLevel();
         BlockPos center = hit.getBlockPos();
         Vec3 c = Vec3.atCenterOf(center);
         List<BlockPos> all = new ArrayList<>();
+        com.infinitystones.tensura.skill.ability.extra.Terrain.Session terrain = new com.infinitystones.tensura.skill.ability.extra.Terrain.Session(p);
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-r, -r, -r), center.offset(r, r, r)))
-            if (pos.distSqr(center) <= (r + 0.5) * (r + 0.5)) all.add(pos.immutable());
+            if (pos.distSqr(center) <= (r + 0.5) * (r + 0.5) && terrain.may(pos)) all.add(pos.immutable());
         all.sort(Comparator.comparingDouble(b -> b.distSqr(center)));
         int ticks = r * 3 + 4;
         Vec3 floor = new Vec3(c.x, center.getY() + 1.02, c.z);

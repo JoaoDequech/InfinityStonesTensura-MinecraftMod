@@ -26,7 +26,20 @@ public final class TimeNet {
             MARK_RING = 8, KILL = 9;
 
     /** Climates (zone extra). */
-    public static final int C_NONE = 0, C_STORM = 1, C_RAIN = 2, C_SNOW = 3, C_FOG = 4, C_SUN = 5, C_AURORA = 6, C_SAND = 7;
+    public static final int C_NONE = 0, C_STORM = 1, C_RAIN = 2, C_SNOW = 3, C_FOG = 4, C_SUN = 5, C_AURORA = 6, C_SAND = 7,
+            C_BLIZZARD = 8, C_ASH = 9, C_CHERRY = 10, C_SUPERCELL = 11, C_METEOR = 12, C_TOXIC = 13, C_STARFALL = 14, C_HEAT = 15, C_RAINBOW = 16;
+
+    /** Climates whose sky is forced to night for everybody inside the zone. */
+    public static boolean night(int climate) { return climate == C_METEOR || climate == C_STARFALL; }
+
+    /** Wind gust phase shared by server pushes and client visuals: 0..1 while a gust blows, -1 otherwise (zone age in ticks). */
+    public static float gust(int zoneId, float ageTicks) {
+        float cyc = ageTicks % 90F;
+        return cyc < 36F ? (float) Math.sin(cyc / 36F * Math.PI) : -1F;
+    }
+
+    /** Direction (radians) of the gust that blows at this zone age. */
+    public static double gustAngle(int zoneId, float ageTicks) { return zoneId * 1.713 + Math.floor(ageTicks / 90F) * 2.399; }
 
     private static final AtomicInteger IDS = new AtomicInteger(1);
     /** Ids live in their own range so they never collide with FxNet ids on the client (separate store anyway). */
@@ -65,8 +78,11 @@ public final class TimeNet {
         return new T(kind, id, color & 0xFFFFFF, life, size, extra, a.x, a.y, a.z, b.x, b.y, b.z, ea);
     }
 
+    /** Zones refresh every 2 s (life 5 s): one small packet per player in range. */
+    public static final int ZONE_LIFE = 100, ZONE_REFRESH = 40;
+
     public static void zone(ServerLevel l, int id, Vec3 c, float radius, int climate, int life, int ageTicks) {
-        send(l, c, of(ZONE, id, 0x2BD56A, life, radius, climate, c, new Vec3(ageTicks, 0, 0), -1));
+        send(l, c, of(ZONE, id, 0x2BD56A, Math.max(life, ZONE_LIFE), radius, climate, c, new Vec3(ageTicks, 0, 0), -1));
     }
 
     public static void stasis(ServerLevel l, int id, Vec3 c, float radius, int life) {

@@ -1,7 +1,6 @@
 package com.infinitystones.tensura.skill.ability.extra.v2a;
 
 import com.infinitystones.tensura.InfinityStones;
-import com.infinitystones.tensura.compat.ClaimsCompat;
 import com.infinitystones.tensura.skill.Stone;
 import com.infinitystones.tensura.skill.StoneProgress;
 import com.infinitystones.tensura.skill.StoneTier;
@@ -54,12 +53,11 @@ import java.util.UUID;
  *   <li>Left (aim): the aimed living being (player or any mob, bosses too) or, aiming at a point with nobody on it, every
  *       living being around the point. Middle click: a list of the players in the dimension; the choice does exactly
  *       what grabbing by aim does, at any distance.</li>
- *   <li>Strength 1-10 (scroll). While held, every second a share of the maximum health that grows with the level
- *       (2% at 1, 25% at 9) ignores armour and resistances. Level 10 executes: everyone in the fist dies in a burst of gore.</li>
- *   <li>Right: first click squeezes (strong pulses, or the execution at level 10), the next one opens the hand and lets
- *       everyone down slowly. Prey is locked in a cutscene (fixed camera shot, no input), the caster is rooted but can
- *       still look and use the wheel.</li>
- *   <li>Claims still block damage and killing of players inside land that is not the caster's; holding is allowed.</li>
+ *   <li>Strength 1-10 (scroll, live while holding). Holding alone hurts nobody. Left while holding squeezes: one decisive squeeze deals a share of the
+ *       maximum health (2% at 1, 25% at 9, ignoring armour); left held down squeezes on and on at that share per second. At strength 10 a squeeze executes:
+ *       everyone in the fist dies in a burst of gore.</li>
+ *   <li>Right while holding: opens the hand and lets everyone down slowly (slow falling); the arm climbs back into the circle, which closes.
+ *       Prey is locked in a cutscene (smooth camera shot, no input), the caster is rooted but can look around.</li>
  * </ul>
  * Everyone is released when the caster logs out, dies, changes dimension or no longer carries the whole gauntlet, and
  * put on the ground if the server stops. Captives are held by velocity and position only (no entity data is changed).
@@ -72,7 +70,7 @@ public final class CreatorHand implements Ability {
     private static final Map<UUID, Session> ACTIVE = new HashMap<>();
     private static final Map<UUID, Session> HELD = new HashMap<>();
 
-    private static final int HOLD_CAP = 3600, AREA = 8, AIM_RANGE = 96;
+    private static final int HOLD_CAP = 3600, AREA = 10, AIM_RANGE = 96;
 
     @Override public Stone stone() { return Stone.POWER; }
 
@@ -80,8 +78,7 @@ public final class CreatorHand implements Ability {
     public boolean press(ServerPlayer p, boolean alt) {
         Session s = ACTIVE.get(p.getUUID());
         if (s != null) {
-            if (!alt) return Fx.fail(p, "infinity.v2a.creator.busy");
-            s.rightClick(p.isShiftKeyDown());
+            if (alt) s.release(); else s.squeezeInput();
             return true;
         }
         if (alt) return Fx.fail(p, "infinity.v2a.creator.none");
@@ -92,6 +89,14 @@ public final class CreatorHand implements Ability {
         Vec3 ground = Ground.below(l, aim.add(0, 0.3, 0), 40);
         if (!l.hasChunkAt(BlockPos.containing(ground))) return Fx.fail(p, "infinity.v2a.far");
         return launch(new Session(p, l, ground, null));
+    }
+
+    /** Caster controls while holding (client key handler): 1 = squeeze (repeated while held), 2 = release. */
+    static void input(ServerPlayer p, int action) {
+        Session s = ACTIVE.get(p.getUUID());
+        if (s == null || s.p != p) return;
+        if (action == 1) s.squeezeInput();
+        else if (action == 2) s.release();
     }
 
     /** Middle click: the death list of the players that can be picked. The reply (V2aNet.Pick) comes back to {@link #pick}. */
@@ -171,27 +176,31 @@ public final class CreatorHand implements Ability {
         final ServerPlayer p; final ServerLevel l; final Vec3 ground;
         final LivingEntity single;
         final int id = V2aNet.newId();
-        final float s, shotYaw, dist;
+        final int[] circles = new int[8];
+        final float s, shotYaw, dist, rc;
         final float yaw;
         final double yC, hoverY, riseY;
         final List<Cap> caps = new ArrayList<>();
-        int state = -1, moveStart, dur = 1, age, squeezeStart, holdStart, relStart;
+        int state = -1, moveStart, dur = 1, age, squeezeStart, relStart, squeezeUntil = -100, lastLevel;
         double y0, y1;
-        boolean releasing, squeezed, execute;
+        boolean releasing, exec, chain;
         Vec3 anchor;
 
         Session(ServerPlayer p, ServerLevel l, Vec3 ground, LivingEntity single) {
             this.p = p; this.l = l; this.ground = ground; this.single = single;
-            this.s = single == null ? Mth.clamp(AREA / 2.2F, 1.6F, 6F)
-                    : Mth.clamp(Math.max(single.getBbHeight() * 0.55F, single.getBbWidth() * 0.8F), 1.8F, 6F);
+            this.s = single == null ? 9F
+                    : Mth.clamp(7.5F + Math.max(single.getBbHeight() * 0.35F, single.getBbWidth() * 0.6F), 8F, 12F);
+            this.rc = 3.4F * s;
             this.shotYaw = p.getYRot();
-            this.dist = 9F + 4.2F * s;
+            this.dist = 8F + 4.6F * s;
             double dx = p.getX() - ground.x, dz = p.getZ() - ground.z;
             float toCaster = dx * dx + dz * dz < 1 ? (float) Math.toRadians(-p.getYRot() + 180) : (float) Math.atan2(dx, dz);
             this.yaw = toCaster + (float) Math.PI;
-            this.yC = Math.min(l.getMaxBuildHeight() - 6, ground.y + 76 + 2 * s);
+            this.yC = Math.min(l.getMaxBuildHeight() - 6, ground.y + 60 + 4.5 * s);
             this.hoverY = ground.y + 2.7 * s + 0.3;
-            this.riseY = Math.min(yC - 14, ground.y + 26 + 1.5 * s);
+            this.riseY = Math.min(yC - 14, ground.y + 18 + 3.2 * s);
+            for (int i = 0; i < circles.length; i++) circles[i] = PowerNet.newId();
+            this.lastLevel = level();
         }
 
         int level() { return ExtraSettings.get(p, MODE, 5, 1, 10, 1); }
@@ -200,13 +209,14 @@ public final class CreatorHand implements Ability {
 
         void broadcast(V2aNet.Msg m) {
             for (ServerPlayer sp : l.players())
-                if (sp == p || sp.position().distanceToSqr(ground) <= 260 * 260) PacketDistributor.sendToPlayer(sp, m);
+                if (sp == p || sp.position().distanceToSqr(ground) <= 300 * 300) PacketDistributor.sendToPlayer(sp, m);
         }
 
         void setState(int st, double toY, int ticks, int life) {
             double cur = state < 0 ? yC : yb();
             y0 = cur; y1 = toY; moveStart = age; dur = ticks; state = st;
-            broadcast(V2aNet.msg(V2aNet.GAUNTLET, id, st, life, s, ground, yaw, y0, y1, ticks, AREA));
+            broadcast(V2aNet.msg(V2aNet.GAUNTLET, id, st, life, s, ground, yaw, y0, y1, ticks, level()));
+            if (st == V2aAnim.G_HOLD || st == V2aAnim.G_SQUEEZE) syncLocks();
         }
 
         Vec3 centre() {
@@ -214,22 +224,32 @@ public final class CreatorHand implements Ability {
             return new Vec3(ground.x + Math.sin(yaw) * 0.85 * s, yb + 1.0 * s, ground.z + Math.cos(yaw) * 0.85 * s);
         }
 
-        void rightClick(boolean shift) {
+        int ready() { return releasing ? 0 : (state == V2aAnim.G_HOLD || state == V2aAnim.G_SQUEEZE) ? 3 : 2; }
+
+        void circles(int life) {
+            Vec3 sky = new Vec3(ground.x, yC, ground.z), up = new Vec3(0, 1, 0);
+            PowerNet.circle(l, circles[0], sky, up, rc, Bits.GOLD, 0xFFF3C4, life, 2.2F, PowerNet.RAYS);
+            PowerNet.circle(l, circles[1], sky.add(0, -0.3, 0), up, rc * 0.62F, 0xFFF3C4, Bits.GOLD, life, -3.5F, PowerNet.GLYPHS_ONLY);
+            for (int i = 0; i < 6; i++) {
+                double a = Math.toRadians(60 * i + 30);
+                Vec3 at = sky.add(Math.cos(a) * rc * 0.8, -0.5, Math.sin(a) * rc * 0.8);
+                int col = PowerNet.STONE_COLORS[i];
+                PowerNet.circle(l, circles[2 + i], at, up, rc * 0.17F, col, PowerNet.tint(col, 0.5F), life, 5F, PowerNet.SIMPLE);
+            }
+        }
+
+        void squeezeInput() {
             if (releasing) return;
-            if (state == V2aAnim.G_HOLD && !squeezed && !shift) {
-                squeezed = true;
-                execute = level() >= 10;
-                squeezeStart = age;
-                setState(V2aAnim.G_SQUEEZE, riseY, 1, 1200);
-            } else release();
+            if (state == V2aAnim.G_HOLD || state == V2aAnim.G_SQUEEZE) squeezeUntil = age + 6;
         }
 
         void syncLocks() {
-            HandLock.send(p, 2, id, shotYaw, dist, s);
-            for (Cap c : caps) if (c.e instanceof ServerPlayer sp) HandLock.send(sp, 1, id, shotYaw, dist, s);
+            int lv = level();
+            HandLock.send(p, 2, id, shotYaw, dist, s, lv, ready());
+            for (Cap c : caps) if (c.e instanceof ServerPlayer sp) HandLock.send(sp, 1, id, shotYaw, dist, s, lv, 0);
         }
 
-        /** The caster stays where he is (looking and the wheel still work). */
+        /** The caster stays where he is (looking still works). */
         void root() {
             if (anchor == null) anchor = p.position();
             double dx = p.getX() - anchor.x, dz = p.getZ() - anchor.z;
@@ -250,79 +270,68 @@ public final class CreatorHand implements Ability {
             root();
             if (age == 0) {
                 setState(V2aAnim.G_DESC, hoverY, V2aAnim.G_DESC_TICKS, 1200);
-                Vec3 sky = new Vec3(ground.x, yC, ground.z);
-                float rc = 4.2F * s;
-                Vec3 up = new Vec3(0, 1, 0);
-                PowerNet.circle(l, PowerNet.newId(), sky, up, rc, Bits.GOLD, 0xFFF3C4, 74, 2.5F, PowerNet.RAYS);
-                PowerNet.circle(l, PowerNet.newId(), sky.add(0, -0.3, 0), up, rc * 0.6F, 0xFFF3C4, Bits.GOLD, 74, -4F, PowerNet.GLYPHS_ONLY);
-                Bits.farSound(l, ground, SoundEvents.BEACON_ACTIVATE, 0.6F, 0.5F, 140);
-                Bits.farSound(l, ground, SoundEvents.ENDER_DRAGON_GROWL, 0.3F, 0.7F, 140);
+                circles(70);
+                Bits.farSound(l, ground, SoundEvents.BEACON_ACTIVATE, 0.6F, 0.5F, 160);
+                Bits.farSound(l, ground, SoundEvents.ENDER_DRAGON_GROWL, 0.3F, 0.7F, 160);
                 if (single != null) take(single, Vec3.ZERO);
                 syncLocks();
-            }
+            } else if (age % 30 == 0) circles(70);
             if (age > 0 && age < V2aAnim.G_DESC_TICKS) {
                 Vec3 h = new Vec3(ground.x, yb(), ground.z);
-                FxNet.pillar(l, 0, h, 0.7F * s * 0.5F, 18F, Bits.GOLD, 3);
-                if (age % 2 == 0) l.sendParticles(Fx.dust(Bits.GOLD, 2.6F), h.x, h.y + 2, h.z, 8, s, 2, s, 0);
-                if (age == 8) Bits.farSound(l, ground, SoundEvents.AMETHYST_CLUSTER_BREAK, 0.6F, 0.5F, 120);
-                if (age == 20) Bits.farSound(l, h, SoundEvents.WIND_CHARGE_BURST, 0.6F, 0.4F, 120);
-                if (age == 30) Bits.farSound(l, h, SoundEvents.BELL_RESONATE, 0.5F, 0.5F, 120);
-                if (age == V2aAnim.G_DESC_TICKS - 4) FxNet.shake(l, ground, 50, 2.2F, 14);
+                FxNet.pillar(l, 0, h, 0.35F * s, 18F, Bits.GOLD, 3);
+                if (age % 2 == 0) l.sendParticles(Fx.dust(Bits.GOLD, 2.6F), h.x, h.y + 2, h.z, 10, s * 0.5, 2, s * 0.5, 0);
+                for (int i = 0; i < 6; i++) {
+                    if (age == (i + 1) * V2aAnim.G_DESC_TICKS / 8) {
+                        Fx.sound(l, ground, SoundEvents.NOTE_BLOCK_CHIME.value(), 0.6F, 0.6F + 0.14F * i);
+                        FxNet.flare(l, new Vec3(h.x, h.y + 1.2 * s, h.z), s * 0.7F, PowerNet.STONE_COLORS[i], 8);
+                    }
+                }
+                if (age == 8) Bits.farSound(l, ground, SoundEvents.AMETHYST_CLUSTER_BREAK, 0.6F, 0.5F, 140);
+                if (age == 20) Bits.farSound(l, h, SoundEvents.WIND_CHARGE_BURST, 0.6F, 0.4F, 140);
+                if (age == 30) Bits.farSound(l, h, SoundEvents.BELL_RESONATE, 0.5F, 0.5F, 140);
+                if (age == V2aAnim.G_DESC_TICKS - 5) FxNet.shake(l, ground, 90, 2.4F, 16);
             }
             if (age == V2aAnim.G_DESC_TICKS) {
                 setState(V2aAnim.G_OPEN, hoverY, V2aAnim.G_OPEN_TICKS, 1200);
-                FxNet.shockwave(l, ground.add(0, 0.1, 0), AREA * 1.4F, Bits.GOLD, 22);
-                Bits.farSound(l, ground, SoundEvents.ANVIL_LAND, 0.4F, 0.6F, 120);
-            }
-            int openAge = age - V2aAnim.G_DESC_TICKS;
-            if (state == V2aAnim.G_OPEN && openAge >= 0 && openAge % 3 == 0 && openAge / 3 < 6) {
-                int i = openAge / 3;
-                Fx.sound(l, ground, SoundEvents.NOTE_BLOCK_CHIME.value(), 0.6F, 0.6F + 0.14F * i);
-                FxNet.flare(l, centre().add(0, 0.5 * s, 0), s * 1.2F, PowerNet.STONE_COLORS[i], 8);
+                FxNet.shockwave(l, ground.add(0, 0.1, 0), AREA * 1.6F, Bits.GOLD, 24);
+                Bits.farSound(l, ground, SoundEvents.ANVIL_LAND, 0.4F, 0.6F, 140);
             }
             int closeAt = V2aAnim.G_DESC_TICKS + V2aAnim.G_OPEN_TICKS;
             int closedAt = closeAt + V2aAnim.G_CLOSE_TICKS;
             if (age == closeAt) {
                 if (single == null) capture();
                 setState(V2aAnim.G_CLOSE, hoverY, V2aAnim.G_CLOSE_TICKS, 1200);
-                Bits.farSound(l, ground, SoundEvents.ANVIL_LAND, 0.6F, 0.5F, 120);
-                Bits.farSound(l, ground, SoundEvents.IRON_GOLEM_ATTACK, 0.7F, 0.5F, 120);
-                FxNet.shake(l, ground, 50, 2F, 14);
+                Bits.farSound(l, ground, SoundEvents.ANVIL_LAND, 0.6F, 0.5F, 140);
+                Bits.farSound(l, ground, SoundEvents.IRON_GOLEM_ATTACK, 0.7F, 0.5F, 140);
+                FxNet.shake(l, ground, 90, 2.4F, 16);
                 FxNet.flashAround(l, ground, AREA + 6, Bits.GOLD, 0.5F, 10);
             }
             if (age == closedAt) {
                 if (caps.isEmpty()) { release(); return true; }
-                if (level() >= 10) {
-                    squeezed = true; execute = true; squeezeStart = age;
-                    setState(V2aAnim.G_SQUEEZE, hoverY, 1, 1200);
-                } else {
-                    setState(V2aAnim.G_RISE, riseY, V2aAnim.G_RISE_TICKS, 1200);
-                    Bits.farSound(l, centre(), SoundEvents.WIND_CHARGE_BURST, 0.5F, 0.5F, 120);
-                }
+                setState(V2aAnim.G_RISE, riseY, V2aAnim.G_RISE_TICKS, 1200);
+                Bits.farSound(l, centre(), SoundEvents.WIND_CHARGE_BURST, 0.5F, 0.5F, 140);
             }
-            if (age == closedAt + V2aAnim.G_RISE_TICKS && state == V2aAnim.G_RISE) {
-                holdStart = age;
-                setState(V2aAnim.G_HOLD, riseY, 1, 1200);
-            }
-            if (state == V2aAnim.G_SQUEEZE) squeeze(age - squeezeStart);
+            if (age == closedAt + V2aAnim.G_RISE_TICKS && state == V2aAnim.G_RISE) setState(V2aAnim.G_HOLD, riseY, 1, 1200);
+            if (state == V2aAnim.G_HOLD && age < squeezeUntil) { chain = false; startSqueeze(); }
+            if (state == V2aAnim.G_SQUEEZE) squeezeTick(age - squeezeStart);
             if (releasing) return true;
             if (age >= closedAt && (state == V2aAnim.G_RISE || state == V2aAnim.G_HOLD || state == V2aAnim.G_SQUEEZE)) {
                 if (age % 4 == 0) sparkle(1F);
                 if (age % 20 == 10) Bits.farSound(l, centre(), SoundEvents.WARDEN_HEARTBEAT, 0.5F, 0.6F, 70);
-                if (age % 20 == 0 && age > closedAt && !execute) drainTick();
-                if (state == V2aAnim.G_HOLD && age - holdStart > HOLD_CAP) { release(); return true; }
+                if (age - closedAt > HOLD_CAP) { release(); return true; }
             }
             if (!caps.isEmpty()) holdAll(closeAt);
             if (releasing) return true;
             if (age > closedAt && caps.isEmpty()) { release(); return true; }
-            if (age % 20 == 0) syncLocks();
+            int lv = level();
+            if (age % 20 == 0 || lv != lastLevel) { lastLevel = lv; syncLocks(); }
             return true;
         }
 
         private void sparkle(float k) {
             Vec3 c = centre();
-            l.sendParticles(Fx.dust(Bits.GOLD, 2.2F), c.x, c.y, c.z, (int) (6 * k), s * 0.7, s * 0.6, s * 0.7, 0);
-            l.sendParticles(ParticleTypes.END_ROD, c.x, c.y - 0.5 * s, c.z, 2, s * 0.5, s * 0.5, s * 0.5, 0.02);
+            l.sendParticles(Fx.dust(Bits.GOLD, 2.2F), c.x, c.y, c.z, (int) (8 * k), s * 0.7, s * 0.6, s * 0.7, 0);
+            l.sendParticles(ParticleTypes.END_ROD, c.x, c.y - 0.5 * s, c.z, 3, s * 0.5, s * 0.5, s * 0.5, 0.02);
         }
 
         private void take(LivingEntity e, Vec3 off) {
@@ -369,61 +378,66 @@ public final class CreatorHand implements Ability {
             }
         }
 
-        /** Everyone in the fist loses a share of the maximum health that grows with the strength. */
-        private void drainTick() {
-            float k = pct(level());
-            for (Cap cap : new ArrayList<>(caps)) {
-                LivingEntity e = cap.e;
-                if (!e.isAlive() || !Rules.canHarm(p, e) || protectedPlayer(e)) continue;
-                drain(e, e.getMaxHealth() * k);
+        private void startSqueeze() {
+            exec = level() >= 10;
+            squeezeStart = age;
+            setState(V2aAnim.G_SQUEEZE, riseY, 1, 1200);
+        }
+
+        private void squeezeTick(int t) {
+            Vec3 c = centre();
+            if (exec) {
+                if (t == 0) {
+                    Bits.farSound(l, c, SoundEvents.WARDEN_SONIC_CHARGE, 0.6F, 0.6F, 120);
+                    FxNet.shake(l, c, 120, 1.6F, 12);
+                }
+                if (t == 10) {
+                    executeAll();
+                    release();
+                }
+                return;
+            }
+            if (t == 4) crush(c);
+            int period = chain ? 10 : V2aAnim.G_SQUEEZE_TICKS;
+            if (t >= period - 1) {
+                if (age < squeezeUntil) { chain = true; startSqueeze(); }
+                else if (t >= V2aAnim.G_SQUEEZE_TICKS - 1) setState(V2aAnim.G_HOLD, riseY, 1, 1200);
             }
         }
 
-        private boolean protectedPlayer(LivingEntity e) { return e instanceof ServerPlayer sp && ClaimsCompat.isProtected(sp, p); }
-
-        private void squeeze(int t) {
-            Vec3 c = centre();
-            if (execute) {
-                if (t == 0) {
-                    Bits.farSound(l, c, SoundEvents.WARDEN_SONIC_CHARGE, 0.6F, 0.6F, 100);
-                    FxNet.shake(l, c, 70, 1.5F, 10);
-                }
-                if (t == 8) executeAll();
-                if (t >= 8) release();
-                return;
-            }
-            if (t % 10 != 0 || t > 30) {
-                if (t >= 40) setState(V2aAnim.G_HOLD, riseY, 1, 1200);
-                return;
-            }
-            FxNet.shake(l, c, 70, 3.2F, 10);
-            FxNet.flare(l, c, s * 2.4F, 0xFFFFFF, 8);
-            FxNet.shockwave(l, new Vec3(ground.x, c.y, ground.z), s * 3F, Bits.GOLD, 14);
-            Bits.farSound(l, c, SoundEvents.ANVIL_LAND, 0.55F, 0.5F + 0.1F * (t / 10), 100);
-            Bits.farSound(l, c, SoundEvents.IRON_GOLEM_DAMAGE, 0.7F, 0.5F, 100);
-            float pulse = pct(level()) * 0.5F;
+        /** One squeeze: a share of the maximum health that grows with the force, ignoring armour and resistances. */
+        private void crush(Vec3 c) {
+            int lv = level();
+            float k = Mth.clamp(lv / 10F, 0.1F, 1F);
+            FxNet.shake(l, c, 100, 1.4F + 3F * k, 10);
+            FxNet.flare(l, c, s * (1.4F + 1.2F * k), 0xFFFFFF, 8);
+            FxNet.shockwave(l, new Vec3(ground.x, c.y, ground.z), s * (1.6F + 1.4F * k), Bits.GOLD, 14);
+            Bits.farSound(l, c, SoundEvents.ANVIL_LAND, 0.6F, 0.4F + 0.05F * lv, 110);
+            Bits.farSound(l, c, SoundEvents.IRON_GOLEM_DAMAGE, 0.8F, 0.5F, 110);
+            Bits.farSound(l, c, SoundEvents.WARDEN_ATTACK_IMPACT, 0.5F, 0.6F, 110);
+            float amount = pct(lv) * (chain ? 0.5F : 1F);
             for (Cap cap : new ArrayList<>(caps)) {
                 LivingEntity e = cap.e;
-                if (e.isAlive() && Rules.canHarm(p, e) && !protectedPlayer(e)) drain(e, e.getMaxHealth() * pulse);
+                if (e.isAlive() && Rules.canHarm(p, e)) drain(e, e.getMaxHealth() * amount);
                 if (e instanceof ServerPlayer sp) FxNet.flash(sp, 0xFFFFFF, 0.35F, 5);
             }
         }
 
-        /** Level 10: the fist closes for good. Players inside land that is not the caster's are spared. */
+        /** Force 10: the fist closes for good. */
         private void executeAll() {
             Vec3 c = centre();
-            FxNet.flare(l, c, s * 3.6F, 0xFFFFFF, 12);
-            FxNet.flare(l, c, s * 5.5F, Bits.GOLD, 16);
+            FxNet.flare(l, c, s * 2.4F, 0xFFFFFF, 12);
+            FxNet.flare(l, c, s * 3.6F, Bits.GOLD, 16);
             FxNet.flashAround(l, c, 90, Bits.GOLD, 0.95F, 20);
-            FxNet.shake(l, c, 100, 4.5F, 24);
+            FxNet.shake(l, c, 140, 5F, 24);
             FxNet.shockwave(l, new Vec3(ground.x, c.y, ground.z), s * 4F, Bits.GOLD, 18);
-            Bits.farSound(l, c, SoundEvents.GENERIC_EXPLODE.value(), 0.7F, 0.45F, 120);
-            Bits.farSound(l, c, SoundEvents.WARDEN_SONIC_BOOM, 0.6F, 0.7F, 120);
-            Bits.farSound(l, c, SoundEvents.IRON_GOLEM_DAMAGE, 0.7F, 0.4F, 120);
+            Bits.farSound(l, c, SoundEvents.GENERIC_EXPLODE.value(), 0.7F, 0.45F, 140);
+            Bits.farSound(l, c, SoundEvents.WARDEN_SONIC_BOOM, 0.6F, 0.7F, 140);
+            Bits.farSound(l, c, SoundEvents.IRON_GOLEM_DAMAGE, 0.7F, 0.4F, 140);
             for (Iterator<Cap> it = caps.iterator(); it.hasNext(); ) {
                 Cap cap = it.next();
                 LivingEntity e = cap.e;
-                if (!e.isAlive() || !Rules.canHarm(p, e) || protectedPlayer(e)) continue;
+                if (!e.isAlive() || !Rules.canHarm(p, e)) continue;
                 gore(e);
                 kill(e);
                 drop(cap);
@@ -444,7 +458,7 @@ public final class CreatorHand implements Ability {
             if (cap.e instanceof ServerPlayer sp) HandLock.free(sp);
         }
 
-        /** Opens the hand and lets everyone down gently. */
+        /** Opens the hand and lets everyone down gently; the arm climbs back into the circle, which closes. */
         void release() {
             if (releasing) return;
             releasing = true;
@@ -459,7 +473,8 @@ public final class CreatorHand implements Ability {
             HandLock.free(p);
             double up = Math.min(l.getMaxBuildHeight() - 6, yC + 4);
             setState(V2aAnim.G_RELEASE, up, V2aAnim.G_RELEASE_TICKS, V2aAnim.G_RELEASE_TICKS + 8);
-            Bits.farSound(l, centre(), SoundEvents.BEACON_DEACTIVATE, 0.5F, 0.8F, 120);
+            circles(V2aAnim.G_RELEASE_TICKS + 16);
+            Bits.farSound(l, centre(), SoundEvents.BEACON_DEACTIVATE, 0.5F, 0.8F, 140);
         }
 
         @Override
@@ -472,6 +487,7 @@ public final class CreatorHand implements Ability {
             caps.clear();
             HandLock.free(p);
             V2aNet.kill(l, ground, id);
+            for (int c : circles) PowerNet.kill(l, new Vec3(ground.x, yC, ground.z), c);
         }
 
         void putDown(Entity e) {

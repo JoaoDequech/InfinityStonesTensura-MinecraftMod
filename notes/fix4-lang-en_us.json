@@ -1,0 +1,13 @@
+{
+  "ability.infinity.space_stone.cosmic_scale.description": "Left (aim at a build): space stretches in blue and the connected structure (up to 1,000,000 built blocks) swells 2x or 3x from its base, layer by layer, over many ticks. Right: shrinks it to 1/2 or 1/3 by sampling each cell. Sneak + click on two blocks selects an A/B box (up to 100 per side) instead of the structure. Scroll: factor. Only other people's claims and unbreakable blocks stop it.",
+  "infinity.extra.v2b.scale.too_big": "Structure too big (max %s blocks)",
+  "infinity.extra.v2b.scale.scanning": "Measuring space: %s blocks",
+  "infinity.extra.v2b.scale.progress": "Space is moving: %s%%",
+  "infinity.extra.v2b.scale.box_big": "The box is over %s blocks per side",
+  "ability.infinity.reality_stone.harmless_form.description": "Rewrite the creature under your aim (any non-boss mob, or a player) as a harmless chicken for 8 seconds. Mobs come back identical (identity, health and equipment). Players are seen as a chicken by everyone, walk slower and cannot attack, use items or edit blocks. Bosses resist.",
+  "ability.infinity.mind_stone.nightmare.description": "Conjunction Mind + Soul. The aimed creature falls into a nightmare for 10 s without moving an inch. Player: heavy darkness, fake monster sounds, footsteps closing in from behind and whispers only they hear, fake hits that never hurt, shadows flickering at the edge of the view and a racing heartbeat. Mob: panics and flees from you, and its pack scatters.",
+  "ability.infinity.soul_stone.enter_soulworld.description": "Takes you and the entities within 5 blocks into the SoulWorld. Each one remembers the exact spot it left from.",
+  "ability.infinity.soul_stone.exit_soulworld.description": "Brings you and nearby entities back from the SoulWorld, each to exactly where it stood when it went in.",
+  "ability.infinity.power_stone.gauntlet_execution.description": "Complete gauntlet. Left: execute the aimed player or mob (up to 256 blocks). Right: open a list of players and nearby mobs to pick who to execute. Burns your arm for one day.",
+  "infinity.wheel.dual.gauntlet_execution": "Left: aimed target  ·  Right: pick from list"
+}

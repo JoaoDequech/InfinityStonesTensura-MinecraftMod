@@ -134,7 +134,7 @@ public final class PortFx {
 
     /** Like {@link #attack} but still lands on players when server PvP / teams would block a player attack (project decision). */
     public static DamageSource attack(ServerPlayer p, Entity target) {
-        if (target instanceof Player other && (!p.server.isPvpAllowed() || !p.canHarmPlayer(other)))
+        if (target instanceof Player other && (!p.server.isPvpAllowed() || !p.canHarmPlayer(other) || com.infinitystones.tensura.compat.ClaimsCompat.opacLoaded()))
             return new DamageSource(p.serverLevel().registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.DAMAGE_TYPE)
                     .getHolderOrThrow(net.minecraft.world.damagesource.DamageTypes.MAGIC));
         return attack(p);
@@ -147,12 +147,9 @@ public final class PortFx {
     public static boolean canAffect(ServerPlayer caster, Entity target) {
         if (target == caster || !target.isAlive() || target.isSpectator()) return false;
         if (target instanceof ArmorStand) return false;
-        if (target instanceof Player other) // hits players even with PvP off (project decision), but never inside somebody else's claim
-            return !other.isCreative() && !(other instanceof ServerPlayer victim && (com.infinitystones.tensura.compat.ClaimsCompat.isProtected(victim, caster)
-                    || com.infinitystones.tensura.compat.ClaimsCompat.sameParty(caster, victim)));
+        if (target instanceof Player other) return !other.isCreative(); // players always, whatever PvP, team, party or claim says
         if (target instanceof OwnableEntity own && caster.getUUID().equals(own.getOwnerUUID())) return false;
-        if (target instanceof TamableAnimal t && t.isOwnedBy(caster)) return false;
-        return !caster.isAlliedTo(target);
+        return !(target instanceof TamableAnimal t && t.isOwnedBy(caster));
     }
 
     public static boolean hostileTarget(ServerPlayer caster, Entity target) {

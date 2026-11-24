@@ -20,13 +20,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
  */
 @EventBusSubscriber(modid = InfinityStones.MOD_ID)
 final class HandLock {
-    static void send(ServerPlayer sp, int mode, int id, float shotYaw, float dist, float scale) {
-        PacketDistributor.sendToPlayer(sp, new V2aNet.Lock(mode, id, shotYaw, dist, scale));
+    static void send(ServerPlayer sp, int mode, int id, float shotYaw, float dist, float scale, int force, int ready) {
+        PacketDistributor.sendToPlayer(sp, new V2aNet.Lock(mode, id, shotYaw, dist, scale, force, ready));
     }
 
     static void free(ServerPlayer sp) {
         if (sp.hasDisconnected()) return;
-        send(sp, 0, 0, 0, 0, 1);
+        send(sp, 0, 0, 0, 0, 1, 0, 0);
     }
 
     /** Every tick for each held player. */

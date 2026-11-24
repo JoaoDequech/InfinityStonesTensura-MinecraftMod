@@ -39,6 +39,18 @@ final class Geo {
         quad(p, vc, h, n, n, n, n, n, n, h, n, h, h, n, u0, v0, u1, v1, 0, 0, -1, light, r * 0.93F, g * 0.93F, b * 0.93F);
     }
 
+    /** Box of half-sizes hx, hy, hz around the origin with the same texture patch on every face. */
+    static void uvBox(PoseStack ps, VertexConsumer vc, float hx, float hy, float hz, float u0, float v0, float u1, float v1,
+            int light, float r, float g, float b) {
+        PoseStack.Pose p = ps.last();
+        float nx = -hx, ny = -hy, nz = -hz;
+        quad(p, vc, hx, ny, nz, hx, ny, hz, hx, hy, hz, hx, hy, nz, u0, v0, u1, v1, 1, 0, 0, light, r * 0.86F, g * 0.86F, b * 0.86F);
+        quad(p, vc, nx, ny, hz, nx, ny, nz, nx, hy, nz, nx, hy, hz, u0, v0, u1, v1, -1, 0, 0, light, r * 0.86F, g * 0.86F, b * 0.86F);
+        quad(p, vc, nx, hy, hz, hx, hy, hz, hx, hy, nz, nx, hy, nz, u0, v0, u1, v1, 0, 1, 0, light, r, g, b);
+        quad(p, vc, nx, ny, nz, hx, ny, nz, hx, ny, hz, nx, ny, hz, u0, v0, u1, v1, 0, -1, 0, light, r * 0.6F, g * 0.6F, b * 0.6F);
+        quad(p, vc, nx, ny, hz, hx, ny, hz, hx, hy, hz, nx, hy, hz, u0, v0, u1, v1, 0, 0, 1, light, r * 0.93F, g * 0.93F, b * 0.93F);
+        quad(p, vc, hx, ny, nz, nx, ny, nz, nx, hy, nz, hx, hy, nz, u0, v0, u1, v1, 0, 0, -1, light, r * 0.93F, g * 0.93F, b * 0.93F);
+    }
     /** Corners a, b, c, d (counter-clockwise seen from outside); u0..u1 / v0..v1 = texture span. */
     private static void quad(PoseStack.Pose p, VertexConsumer vc,
                              float ax, float ay, float az, float bx, float by, float bz,

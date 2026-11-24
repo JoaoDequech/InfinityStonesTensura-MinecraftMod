@@ -44,16 +44,20 @@ public final class CuriosCompat {
         try {
             if (getInventory == null) {
                 Class<?> api = Class.forName("top.theillusivec4.curios.api.CuriosApi");
-                getInventory = api.getMethod("getCuriosInventory", LivingEntity.class);
                 Class<?> handler = Class.forName("top.theillusivec4.curios.api.type.capability.ICuriosItemHandler");
                 findFirst = handler.getMethod("findFirstCurio", Predicate.class);
+                getInventory = api.getMethod("getCuriosInventory", LivingEntity.class);
             }
+        } catch (ReflectiveOperationException | LinkageError e) {
+            curiosBroken = true; // the API is not what we expect: stop asking
+            return false;
+        }
+        try {
             Optional<?> inv = (Optional<?>) getInventory.invoke(null, entity);
             if (inv.isEmpty()) return false;
             return ((Optional<?>) findFirst.invoke(inv.get(), test)).isPresent();
         } catch (ReflectiveOperationException | LinkageError | RuntimeException e) {
-            curiosBroken = true;
-            return false;
+            return false; // transient (inventory not synced yet, mid-login): answer again next time instead of giving up for good
         }
     }
 
@@ -62,13 +66,17 @@ public final class CuriosCompat {
         try {
             if (accOptionally == null) {
                 Class<?> cap = Class.forName("io.wispforest.accessories.api.AccessoriesCapability");
-                accOptionally = cap.getMethod("getOptionally", LivingEntity.class);
                 accIsEquipped = cap.getMethod("isEquipped", Predicate.class);
+                accOptionally = cap.getMethod("getOptionally", LivingEntity.class);
             }
+        } catch (ReflectiveOperationException | LinkageError e) {
+            accBroken = true;
+            return false;
+        }
+        try {
             Optional<?> cap = (Optional<?>) accOptionally.invoke(null, entity);
             return cap.isPresent() && (Boolean) accIsEquipped.invoke(cap.get(), test);
         } catch (ReflectiveOperationException | LinkageError | RuntimeException e) {
-            accBroken = true;
             return false;
         }
     }

@@ -412,12 +412,9 @@ public final class EnergyBeam implements Ported {
     static boolean targetable(ServerPlayer caster, Entity target) {
         if (target == caster || !target.isAlive() || target.isSpectator() || target instanceof ArmorStand) return false;
         if (target == caster.getVehicle() || target.isPassengerOfSameVehicle(caster)) return false;
-        if (target instanceof Player pl)
-            return !pl.isCreative() && !(pl instanceof ServerPlayer victim && (com.infinitystones.tensura.compat.ClaimsCompat.isProtected(victim, caster)
-                    || com.infinitystones.tensura.compat.ClaimsCompat.sameParty(caster, victim)));
+        if (target instanceof Player pl) return !pl.isCreative();
         if (target instanceof OwnableEntity own && caster.getUUID().equals(own.getOwnerUUID())) return false;
-        if (target instanceof TamableAnimal t && t.isOwnedBy(caster)) return false;
-        return !caster.isAlliedTo(target);
+        return !(target instanceof TamableAnimal t && t.isOwnedBy(caster));
     }
 
     /** One beam hit: max(flat floor, pct of max HP) as magic damage; the hidden levels execute (nothing resists it, no death message). */

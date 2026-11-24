@@ -1,0 +1,13 @@
+{
+  "ability.infinity.space_stone.cosmic_scale.description": "Esquerdo (mira numa construção): o espaço se estica em azul e a estrutura conectada (até 1.000.000 de blocos de construção) cresce 2× ou 3× a partir da base, camada por camada, ao longo de vários ticks. Direito: encolhe para ½ ou ⅓, amostrando cada célula. Agachado + clique em dois blocos marca uma caixa A/B (até 100 de lado) em vez da estrutura. Scroll: fator. Só claims de outras pessoas e blocos inquebráveis a impedem.",
+  "infinity.extra.v2b.scale.too_big": "Estrutura grande demais (máx. %s blocos)",
+  "infinity.extra.v2b.scale.scanning": "Medindo o espaço: %s blocos",
+  "infinity.extra.v2b.scale.progress": "O espaço se move: %s%%",
+  "infinity.extra.v2b.scale.box_big": "A caixa passa de %s blocos de lado",
+  "ability.infinity.reality_stone.harmless_form.description": "Reescreva a criatura sob a mira (qualquer mob que não seja chefe, ou um jogador) como uma galinha inofensiva por 8 segundos. Mobs voltam idênticos (identidade, vida e equipamentos). Jogadores são vistos como galinha por todos, andam mais devagar e não conseguem atacar, usar itens nem mexer em blocos. Chefes resistem.",
+  "ability.infinity.mind_stone.nightmare.description": "Conjunção Mente + Alma. O alvo mirado entra num pesadelo por 10 s sem sair do lugar. Jogador: escuridão pesada, sons falsos de monstros, passos se aproximando por trás e sussurros só para ele, golpes falsos que não ferem, sombras que piscam no canto da visão e coração acelerado. Mob: entra em pânico e foge de você, e o bando dele se espalha.",
+  "ability.infinity.soul_stone.enter_soulworld.description": "Leva você e as entidades a até 5 blocos para o Mundo das Almas. Cada uma lembra o ponto exato de onde saiu.",
+  "ability.infinity.soul_stone.exit_soulworld.description": "Traz você e as entidades próximas de volta do Mundo das Almas, cada uma exatamente ao ponto onde estava ao entrar.",
+  "ability.infinity.power_stone.gauntlet_execution.description": "Manopla completa. Esquerdo: executa o jogador ou mob mirado (até 256 blocos). Direito: abre uma lista com os jogadores e os mobs próximos para escolher quem executar. Queima seu braço por um dia.",
+  "infinity.wheel.dual.gauntlet_execution": "Esq.: alvo mirado  ·  Dir.: escolher na lista"
+}

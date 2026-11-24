@@ -25,6 +25,7 @@ public final class InfinityStones {
         com.infinitystones.tensura.skill.InfinitySkills.init();
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
+        com.infinitystones.tensura.registry.ModComponents.COMPONENTS.register(modBus);
         ModSounds.SOUNDS.register(modBus);
         ModMisc.PARTICLES.register(modBus);
         ModMisc.POI.register(modBus);

@@ -338,7 +338,7 @@
       ],
       "settings": {
         "min": 16,
-        "max": 64,
+        "max": 128, "cap1": 64,
         "step": 4,
         "default": 40,
         "label": "infinity.setting.soul.sight_radius"
