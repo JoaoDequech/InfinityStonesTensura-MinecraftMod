@@ -38,7 +38,9 @@ public final class DualModes {
 
     // v2d
     private static final Set<String> DUAL_V2D = Set.of(
-            "time.time_race", "time.temporal_lag", "mind.lucid_dream", "power.time_bomb", "reality.reincarnate_pet", "space.deja_vu");
+            "time.time_race", "time.temporal_lag", "mind.lucid_dream", "power.time_bomb", "reality.reincarnate_pet", "space.deja_vu",
+            "space.star_rails", "space.cosmic_scale", "mind.telepathic_link", "mind.borrowed_eyes",
+            "reality.painted_sky", "reality.genesis", "soul.wisp_guide", "soul.essence_harvest");
 
     public static boolean isDual(String modeId) { return DUAL.contains(modeId) || DUAL_V2D.contains(modeId); }
     public static boolean hasDestination(String modeId) { return DESTINATION_TARGET.contains(modeId) || DESTINATION_SELF.contains(modeId); }

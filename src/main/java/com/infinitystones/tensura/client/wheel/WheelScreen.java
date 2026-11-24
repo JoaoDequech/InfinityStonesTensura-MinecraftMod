@@ -413,7 +413,7 @@ public final class WheelScreen extends Screen {
                 : Component.translatableWithFallback("infinity.wheel.stats.no", "No").withStyle(ChatFormatting.GREEN);
         out.addAll(font.split(statRow("infinity.wheel.stats.players", "Hits players", players), width));
         out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.cooldown", "Cooldown: none").withStyle(ChatFormatting.DARK_GRAY), width));
-        out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.cost", "Magicule cost: 0.001 per use").withStyle(ChatFormatting.DARK_GRAY), width));
+        out.addAll(font.split(Component.translatableWithFallback("infinity.wheel.stats.cost", "Magicule cost: 1 per use").withStyle(ChatFormatting.DARK_GRAY), width));
         return out;
     }
 

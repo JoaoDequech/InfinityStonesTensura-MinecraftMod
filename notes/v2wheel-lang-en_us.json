@@ -10,5 +10,5 @@
   "infinity.wheel.stats.yes": "Yes",
   "infinity.wheel.stats.no": "No",
   "infinity.wheel.stats.cooldown": "Cooldown: none",
-  "infinity.wheel.stats.cost": "Magicule cost: 0.001 per use"
+  "infinity.wheel.stats.cost": "Magicule cost: 1 per use"
 }
