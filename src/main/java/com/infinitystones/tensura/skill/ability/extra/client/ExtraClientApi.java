@@ -15,7 +15,10 @@ public final class ExtraClientApi {
     public static final Set<String> MENU_POWERS = Set.of(
             "mind.suggestion", "reality.reality_pet", "reality.local_decree", "reality.reality_shatter", "time.climate_zone", "space.area_heist");
 
-    public static boolean hasMenu(String modeId) { return MENU_POWERS.contains(modeId); }
+    /** v2d: the right click of these opens the menu. */
+    private static final Set<String> MENU_POWERS_V2D = Set.of("time.time_race", "reality.reincarnate_pet");
+
+    public static boolean hasMenu(String modeId) { return MENU_POWERS.contains(modeId) || MENU_POWERS_V2D.contains(modeId); }
 
     public static void requestMenu(int stone, String node) { PacketDistributor.sendToServer(new MenuNet.Pick(stone, node, -1)); }
 

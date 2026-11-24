@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    {
+      "id": "reincarnate_pet",
+      "original_type": "infinity:reincarnate_pet",
+      "title": "@ability.infinity.reality_stone.reincarnate_pet.title",
+      "description": "@ability.infinity.reality_stone.reincarnate_pet.description",
+      "icon": "minecraft:bone",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 22
+      },
+      "parents": [
+        "paint_world"
+      ],
+      "requires_stones": [
+        "infinity:soul_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -4,
+        -1.5
+      ],
+      "page": 2,
+      "aim": false,
+      "stats": {
+        "range": "ao seu lado",
+        "duration": "instantâneo",
+        "area": "1 companheiro",
+        "players": false
+      }
+    }
+  ]
+}

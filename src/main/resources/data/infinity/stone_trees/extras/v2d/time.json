@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {
+      "id": "time_race",
+      "original_type": "infinity:time_race",
+      "title": "@ability.infinity.time_stone.time_race.title",
+      "description": "@ability.infinity.time_stone.time_race.description",
+      "icon": "minecraft:clock",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "alternate_timeline"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        6,
+        -4.5
+      ],
+      "page": 2,
+      "aim": true,
+      "settings": {
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "default": 3,
+        "label": "infinity.setting.v2d.race_laps"
+      },
+      "stats": {
+        "range": "12 portões",
+        "duration": "1 a 5 voltas",
+        "area": "portão de 3 blocos",
+        "players": false
+      }
+    },
+    {
+      "id": "temporal_lag",
+      "original_type": "infinity:temporal_lag",
+      "title": "@ability.infinity.time_stone.temporal_lag.title",
+      "description": "@ability.infinity.time_stone.temporal_lag.description",
+      "icon": "minecraft:sculk_sensor",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [
+        "eras"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        7,
+        -3
+      ],
+      "page": 2,
+      "tier": 2,
+      "aim": true,
+      "settings": {
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "default": 2,
+        "label": "infinity.setting.v2d.lag_seconds"
+      }
+    }
+  ]
+}

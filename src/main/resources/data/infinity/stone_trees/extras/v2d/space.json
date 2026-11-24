@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "id": "deja_vu",
+      "original_type": "infinity:deja_vu",
+      "title": "@ability.infinity.space_stone.deja_vu.title",
+      "description": "@ability.infinity.space_stone.deja_vu.description",
+      "icon": "minecraft:recovery_compass",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [
+        "space_mirror"
+      ],
+      "requires_stones": [
+        "infinity:time_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        5,
+        -3.5
+      ],
+      "page": 2,
+      "tier": 2,
+      "aim": true,
+      "settings": {
+        "min": 4,
+        "max": 16,
+        "step": 1,
+        "default": 8,
+        "label": "infinity.setting.v2d.deja_radius"
+      }
+    }
+  ]
+}
