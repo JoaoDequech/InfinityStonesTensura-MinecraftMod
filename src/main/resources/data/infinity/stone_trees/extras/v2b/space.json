@@ -1,0 +1,83 @@
+{
+  "nodes": [
+    {
+      "id": "star_rails",
+      "original_type": "infinity:star_rails",
+      "title": "@ability.infinity.space_stone.star_rails.title",
+      "description": "@ability.infinity.space_stone.star_rails.description",
+      "icon": "minecraft:nether_star",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [
+        "teleport_command"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        0,
+        0
+      ],
+      "aim": true,
+      "page": 2,
+      "settings": {
+        "min": 1,
+        "max": 5,
+        "default": 3,
+        "step": 1,
+        "label": "infinity.extra.v2b.rails.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": [],
+      "stats": {
+        "range": "64 blocos",
+        "duration": "5 min",
+        "area": "5 estrelas",
+        "players": true
+      }
+    },
+    {
+      "id": "cosmic_scale",
+      "original_type": "infinity:cosmic_scale",
+      "title": "@ability.infinity.space_stone.cosmic_scale.title",
+      "description": "@ability.infinity.space_stone.cosmic_scale.description",
+      "icon": "minecraft:amethyst_cluster",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "spatial_reflection"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        1.5,
+        0
+      ],
+      "aim": true,
+      "page": 2,
+      "settings": {
+        "min": 2,
+        "max": 3,
+        "default": 2,
+        "step": 1,
+        "label": "infinity.extra.v2b.scale.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": [],
+      "tier": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "nodes": [
+    {
+      "id": "telepathic_link",
+      "original_type": "infinity:telepathic_link",
+      "title": "@ability.infinity.mind_stone.telepathic_link.title",
+      "description": "@ability.infinity.mind_stone.telepathic_link.description",
+      "icon": "minecraft:amethyst_shard",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 14
+      },
+      "parents": [
+        "psionic_mastery"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        0,
+        0
+      ],
+      "aim": true,
+      "page": 2,
+      "settings": {
+        "min": 1,
+        "max": 5,
+        "default": 1,
+        "step": 1,
+        "label": "infinity.extra.v2b.link.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": [],
+      "stats": {
+        "range": "128 blocos",
+        "duration": "20 s",
+        "players": true
+      }
+    },
+    {
+      "id": "borrowed_eyes",
+      "original_type": "infinity:borrowed_eyes",
+      "title": "@ability.infinity.mind_stone.borrowed_eyes.title",
+      "description": "@ability.infinity.mind_stone.borrowed_eyes.description",
+      "icon": "minecraft:spyglass",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "psychic_dominion"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        1.5,
+        0
+      ],
+      "aim": true,
+      "page": 2,
+      "settings": {
+        "min": 10,
+        "max": 40,
+        "default": 20,
+        "step": 5,
+        "label": "infinity.extra.v2b.eyes.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": [],
+      "tier": 2
+    }
+  ]
+}
