@@ -49,7 +49,7 @@ import java.util.List;
  * Area Heist, client side (owner only), modelled on Create's schematic tools but written from scratch (Create is not needed).
  * <b>Capture</b> (like Schematic and Quill): left click marks corner 1, corner 2 and then confirms the capture; the box
  * stays fixed in the world, Ctrl+scroll on an aimed face pushes / pulls it, right click or Del discards the selection.
- * <b>Place</b> (like a deployed schematic): the ghost stays fixed where it was deployed; hold Alt for the tool bar and scroll to
+ * <b>Place</b> (like a deployed schematic): the ghost stays fixed where it was deployed; hold Alt to free the cursor over the tool bar and click (or scroll) to
  * choose a tool (Deploy, Move, Move vertical, Rotate, Flip, Print, Delete); Ctrl+scroll applies the tool, right click runs
  * Deploy / Print / Delete. The server validates every step; the ghost is predicted here so it feels immediate.
  */
@@ -158,17 +158,9 @@ public final class HeistClient {
     public static void scroll(InputEvent.MouseScrollingEvent e) {
         Minecraft mc = Minecraft.getInstance();
         if (mode == 0 || mc.screen != null || e.getScrollDeltaY() == 0) return;
-        boolean alt = altDown(mc), ctrl = ctrlDown(mc);
-        if (!alt && !ctrl) return;
+        if (!ctrlDown(mc)) return;
         e.setCanceled(true);
         int d = e.getScrollDeltaY() > 0 ? 1 : -1;
-        if (mode == 2 && alt) {
-            tool = Math.floorMod(tool - d, TOOLS.length);
-            toolShownAt = System.currentTimeMillis();
-            deleteArmedAt = 0;
-            return;
-        }
-        if (!ctrl) return;
         if (mode == 1) {
             if (a == null || b == null) return;
             Direction f = aimedFace(boxLo(), boxHi(), 1F);
@@ -221,6 +213,73 @@ public final class HeistClient {
     public static void tick(ClientTickEvent.Post e) {
         Minecraft mc = Minecraft.getInstance();
         if (attackHeld && !mc.options.keyAttack.isDown()) attackHeld = false;
+        if (mode == 2 && mc.screen == null && mc.player != null && altDown(mc)) mc.setScreen(new ToolScreen());
+    }
+
+    private static void pickTool(int i) {
+        if (i == tool) return;
+        tool = i;
+        toolShownAt = System.currentTimeMillis();
+        deleteArmedAt = 0;
+        Minecraft.getInstance().getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK.value(), 1.6F, 0.35F));
+    }
+
+    private static final int SLOT = 30;
+
+    private static int barX0(int w) { return w / 2 - TOOLS.length * SLOT / 2; }
+
+    private static int barY0(int h) { return h - 66; }
+
+    /** Tool under the mouse on the bar, or -1. */
+    private static int toolAt(int w, int h, double mx, double my) {
+        int x0 = barX0(w), y0 = barY0(h);
+        if (my < y0 - 4 || my > y0 + 26 || mx < x0) return -1;
+        int i = (int) ((mx - x0) / SLOT);
+        return i < TOOLS.length ? i : -1;
+    }
+
+    /**
+     * While Alt is held in place mode the cursor is freed over the tool bar: click a tool (or scroll) to pick it, let go of Alt
+     * to go back. Scrolling inside a screen never reaches the in-game scroll handlers, so nothing clashes with other mods' Alt+scroll.
+     */
+    private static final class ToolScreen extends net.minecraft.client.gui.screens.Screen {
+        private int hover = -1;
+
+        ToolScreen() { super(Component.empty()); }
+
+        @Override public boolean isPauseScreen() { return false; }
+
+        @Override public void renderBackground(GuiGraphics g, int mx, int my, float pt) {}
+
+        @Override
+        public void tick() {
+            if (mode != 2 || !altDown(minecraft)) onClose();
+        }
+
+        @Override
+        public void render(GuiGraphics g, int mx, int my, float pt) {
+            hover = toolAt(width, height, mx, my);
+            toolBar(minecraft, g, width, height, Stone.SPACE.color() & 0xFFFFFF, hover);
+        }
+
+        @Override
+        public boolean mouseClicked(double mx, double my, int button) {
+            int i = toolAt(width, height, mx, my);
+            if (i >= 0) { pickTool(i); return true; }
+            return false;
+        }
+
+        @Override
+        public boolean mouseScrolled(double mx, double my, double sx, double sy) {
+            if (sy != 0) pickTool(Math.floorMod(tool - (sy > 0 ? 1 : -1), TOOLS.length));
+            return true;
+        }
+
+        @Override
+        public boolean keyReleased(int key, int scan, int mods) {
+            if (key == org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT || key == org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_ALT) { onClose(); return true; }
+            return super.keyReleased(key, scan, mods);
+        }
     }
 
     /** at: the block aimed (capture), the ghost anchor (deploy) or a direction (move). */
@@ -568,29 +627,28 @@ public final class HeistClient {
         int ly = 0;
         for (var l : lines) { g.drawCenteredString(mc.font, l, 0, ly, 0xFFD6E8FF); ly += 11; }
         g.pose().popPose();
-        if (mode == 2) toolBar(mc, g, w, h, col);
+        if (mode == 2 && !(mc.screen instanceof ToolScreen) && System.currentTimeMillis() - toolShownAt < 1500) toolBar(mc, g, w, h, col, -1);
     }
 
     /** Create-style tool bar: shown while Alt is held (and briefly after choosing), the chosen tool is lit. */
-    private static void toolBar(Minecraft mc, GuiGraphics g, int w, int h, int col) {
-        long now = System.currentTimeMillis();
-        boolean show = altDown(mc) || now - toolShownAt < 1500;
-        if (!show) return;
-        int n = TOOLS.length, slot = 26, total = n * slot;
-        int x0 = w / 2 - total / 2, y0 = h - 62;
-        g.fill(x0 - 4, y0 - 4, x0 + total + 4, y0 + 24, 0xB0040A18);
+    private static void toolBar(Minecraft mc, GuiGraphics g, int w, int h, int col, int hover) {
+        int n = TOOLS.length, slot = SLOT, total = n * slot;
+        int x0 = barX0(w), y0 = barY0(h);
+        g.fill(x0 - 4, y0 - 4, x0 + total + 4, y0 + 26, 0xB0040A18);
         g.fill(x0 - 4, y0 - 4, x0 + total + 4, y0 - 3, 0xFF000000 | col);
         for (int i = 0; i < n; i++) {
             int sx0 = x0 + i * slot;
             boolean sel = i == tool;
+            if (i == hover && !sel) g.fill(sx0, y0 - 2, sx0 + slot - 2, y0 + 24, 0x33FFFFFF);
             if (sel) {
-                g.fill(sx0, y0 - 2, sx0 + slot - 2, y0 + 22, 0x66000000 | col);
-                g.fill(sx0, y0 + 20, sx0 + slot - 2, y0 + 22, 0xFF000000 | lighten(col));
+                g.fill(sx0, y0 - 2, sx0 + slot - 2, y0 + 24, 0x66000000 | col);
+                g.fill(sx0, y0 + 22, sx0 + slot - 2, y0 + 24, 0xFF000000 | lighten(col));
             }
-            g.renderItem(icons()[i], sx0 + 3, y0 + 1 + (sel ? -1 : 0));
+            g.renderItem(icons()[i], sx0 + (slot - 2) / 2 - 8, y0 + 3 + (sel ? -1 : 0));
         }
-        Component name = Component.translatable(K + "tool." + TOOLS[tool]);
-        Component desc = Component.translatable(K + "tool." + TOOLS[tool] + ".desc");
+        int shown = hover >= 0 ? hover : tool;
+        Component name = Component.translatable(K + "tool." + TOOLS[shown]);
+        Component desc = Component.translatable(K + "tool." + TOOLS[shown] + ".desc");
         g.drawCenteredString(mc.font, name, w / 2, y0 - 26, 0xFF000000 | lighten(col));
         g.pose().pushPose();
         g.pose().translate(w / 2F, y0 - 14, 0);

@@ -57,7 +57,7 @@ import java.util.UUID;
  *       maximum health (2% at 1, 25% at 9, ignoring armour); left held down squeezes on and on at that share per second. At strength 10 a squeeze executes:
  *       everyone in the fist dies in a burst of gore.</li>
  *   <li>Right while holding: opens the hand and lets everyone down slowly (slow falling); the arm climbs back into the circle, which closes.
- *       Prey is locked in a cutscene (smooth camera shot, no input), the caster is rooted but can look around.</li>
+ *       Prey is locked in a cutscene (smooth camera shot, no input), the caster moves and flies freely.</li>
  * </ul>
  * Everyone is released when the caster logs out, dies, changes dimension or no longer carries the whole gauntlet, and
  * put on the ground if the server stops. Captives are held by velocity and position only (no entity data is changed).
@@ -184,7 +184,6 @@ public final class CreatorHand implements Ability {
         int state = -1, moveStart, dur = 1, age, squeezeStart, relStart, squeezeUntil = -100, lastLevel;
         double y0, y1;
         boolean releasing, exec, chain;
-        Vec3 anchor;
 
         Session(ServerPlayer p, ServerLevel l, Vec3 ground, LivingEntity single) {
             this.p = p; this.l = l; this.ground = ground; this.single = single;
@@ -248,14 +247,6 @@ public final class CreatorHand implements Ability {
             HandLock.send(p, 2, id, shotYaw, dist, s, lv, ready());
             for (Cap c : caps) if (c.e instanceof ServerPlayer sp) HandLock.send(sp, 1, id, shotYaw, dist, s, lv, 0);
         }
-
-        /** The caster stays where he is (looking still works). */
-        void root() {
-            if (anchor == null) anchor = p.position();
-            double dx = p.getX() - anchor.x, dz = p.getZ() - anchor.z;
-            if (dx * dx + dz * dz > 1.0) Bits.place(p, new Vec3(anchor.x, p.getY(), anchor.z));
-        }
-
         @Override
         public boolean tick(int a) {
             age = a;
@@ -267,7 +258,6 @@ public final class CreatorHand implements Ability {
                 release();
                 return true;
             }
-            root();
             if (age == 0) {
                 setState(V2aAnim.G_DESC, hoverY, V2aAnim.G_DESC_TICKS, 1200);
                 circles(70);

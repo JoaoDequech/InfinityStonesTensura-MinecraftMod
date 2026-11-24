@@ -195,7 +195,7 @@ public final class HandClient {
 
     @SubscribeEvent
     public static void move(MovementInputUpdateEvent e) {
-        if (mode == 0) return;
+        if (mode != 1) return;
         Input i = e.getInput();
         i.up = i.down = i.left = i.right = false;
         i.jumping = false;
