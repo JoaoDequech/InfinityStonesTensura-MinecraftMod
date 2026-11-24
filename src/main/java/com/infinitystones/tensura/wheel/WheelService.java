@@ -75,7 +75,7 @@ public final class WheelService {
         if (current != null && current.modeId().equals(node.modeId())) { stopHold(p, node); return; } // channel = start/stop toggle
         if (!stone.isHeldBy(p) || !StoneProgress.isUnlocked(p, stone, nodeId)) { deny(p, "infinity.wheel.locked"); return; }
         boolean alt = phase == 2;
-        spendMagicule(p);
+        if (!node.upper()) spendMagicule(p);
         if (!AbilityMeta.isSwitch(node)) stopHold(p, null); // flipping a switch never interrupts a channel
         switch (node.activation()) {
             case PASSIVE -> { NodeEffects.use(p, node, false); castFx(p, stone); }
@@ -93,7 +93,7 @@ public final class WheelService {
     }
 
     /** Token Tensura magicule cost per power use (never blocks a power, never runs out in practice). */
-    private static final double MAGICULE_COST = 0.001;
+    private static final double MAGICULE_COST = 1.0;
 
     private static void spendMagicule(ServerPlayer p) {
         try {
