@@ -1,0 +1,181 @@
+{
+  "nodes": [
+    {
+      "id": "sky_fist",
+      "original_type": "infinity:sky_fist",
+      "title": "@ability.infinity.power_stone.sky_fist.title",
+      "description": "@ability.infinity.power_stone.sky_fist.description",
+      "icon": "minecraft:obsidian",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [
+        "explosion2"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -4,
+        -1
+      ],
+      "page": 2,
+      "aim": true,
+      "settings": {
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "default": 1,
+        "label": "ability.infinity.power_stone.sky_fist.setting",
+        "values": [
+          "ability.infinity.power_stone.sky_fist.setting.1",
+          "ability.infinity.power_stone.sky_fist.setting.2",
+          "ability.infinity.power_stone.sky_fist.setting.3"
+        ]
+      },
+      "stats": {
+        "damage": "6 ❤",
+        "range": "48 blocos",
+        "duration": "10 s",
+        "area": "3-4 blocos",
+        "players": true
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "sculptor_hands",
+      "tier": 2,
+      "original_type": "infinity:sculptor_hands",
+      "title": "@ability.infinity.power_stone.sculptor_hands.title",
+      "description": "@ability.infinity.power_stone.sculptor_hands.description",
+      "icon": "minecraft:mossy_stone_bricks",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 16
+      },
+      "parents": [],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -4,
+        -2
+      ],
+      "page": 2,
+      "aim": true,
+      "settings": {
+        "min": 4,
+        "max": 24,
+        "step": 2,
+        "default": 10,
+        "label": "ability.infinity.power_stone.sculptor_hands.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "gauntlet_wish",
+      "original_type": "infinity:gauntlet_wish",
+      "title": "@ability.infinity.power_stone.gauntlet_wish.title",
+      "description": "@ability.infinity.power_stone.gauntlet_wish.description",
+      "icon": "minecraft:firework_star",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [],
+      "requires_stones": [
+        "infinity:mind_stone",
+        "infinity:reality_stone",
+        "infinity:soul_stone",
+        "infinity:space_stone",
+        "infinity:time_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -5,
+        -3
+      ],
+      "page": 2,
+      "settings": {
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "default": 1,
+        "label": "ability.infinity.power_stone.gauntlet_wish.setting",
+        "values": [
+          "ability.infinity.power_stone.gauntlet_wish.setting.1",
+          "ability.infinity.power_stone.gauntlet_wish.setting.2",
+          "ability.infinity.power_stone.gauntlet_wish.setting.3",
+          "ability.infinity.power_stone.gauntlet_wish.setting.4",
+          "ability.infinity.power_stone.gauntlet_wish.setting.5"
+        ]
+      },
+      "stats": {
+        "damage": "nenhum",
+        "range": "ao redor",
+        "duration": "12-35 s",
+        "area": "20 blocos",
+        "players": false
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "creator_hand",
+      "tier": 2,
+      "original_type": "infinity:creator_hand",
+      "title": "@ability.infinity.power_stone.creator_hand.title",
+      "description": "@ability.infinity.power_stone.creator_hand.description",
+      "icon": "minecraft:gold_block",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 20
+      },
+      "parents": [],
+      "requires_stones": [
+        "infinity:mind_stone",
+        "infinity:reality_stone",
+        "infinity:soul_stone",
+        "infinity:space_stone",
+        "infinity:time_stone"
+      ],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "gui_position": [
+        -5,
+        -4
+      ],
+      "page": 2,
+      "aim": true,
+      "settings": {
+        "min": 4,
+        "max": 16,
+        "step": 1,
+        "default": 8,
+        "label": "ability.infinity.power_stone.creator_hand.setting"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}
