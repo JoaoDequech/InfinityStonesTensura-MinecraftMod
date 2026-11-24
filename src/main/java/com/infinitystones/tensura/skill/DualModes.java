@@ -36,7 +36,11 @@ public final class DualModes {
     /** Powers whose left click itself opens the destination menu (the original "Teleport GUI"). */
     private static final Set<String> MENU_ON_LEFT = Set.of("space.teleport_gui");
 
-    public static boolean isDual(String modeId) { return DUAL.contains(modeId); }
+    // v2d
+    private static final Set<String> DUAL_V2D = Set.of(
+            "time.time_race", "time.temporal_lag", "mind.lucid_dream", "power.time_bomb", "reality.reincarnate_pet", "space.deja_vu");
+
+    public static boolean isDual(String modeId) { return DUAL.contains(modeId) || DUAL_V2D.contains(modeId); }
     public static boolean hasDestination(String modeId) { return DESTINATION_TARGET.contains(modeId) || DESTINATION_SELF.contains(modeId); }
     public static boolean movesTarget(String modeId) { return DESTINATION_TARGET.contains(modeId); }
     public static boolean menuOnLeft(String modeId) { return MENU_ON_LEFT.contains(modeId); }
