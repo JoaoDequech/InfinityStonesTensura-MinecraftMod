@@ -1,0 +1,83 @@
+{
+  "nodes": [
+    {
+      "id": "painted_sky",
+      "original_type": "infinity:painted_sky",
+      "title": "@ability.infinity.reality_stone.painted_sky.title",
+      "description": "@ability.infinity.reality_stone.painted_sky.description",
+      "icon": "minecraft:prismarine_crystals",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "paint_world"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "page": 2,
+      "gui_position": [
+        -4,
+        -1.5
+      ],
+      "aim": true,
+      "settings": {
+        "min": 32,
+        "max": 128,
+        "step": 8,
+        "default": 64,
+        "label": "infinity.setting.reality.sky_radius"
+      },
+      "stats": {
+        "range": "128 blocos",
+        "duration": "2 min",
+        "area": "32–128 blocos",
+        "players": false
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    },
+    {
+      "id": "genesis",
+      "tier": 2,
+      "original_type": "infinity:genesis",
+      "title": "@ability.infinity.reality_stone.genesis.title",
+      "description": "@ability.infinity.reality_stone.genesis.description",
+      "icon": "minecraft:mycelium",
+      "cost": {
+        "type": "item",
+        "item": "infinity:aspects_of_existance",
+        "amount": 18
+      },
+      "parents": [
+        "greed"
+      ],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": true,
+      "in_bar": true,
+      "page": 2,
+      "gui_position": [
+        -5,
+        -6.5
+      ],
+      "aim": true,
+      "settings": {
+        "min": 8,
+        "max": 64,
+        "step": 4,
+        "default": 24,
+        "label": "infinity.setting.reality.genesis_radius"
+      },
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}
