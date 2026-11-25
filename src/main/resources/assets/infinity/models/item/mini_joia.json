@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "infinity:item/mini_joia/mind_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "infinity:item/mini_joia/mind_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "infinity:item/mini_joia/power_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "infinity:item/mini_joia/space_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "infinity:item/mini_joia/reality_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "infinity:item/mini_joia/soul_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "infinity:item/mini_joia/time_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/mind_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/power_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/space_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/reality_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/soul_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6,
+        "infinity:decay": 0.55
+      },
+      "model": "infinity:item/mini_joia/time_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/mind_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/power_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/space_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/reality_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/soul_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6,
+        "infinity:decay": 0.85
+      },
+      "model": "infinity:item/mini_joia/time_2"
+    }
+  ]
+}

@@ -49,7 +49,9 @@ public final class StoneTier {
     public static boolean has(Player p, Stone stone) { return (mask(p) >> stone.ordinal() & 1) != 0; }
 
     /** Node of tier 2 that this player has not attuned for its stone. */
-    public static boolean hidden(Player p, StoneTree.Node node) { return node.upper() && !has(p, node.stone()); }
+    public static boolean hidden(Player p, StoneTree.Node node) {
+        return node.upper() && !has(p, node.stone()) && !com.infinitystones.tensura.shard.ShardGrants.grants(p, node.stone(), node.id());
+    }
 
     private static CompoundTag store(Player p) {
         CompoundTag root = p.getPersistentData();

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "infinity:item/mini_joia/time_1"
+  }
+}

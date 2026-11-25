@@ -76,30 +76,52 @@ public final class WheelService {
         if (current != null && current.modeId().equals(node.modeId())) { stopHold(p, node); return; } // channel = start/stop toggle
         if (!stone.isHeldBy(p) || !StoneProgress.isUnlocked(p, stone, nodeId)) { deny(p, "infinity.wheel.locked"); return; }
         boolean alt = phase == 2;
-        if (!node.upper()) spendMagicule(p);
+        boolean borrowed = com.infinitystones.tensura.shard.ShardGrants.isBorrowed(p, stone, node); // lent by a mini gem
+        if (borrowed) {
+            int left = com.infinitystones.tensura.shard.ShardGrants.cooldownLeft(p, node.modeId());
+            if (left > 0) {
+                p.displayClientMessage(Component.translatable("infinity.shard.cooldown", (left + 19) / 20).withStyle(ChatFormatting.GRAY), true);
+                com.infinitystones.tensura.shard.ShardNet.syncWheel(p, true);
+                return;
+            }
+        }
+        if (!borrowed && !node.upper()) spendMagicule(p);
         if (!AbilityMeta.isSwitch(node)) stopHold(p, null); // flipping a switch never interrupts a channel
         switch (node.activation()) {
             case PASSIVE -> { NodeEffects.use(p, node, false); castFx(p, stone); }
             case PRESS, TOGGLE -> {
-                if (NodeEffects.use(p, node, alt)) castFx(p, stone);
+                if (NodeEffects.use(p, node, alt)) {
+                    castFx(p, stone);
+                    if (borrowed) chargeShard(p, node);
+                }
             }
             case HOLD -> {
                 NodeEffects.use(p, node, alt);
                 castFx(p, stone);
+                if (borrowed) chargeShard(p, node);
                 HOLDING.put(p.getUUID(), node);
                 HOLD_TICKS.put(p.getUUID(), 0);
             }
         }
         sync(p, true);
+        com.infinitystones.tensura.shard.ShardNet.syncWheel(p, true);
+    }
+
+    /** A power used through a mini gem: its own cooldown starts and the (higher) magicule cost is paid. */
+    private static void chargeShard(ServerPlayer p, StoneTree.Node node) {
+        com.infinitystones.tensura.shard.ShardGrants.startCooldown(p, node.modeId());
+        spendMagicule(p, com.infinitystones.tensura.shard.ShardRules.magiculeCost(node.modeId()));
     }
 
     /** Token Tensura magicule cost per power use (never blocks a power, never runs out in practice). */
     private static final double MAGICULE_COST = 1.0;
 
-    private static void spendMagicule(ServerPlayer p) {
+    private static void spendMagicule(ServerPlayer p) { spendMagicule(p, MAGICULE_COST); }
+
+    private static void spendMagicule(ServerPlayer p, double cost) {
         try {
             var ep = io.github.manasmods.tensura.storage.TensuraStorages.getExistenceFrom(p);
-            if (ep != null) ep.setMagicule(Math.max(0, ep.getMagicule() - MAGICULE_COST));
+            if (ep != null) ep.setMagicule(Math.max(0, ep.getMagicule() - cost));
         } catch (RuntimeException | LinkageError ignored) {
             // Tensura storage unavailable: powers still work
         }
@@ -255,6 +277,10 @@ public final class WheelService {
 
     /** Sends the wheel contents (carried stones, their slottable nodes, lock/toggle/cooldown) when it changed. */
     public static void sync(ServerPlayer p, boolean force) {
+        com.infinitystones.tensura.shard.ShardGrants.without(() -> syncOwn(p, force)); // the normal pages never list borrowed powers
+    }
+
+    private static void syncOwn(ServerPlayer p, boolean force) {
         Set<Stone> held = StoneProgress.heldStones(p);
         int gauntlet = GauntletStones.carriedMask(p);
         List<WheelPayloads.Entry> entries = new ArrayList<>();

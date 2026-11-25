@@ -194,6 +194,9 @@ public final class WheelActions {
 
     static @Nullable WheelPayloads.Entry entry(int stone, String node) {
         for (WheelPayloads.Entry e : WheelClientState.get().entries()) if (e.stone() == stone && e.node().equals(node) && e.unlocked()) return e;
+        for (com.infinitystones.tensura.shard.ShardNet.Page pg : com.infinitystones.tensura.shard.ShardClientState.pages())
+            if (pg.stone() == stone) for (com.infinitystones.tensura.shard.ShardNet.Power w : pg.powers())
+                if (w.node().equals(node)) return new WheelPayloads.Entry(stone, node, true, false, w.cdLeft(), Math.max(1, w.cdTotal()), 0);
         return null;
     }
 

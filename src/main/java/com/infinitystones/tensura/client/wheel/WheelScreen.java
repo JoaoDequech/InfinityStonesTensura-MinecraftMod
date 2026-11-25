@@ -44,6 +44,8 @@ public final class WheelScreen extends Screen {
     public static final int GAUNT = Stone.values().length;
     /** Node id of the gauntlet page's "Joias" action entry (never sent to the server as a power). */
     private static final String GEMS = "@gems";
+    /** Node id of the gauntlet page's "Borrowed Shard" action entry (opens the mini-gem menu). */
+    private static final String SHARD_MENU = "@shard";
     private static int focusedStone = -1;
 
     private final long openedAt = System.currentTimeMillis();
@@ -104,6 +106,7 @@ public final class WheelScreen extends Screen {
             // top of the ring: the gauntlet and every complete-gauntlet power, after the "Joias" action
             List<WheelPayloads.Entry> list = new ArrayList<>();
             list.add(new WheelPayloads.Entry(GAUNT, GEMS, true, false, 0, 1, 0));
+            list.add(new WheelPayloads.Entry(GAUNT, SHARD_MENU, true, false, 0, 1, 0));
             for (Stone s : Stone.values())
                 for (WheelPayloads.Entry e : st.entries()) if (e.stone() == s.ordinal() && isGauntletPower(e)) list.add(e);
             out.add(new Slice(GAUNT, list, List.of(list, new ArrayList<>())));
@@ -118,6 +121,15 @@ public final class WheelScreen extends Screen {
             if (p1.isEmpty()) { p1 = list; p2 = new ArrayList<>(); }
             boolean second = s.ordinal() == focusedStone && page == 1 && !p2.isEmpty();
             out.add(new Slice(s.ordinal(), second ? p2 : p1, List.of(p1, p2)));
+        }
+        // one page per carried mini gem (ids after the gauntlet page): exactly the powers it lends, each with its own cooldown
+        List<com.infinitystones.tensura.shard.ShardNet.Page> shards = com.infinitystones.tensura.shard.ShardClientState.pages();
+        for (int i = 0; i < shards.size(); i++) {
+            com.infinitystones.tensura.shard.ShardNet.Page pg = shards.get(i);
+            List<WheelPayloads.Entry> list = new ArrayList<>();
+            for (com.infinitystones.tensura.shard.ShardNet.Power w : pg.powers())
+                list.add(new WheelPayloads.Entry(pg.stone(), w.node(), true, false, w.cdLeft(), Math.max(1, w.cdTotal()), 0));
+            if (!list.isEmpty()) out.add(new Slice(GAUNT + 1 + i, list, List.of(list, new ArrayList<>())));
         }
         return out;
     }
@@ -358,6 +370,14 @@ public final class WheelScreen extends Screen {
         if (hoveredEntry < 0 || hoveredEntry >= focus.entries().size()) return;
         WheelPayloads.Entry e = focus.entries().get(hoveredEntry);
         StoneTree.Node n = node(e);
+        if (n == null && isShardMenu(e)) {
+            List<Component> tip = new ArrayList<>();
+            tip.add(Component.translatable("infinity.shard.power").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
+            tip.add(Component.translatable("infinity.shard.power.desc").withStyle(ChatFormatting.GRAY));
+            tip.add(Component.translatable("infinity.shard.power.hint").withStyle(ChatFormatting.YELLOW));
+            g.renderComponentTooltip(font, tip, mouseX, mouseY);
+            return;
+        }
         if (n == null) return;
         int col = color(focus.stone());
         final int W = 190;
@@ -376,6 +396,11 @@ public final class WheelScreen extends Screen {
         } else {
             gaps.add(lines.size());
             for (Component h : WheelActions.hints(n)) lines.addAll(font.split(h, W));
+            if (focus.stone() > GAUNT) {
+                lines.addAll(font.split(Component.translatable("infinity.shard.wheel_cost", com.infinitystones.tensura.shard.ShardRules.cooldownSeconds(n.modeId()),
+                        String.format("%.1f", com.infinitystones.tensura.shard.ShardRules.magiculeCost(n.modeId()))).withStyle(ChatFormatting.DARK_AQUA), W));
+                if (e.cooldownLeft() > 0) lines.addAll(font.split(Component.translatable("infinity.shard.cooldown", (e.cooldownLeft() + 19) / 20).withStyle(ChatFormatting.RED), W));
+            }
             if (statsOf(n) != null) lines.addAll(font.split(Component.translatableWithFallback("infinity.wheel.hint.stats", "[Shift] stats")
                     .withStyle(ChatFormatting.DARK_GRAY), W));
         }
@@ -463,6 +488,7 @@ public final class WheelScreen extends Screen {
             else line2 = kind(e); // full description + buttons are in the side panel
         } else {
             title = (focus.stone() == GAUNT ? Component.translatable("infinity.wheel.gauntlet")
+                    : focus.stone() > GAUNT ? Component.translatable("infinity.shard.wheel_page", shardCode(focus.stone()))
                     : Component.translatable("infinity.skill." + Stone.values()[focus.stone()].key + "_stone")).withStyle(s -> s.withColor(color & 0xFFFFFF));
             line2 = hubHover && focus.hasPage2()
                     ? Component.translatableWithFallback("infinity.wheel.page.hint", "Scroll: switch page").withStyle(ChatFormatting.GRAY)
@@ -499,6 +525,7 @@ public final class WheelScreen extends Screen {
         if (e.stone() < 0) return Component.translatable(e.toggled() ? "infinity.wheel.state.on" : "infinity.wheel.state.off")
                 .withStyle(e.toggled() ? ChatFormatting.GOLD : ChatFormatting.GRAY);
         if (isGems(e)) return Component.translatable("infinity.wheel.gauntlet.gems.kind").withStyle(ChatFormatting.GOLD);
+        if (isShardMenu(e)) return Component.translatable("infinity.shard.power.kind").withStyle(ChatFormatting.AQUA);
         StoneTree.Node n = node(e);
         if (n == null) return Component.empty();
         if (n.isPassiveToggle()) return Component.translatableWithFallback("infinity.wheel.kind.passive", "Passive")
@@ -528,12 +555,20 @@ public final class WheelScreen extends Screen {
             // centre hub → the stone's tree
             usedSomething = true;
             playUi(SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 0.3F);
+            if (focus.stone() > GAUNT) return true;
             if (minecraft != null) minecraft.setScreen(focus.stone() == GAUNT ? new GauntletGemsScreen() : new StoneTreeScreen(Stone.values()[focus.stone()]));
             return true;
         }
         if (focus == null || hoveredEntry < 0 || hoveredEntry >= focus.entries().size()) return true;
         WheelPayloads.Entry e = focus.entries().get(hoveredEntry);
         long now = System.currentTimeMillis();
+        if (isShardMenu(e)) {
+            if (button != 0) return true;
+            usedSomething = true;
+            playUi(SoundEvents.AMETHYST_BLOCK_RESONATE, 1.5F, 0.3F);
+            if (minecraft != null) minecraft.setScreen(new com.infinitystones.tensura.shard.client.ShardMenuScreen());
+            return true;
+        }
         if (isGems(e)) {
             if (button != 0) return true;
             usedSomething = true;
@@ -936,6 +971,14 @@ public final class WheelScreen extends Screen {
 
     /** Has extra inputs (right click and/or middle click) — shows the two-dot marker and the input hint. */
     private static boolean isGems(WheelPayloads.Entry e) { return e.stone() == GAUNT && GEMS.equals(e.node()); }
+    private static boolean isShardMenu(WheelPayloads.Entry e) { return e.stone() == GAUNT && SHARD_MENU.equals(e.node()); }
+
+    /** Short code of the mini gem shown on wheel page {@code slice} (a slice id above the gauntlet page). */
+    private static String shardCode(int slice) {
+        var pages = com.infinitystones.tensura.shard.ShardClientState.pages();
+        int i = slice - GAUNT - 1;
+        return i >= 0 && i < pages.size() ? "#" + com.infinitystones.tensura.shard.ShardData.codeOf(pages.get(i).id()) : "";
+    }
 
     private static boolean isDual(WheelPayloads.Entry e) {
         if (e.stone() < 0 || e.stone() >= GAUNT) return false;
@@ -950,11 +993,18 @@ public final class WheelScreen extends Screen {
     private static Component name(WheelPayloads.Entry e) {
         if (e.stone() < 0) return Component.translatable("infinity.skill." + WheelService.IMMORTALITY);
         if (isGems(e)) return Component.translatable("infinity.wheel.gauntlet.gems");
+        if (isShardMenu(e)) return Component.translatable("infinity.shard.power");
         StoneTree.Node n = node(e);
         return n == null ? Component.literal(e.node()) : n.displayName();
     }
 
     private void icon(GuiGraphics g, WheelPayloads.Entry e, float x, float y, boolean lit) {
+        if (isShardMenu(e)) {
+            ItemStack gem = new ItemStack(com.infinitystones.tensura.shard.ShardRegistries.MINI_JOIA.get());
+            gem.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(1 + (int) ((System.currentTimeMillis() / 700) % 6)));
+            item(g, gem, x, y);
+            return;
+        }
         if (isGems(e)) {
             if (!lit) RenderSystem.setShaderColor(0.45F, 0.45F, 0.5F, 1F);
             item(g, stoneItem(GAUNT), x, y);
@@ -981,11 +1031,26 @@ public final class WheelScreen extends Screen {
     }
 
     private static ItemStack stoneItem(int stone) {
+        if (stone > GAUNT) {
+            var pages = com.infinitystones.tensura.shard.ShardClientState.pages();
+            int i = stone - GAUNT - 1;
+            ItemStack gem = new ItemStack(com.infinitystones.tensura.shard.ShardRegistries.MINI_JOIA.get());
+            if (i >= 0 && i < pages.size()) gem.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(pages.get(i).stone() + 1));
+            return gem;
+        }
         if (stone >= GAUNT) return new ItemStack(com.infinitystones.tensura.skill.GauntletStones.gauntletItem());
         return new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("infinity", Stone.values()[stone].key + "_stone")));
     }
 
-    static int color(int stone) { return stone >= GAUNT ? 0xFFE9C25A : Stone.values()[stone].color(); }
+    static int color(int stone) {
+        if (stone > GAUNT) {
+            var pages = com.infinitystones.tensura.shard.ShardClientState.pages();
+            int i = stone - GAUNT - 1;
+            return i >= 0 && i < pages.size() && pages.get(i).stone() >= 0 && pages.get(i).stone() < Stone.values().length
+                    ? Stone.values()[pages.get(i).stone()].color() : 0xFF9FE8FF;
+        }
+        return stone >= GAUNT ? 0xFFE9C25A : Stone.values()[stone].color();
+    }
 
     /** Six small lights under the gauntlet icon: lit in the stone's colour when that stone is set in the gauntlet. */
     private void gauntletPips(GuiGraphics g, float mid, float r, float open) {

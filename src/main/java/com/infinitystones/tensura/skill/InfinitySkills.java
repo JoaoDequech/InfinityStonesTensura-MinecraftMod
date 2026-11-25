@@ -34,7 +34,7 @@ public final class InfinitySkills {
         if (!(event.getEntity() instanceof ServerPlayer p) || p.tickCount % 20 != 0) return;
         var skills = SkillAPI.getSkillsFrom(p);
         for (Stone s : Stone.values()) {
-            if (skills.getSkill(s.skillId()).isEmpty() && s.isHeldBy(p)) skills.learnSkill(STONES.get(s).get());
+            if (skills.getSkill(s.skillId()).isEmpty() && s.ownedBy(p)) skills.learnSkill(STONES.get(s).get());
         }
     }
 

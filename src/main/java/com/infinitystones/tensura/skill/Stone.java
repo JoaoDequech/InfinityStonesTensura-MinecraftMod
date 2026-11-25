@@ -106,8 +106,12 @@ public enum Stone {
         return carriers().contains(stack.getItem()) && !com.infinitystones.tensura.gauntlet.ArtifactSwap.isEmptied(stack);
     }
 
-    /** True when the player carries this stone: inventory, hands, armour, or any Curios slot. */
+    /** True when the player carries this stone, or (server side) a valid mini gem lends it to him. */
     public boolean isHeldBy(Player player) {
+        return ownedBy(player) || com.infinitystones.tensura.shard.ShardGrants.holdsStone(player, this);
+    }
+    /** True when the player really carries this stone: inventory, hands, armour, or any Curios slot. */
+    public boolean ownedBy(Player player) {
         int bit = 1 << ordinal();
         Inventory inv = player.getInventory();
         for (ItemStack s : inv.items) if ((stackMask(s) & bit) != 0) return true;
