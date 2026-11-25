@@ -45,5 +45,6 @@
   "infinity.shard.power": "Borrowed Shard",
   "infinity.shard.power.kind": "Create / delete mini gems",
   "infinity.shard.power.desc": "Creates a temporary mini gem: a holographic copy of one of your stones with the powers you choose. It goes straight into your inventory and binds to the first other player who receives it; whoever carries it gets a wheel page with exactly those powers, each with its own cooldown and magicule cost. You set the duration, keep up to 6 active and can delete them any time.",
-  "infinity.shard.power.hint": "[Left click] open the menu"
+  "infinity.shard.power.hint": "[Left click] open the menu",
+  "item.infinity.mini_joia.final": "Disintegrating in %ss!"
 }

@@ -50,9 +50,29 @@ public final class ShardItem extends Item {
         return Math.max(0F, Math.min(1F, 1F - left / (float) d.total()));
     }
 
+    /** 0 until the last 10 seconds, then rises to 1 at the moment it runs out (drives the "final" cracks of the model). */
+    public static float finalFrac(ItemStack stack, long gameTime) {
+        ShardData d = stack.get(ShardRegistries.SHARD.get());
+        if (d == null || d.infinite()) return 0F;
+        long left = d.expiry() - gameTime;
+        if (left > ShardBelt.FINAL_TICKS) return 0F;
+        return Math.max(0F, Math.min(1F, 1F - left / (float) ShardBelt.FINAL_TICKS));
+    }
+
+    /** Whole seconds left when inside the final countdown (10..1), else 0. */
+    public static int finalSeconds(ItemStack stack, long gameTime) {
+        ShardData d = stack.get(ShardRegistries.SHARD.get());
+        if (d == null || d.infinite()) return 0;
+        long left = d.expiry() - gameTime;
+        return left > 0 && left <= ShardBelt.FINAL_TICKS ? (int) ((left + 19) / 20) : 0;
+    }
+
     @Override public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
         ShardData d = stack.get(ShardRegistries.SHARD.get());
         if (d == null) return;
+        Level lv = ctx.level();
+        int fin = lv == null ? 0 : finalSeconds(stack, lv.getGameTime());
+        if (fin > 0) tip.add(Component.translatable("item.infinity.mini_joia.final", fin).withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
         tip.add(Component.translatable("item.infinity.mini_joia.temp").withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC));
         if (d.stone() >= 0 && d.stone() < Stone.values().length) {
             Stone st = Stone.values()[d.stone()];

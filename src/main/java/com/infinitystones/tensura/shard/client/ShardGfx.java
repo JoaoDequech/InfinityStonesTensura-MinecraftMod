@@ -80,6 +80,7 @@ final class ShardGfx {
 
     /** Radial glow: opaque-ish centre fading to nothing at the edge. */
     static void glow(GuiGraphics g, float cx, float cy, float r, int rgb, float a) {
+        a *= ShardShaders.gui();
         if (a <= 0.003F || r <= 0) return;
         Matrix4f m = g.pose().last().pose();
         int steps = 28;
@@ -112,6 +113,7 @@ final class ShardGfx {
 
     /** Four-point glint (a star with long horizontal and vertical rays). */
     static void glint(GuiGraphics g, float cx, float cy, float len, float rot, int rgb, float a) {
+        a *= ShardShaders.gui();
         if (a <= 0.01F) return;
         int core = alpha(rgb, a), tip = alpha(rgb, 0);
         for (int k = 0; k < 2; k++) {

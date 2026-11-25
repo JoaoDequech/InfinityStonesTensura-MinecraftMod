@@ -4,6 +4,7 @@ import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.client.render.GlowFx;
 import com.infinitystones.tensura.shard.ShardCreate;
 import com.infinitystones.tensura.shard.ShardNet;
+import com.infinitystones.tensura.shard.client.ShardShaders;
 import com.infinitystones.tensura.skill.Stone;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -54,6 +55,36 @@ public final class ShardFxClient {
 
     private static final List<Anim> ANIMS = new ArrayList<>();
 
+    /** A mini gem shattering: holographic shards fly out, glitch and fade. */
+    private static final class Burst {
+        final Vec3 pos; final int rgb, seed; int age;
+        Burst(Vec3 pos, int rgb, int seed) { this.pos = pos; this.rgb = rgb; this.seed = seed; }
+    }
+
+    private static final List<Burst> BURSTS = new ArrayList<>();
+    private static final int BURST_LIFE = 28, FRAGMENTS = 18;
+
+    public static void burst(ShardNet.BurstMsg m) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return;
+        int st = Mth.clamp(m.stone(), 0, Stone.values().length - 1);
+        int rgb = Stone.values()[st].color() & 0xFFFFFF;
+        if (BURSTS.size() > 24) BURSTS.remove(0);
+        BURSTS.add(new Burst(new Vec3(m.x(), m.y(), m.z()), rgb, RNG.nextInt()));
+        var col = new Vector3f((rgb >> 16 & 255) / 255F, (rgb >> 8 & 255) / 255F, (rgb & 255) / 255F);
+        for (int i = 0; i < 26; i++) {
+            Vec3 d = new Vec3(RNG.nextGaussian(), RNG.nextGaussian(), RNG.nextGaussian()).normalize().scale(0.05 + RNG.nextDouble() * 0.2);
+            mc.level.addParticle(i % 3 == 0 ? ParticleTypes.ELECTRIC_SPARK : i % 3 == 1 ? ParticleTypes.END_ROD : new DustParticleOptions(col, 0.9F),
+                    m.x(), m.y(), m.z(), d.x, d.y, d.z);
+        }
+    }
+
+    private static float hash(int a, int b) {
+        int h = a * 374761393 + b * 668265263;
+        h = (h ^ (h >>> 13)) * 1274126177;
+        return ((h ^ (h >>> 16)) & 0xFFFF) / 65535F;
+    }
+
     public static void accept(ShardNet.FxMsg m) {
         if (m.kind() == ShardNet.FX_CANCEL) {
             for (Anim a : ANIMS) if (a.entity == m.entity() && a.cancelAt < 0) a.cancelAt = a.age;
@@ -65,7 +96,7 @@ public final class ShardFxClient {
     }
 
     @SubscribeEvent
-    public static void logout(ClientPlayerNetworkEvent.LoggingOut e) { ANIMS.clear(); }
+    public static void logout(ClientPlayerNetworkEvent.LoggingOut e) { ANIMS.clear(); BURSTS.clear(); }
 
     // ================================================================== geometry shared by tick + render
 
@@ -103,7 +134,9 @@ public final class ShardFxClient {
     @SubscribeEvent
     public static void tick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.isPaused() || ANIMS.isEmpty()) return;
+        if (mc.level == null || mc.isPaused()) return;
+        for (Iterator<Burst> it = BURSTS.iterator(); it.hasNext(); ) if (++it.next().age > BURST_LIFE) it.remove();
+        if (ANIMS.isEmpty()) return;
         for (Iterator<Anim> it = ANIMS.iterator(); it.hasNext(); ) {
             Anim a = it.next();
             Entity e = mc.level.getEntity(a.entity);
@@ -166,7 +199,7 @@ public final class ShardFxClient {
 
     @SubscribeEvent
     public static void render(RenderLevelStageEvent e) {
-        if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES || ANIMS.isEmpty()) return;
+        if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES || (ANIMS.isEmpty() && BURSTS.isEmpty())) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
         float pt = e.getPartialTick().getGameTimeDeltaPartialTick(true);
@@ -181,8 +214,10 @@ public final class ShardFxClient {
         VertexConsumer vc = buf.getBuffer(RenderType.lightning());
         Draw d = new Draw(vc, m, cp);
         for (Anim a : ANIMS) draw(d, a, mc, pt, time, ps, buf, false);
+        for (Burst b : BURSTS) drawBurst(d, b, pt, ps, buf, false);
         buf.endBatch(RenderType.lightning());
         for (Anim a : ANIMS) draw(d, a, mc, pt, time, ps, buf, true);
+        for (Burst b : BURSTS) drawBurst(d, b, pt, ps, buf, true);
         buf.endBatch();
         ps.popPose();
     }
@@ -194,6 +229,7 @@ public final class ShardFxClient {
         float fade = Mth.clamp(t / 3F, 0, 1);
         if (a.cancelAt >= 0) fade *= Mth.clamp(1 - (t - a.cancelAt) / 8F, 0, 1);
         if (t > TOTAL) fade *= Mth.clamp(1 - (t - TOTAL) / 6F, 0, 1);
+        fade *= ShardShaders.glow();   // shader packs: cap the additive strength
         if (fade <= 0.01F) return;
         Vec3 h = hand(e, pt, t), c0 = crystal(e, pt), chest = chest(e, pt);
         int stone = a.rgb;
@@ -311,8 +347,8 @@ public final class ShardFxClient {
             }
             if (t >= CONDENSE && t < CONDENSE + 10) {
                 float f = 1 - (t - CONDENSE) / 10F;
-                d.flare(ps, buf, c0, 2.4F * f + 0.4F, 0xFFFFFF, f * fade, -time * 3);
-                d.flare(ps, buf, c0, 3.4F * f + 0.4F, stone, 0.8F * f * fade, time);
+                d.flare(ps, buf, c0, (2.4F * f + 0.4F) * ShardShaders.radius(), 0xFFFFFF, f * fade, -time * 3);
+                d.flare(ps, buf, c0, (3.4F * f + 0.4F) * ShardShaders.radius(), stone, 0.8F * f * fade, time);
             }
             if (t >= TOTAL - 2 && t < TOTAL + 5) {
                 float f = 1 - (t - TOTAL + 2) / 7F;
@@ -320,6 +356,61 @@ public final class ShardFxClient {
             }
         }
     }
+
+    private static void drawBurst(Draw d, Burst b, float pt, PoseStack ps, MultiBufferSource buf, boolean textured) {
+        float t = b.age + pt;
+        float life = Mth.clamp(t / BURST_LIFE, 0, 1);
+        float cap = ShardShaders.glow();
+        float al = (float) Math.pow(1 - life, 1.2) * cap;
+        if (al <= 0.01F) return;
+        int rgb = b.rgb;
+        if (textured) {
+            float f = Mth.clamp(1 - t / 9F, 0, 1);
+            if (f > 0) {
+                d.flare(ps, buf, b.pos, (0.5F + 1.9F * f) * ShardShaders.radius(), 0xFFFFFF, f * cap, t);
+                d.flare(ps, buf, b.pos, (0.8F + 2.6F * f) * ShardShaders.radius(), rgb, 0.8F * f * cap, -t * 0.5F);
+            }
+            return;
+        }
+        // digital glitch at the origin: horizontal tear bars that jump around for the first ticks
+        if (t < 9) {
+            d.color(0xFFFFFF);
+            for (int i = 0; i < 4; i++) {
+                float jump = hash(b.seed + i, (int) (t * 1.5F));
+                double dy = (jump - 0.5) * 0.7, len = 0.12 + hash(b.seed, i + (int) t) * 0.4;
+                Vec3 o = b.pos.add(0, dy, 0);
+                Vec3 axis = i % 2 == 0 ? new Vec3(1, 0, 0) : new Vec3(0, 0, 1);
+                d.line(o.subtract(axis.scale(len)), o.add(axis.scale(len)), 0.006F, 0.8F * (1 - t / 9F) * cap);
+            }
+        }
+        d.color(rgb);
+        d.ringN(b.pos, new Vec3(0, 1, 0), 0.1F + 1.3F * easeOut(life * 1.6F), 0.03F, 0.7F * (1 - life) * cap, 0);
+        for (int i = 0; i < FRAGMENTS; i++) {
+            if (hash(b.seed + i, b.age / 2) < 0.16F + life * 0.2F) continue;                       // glitch: flickers out for a moment
+            Vec3 dir = new Vec3(hash(b.seed, i * 3) - 0.5, hash(b.seed, i * 3 + 1) - 0.4, hash(b.seed, i * 3 + 2) - 0.5).normalize();
+            double speed = 0.05 + hash(b.seed, i + 77) * 0.16;
+            double dist = speed * t * (1 - t / (2.0 * BURST_LIFE));
+            Vec3 p = b.pos.add(dir.scale(dist)).add(0, -0.0042 * t * t, 0);
+            if (hash(b.seed + i, b.age / 3 + 9) < 0.28F)                                           // glitch: snaps to a coarse grid
+                p = new Vec3(Math.round(p.x * 20) / 20.0, Math.round(p.y * 20) / 20.0, Math.round(p.z * 20) / 20.0);
+            Vec3 axis = new Vec3(hash(b.seed, i + 200) - 0.5, hash(b.seed, i + 300) - 0.5, hash(b.seed, i + 400) - 0.5).normalize();
+            Vec3 u0 = Draw.perp(axis);
+            double ang = t * (0.3 + hash(b.seed, i + 500) * 0.5);
+            Vec3 u = u0.scale(Math.cos(ang)).add(axis.cross(u0).scale(Math.sin(ang)));
+            Vec3 v = axis.cross(u);
+            float size = 0.045F + hash(b.seed, i + 600) * 0.07F;
+            Vec3 a1 = p.add(u.scale(size)), a2 = p.add(u.scale(-size * 0.5).add(v.scale(size * 0.87))), a3 = p.add(u.scale(-size * 0.5).subtract(v.scale(size * 0.87)));
+            boolean white = hash(b.seed + i, b.age) < 0.3F;
+            d.color(white ? 0xFFFFFF : rgb);
+            d.quad(a1, a2, a3, a3, al * 0.55F);
+            d.color(0xFFFFFF);
+            d.line(a1, a2, 0.004F, al * 0.9F);
+            d.line(a2, a3, 0.004F, al * 0.7F);
+            d.line(a3, a1, 0.004F, al * 0.9F);
+        }
+    }
+
+    private static float easeOut(float t) { t = Mth.clamp(t, 0, 1); return 1 - (1 - t) * (1 - t) * (1 - t); }
 
     /** Hexagonal bipyramid with translucent faces, bright edges and a white core. */
     private static void crystal(Draw d, Vec3 c, float h, float spin, int rgb, float fade, boolean white) {

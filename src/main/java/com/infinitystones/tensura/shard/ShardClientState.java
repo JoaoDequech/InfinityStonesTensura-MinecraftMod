@@ -8,7 +8,19 @@ public final class ShardClientState {
     private static volatile ShardNet.ListMsg list = new ShardNet.ListMsg(0L, List.of());
     private static volatile long listAt;
 
+    private static final java.util.Map<Integer, List<ShardNet.BeltEntry>> BELTS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    static void belt(ShardNet.BeltMsg m) {
+        if (m.gems().isEmpty()) BELTS.remove(m.entity()); else BELTS.put(m.entity(), m.gems());
+    }
+
+    /** Hologram entries of the player with this entity id (empty when he carries none). */
+    public static List<ShardNet.BeltEntry> belt(int entity) { return BELTS.getOrDefault(entity, List.of()); }
+
+    public static java.util.Map<Integer, List<ShardNet.BeltEntry>> belts() { return BELTS; }
+
     public static void clear() {
+        BELTS.clear();
         pages = List.of();
         list = new ShardNet.ListMsg(0L, List.of());
     }

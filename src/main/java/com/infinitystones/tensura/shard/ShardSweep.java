@@ -7,8 +7,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -41,7 +39,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.joml.Vector3f;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +205,9 @@ public final class ShardSweep {
 
     /** Everything a player carries or has open. Returns how many were destroyed. */
     public static int scrubPlayer(ServerPlayer p, boolean deep) {
-        Ctx ctx = new Ctx(p.serverLevel(), p.position().add(0, 1.0, 0), deep);
+        double yaw = Math.toRadians(p.yBodyRot);
+        Vec3 hip = p.position().add(-Math.cos(yaw) * 0.34, p.isShiftKeyDown() ? 0.7 : 0.88, -Math.sin(yaw) * 0.34); // where the belt hologram floats
+        Ctx ctx = new Ctx(p.serverLevel(), hip, deep);
         scrubContainer(p.getInventory(), ctx);
         scrubContainer(p.getEnderChestInventory(), ctx);
         CuriosCompat.forEach(p, s -> { if (scrub(s, ctx) == DEAD) s.setCount(0); });
@@ -217,6 +217,8 @@ public final class ShardSweep {
             p.inventoryMenu.broadcastChanges();
             p.containerMenu.broadcastChanges();
             p.displayClientMessage(Component.translatable("infinity.shard.shattered"), true);
+            ShardBelt.sync(p);
+            ShardNet.syncWheel(p, true);
         }
         return ctx.killed;
     }
@@ -320,18 +322,18 @@ public final class ShardSweep {
 
     // ---------------------------------------------------------------- effect
 
-    /** Glass-like shatter in the stone's colour (server particles + sound + a flare for far viewers). */
+    /**
+     * The shatter: a burst of holographic shards (drawn by the clients near it) with the glass + digital glitch sounds.
+     * Used for expiry and for deletion by the creator alike.
+     */
     public static void shatter(ServerLevel level, Vec3 pos, int stone) {
-        int rgb = stone >= 0 && stone < com.infinitystones.tensura.skill.Stone.values().length
-                ? com.infinitystones.tensura.skill.Stone.values()[stone].color() & 0xFFFFFF : 0xFFFFFF;
-        var dust = new DustParticleOptions(new Vector3f((rgb >> 16 & 255) / 255F, (rgb >> 8 & 255) / 255F, (rgb & 255) / 255F), 1.0F);
-        level.sendParticles(dust, pos.x, pos.y, pos.z, 26, 0.22, 0.22, 0.22, 0.12);
-        level.sendParticles(ParticleTypes.ELECTRIC_SPARK, pos.x, pos.y, pos.z, 14, 0.2, 0.2, 0.2, 0.25);
-        level.sendParticles(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, 6, 0.15, 0.15, 0.15, 0.08);
-        level.sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 10, 0.2, 0.2, 0.2, 0.3);
-        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 0.8F, 1.5F);
-        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 0.45F, 1.7F);
-        com.infinitystones.tensura.skill.ability.extra.fx.FxNet.flare(level, pos, 0.9F, rgb, 10);
+        PacketDistributor.sendToPlayersNear(level, null, pos.x, pos.y, pos.z, 64, new ShardNet.BurstMsg(stone, pos.x, pos.y, pos.z));
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 0.55F, 1.7F);
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.PLAYERS, 0.8F, 1.4F);
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.NOTE_BLOCK_BIT.value(), SoundSource.PLAYERS, 0.45F, 0.5F);
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.NOTE_BLOCK_BIT.value(), SoundSource.PLAYERS, 0.35F, 1.9F);
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.PLAYERS, 0.4F, 2.0F);
+        level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 0.08F, 2.0F);
     }
 
     private ShardSweep() {}

@@ -127,6 +127,32 @@ public final class ShardNet {
         @Override public Type<FxMsg> type() { return TYPE; }
     }
 
+    public record BeltEntry(int stone, long expiry, boolean infinite) {}
+
+    /** The mini gems a player carries, for the hologram at his belt (stones + expiry; empty = none). */
+    public record BeltMsg(int entity, List<BeltEntry> gems) implements CustomPacketPayload {
+        public static final Type<BeltMsg> TYPE = new Type<>(InfinityStones.id("shard_belt"));
+        public static final StreamCodec<FriendlyByteBuf, BeltMsg> CODEC = StreamCodec.of((b, m) -> {
+            b.writeVarInt(m.entity); b.writeVarInt(m.gems.size());
+            for (BeltEntry e : m.gems) { b.writeVarInt(e.stone); b.writeLong(e.expiry); b.writeBoolean(e.infinite); }
+        }, b -> {
+            int entity = b.readVarInt(), n = Math.min(b.readVarInt(), 8);
+            List<BeltEntry> gems = new ArrayList<>(n);
+            for (int i = 0; i < n; i++) gems.add(new BeltEntry(b.readVarInt(), b.readLong(), b.readBoolean()));
+            return new BeltMsg(entity, gems);
+        });
+        @Override public Type<BeltMsg> type() { return TYPE; }
+    }
+
+    /** A mini gem shattered at this point (expired or deleted). */
+    public record BurstMsg(int stone, double x, double y, double z) implements CustomPacketPayload {
+        public static final Type<BurstMsg> TYPE = new Type<>(InfinityStones.id("shard_burst"));
+        public static final StreamCodec<FriendlyByteBuf, BurstMsg> CODEC = StreamCodec.of((b, m) -> {
+            b.writeVarInt(m.stone); b.writeDouble(m.x); b.writeDouble(m.y); b.writeDouble(m.z);
+        }, b -> new BurstMsg(b.readVarInt(), b.readDouble(), b.readDouble(), b.readDouble()));
+        @Override public Type<BurstMsg> type() { return TYPE; }
+    }
+
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         var r = event.registrar("1").optional();
@@ -142,6 +168,8 @@ public final class ShardNet {
         r.playToClient(ListMsg.TYPE, ListMsg.CODEC, (m, ctx) -> ctx.enqueueWork(() -> ShardClientBridge.list(m)));
         r.playToClient(WheelMsg.TYPE, WheelMsg.CODEC, (m, ctx) -> ctx.enqueueWork(() -> ShardClientBridge.wheel(m)));
         r.playToClient(FxMsg.TYPE, FxMsg.CODEC, (m, ctx) -> ctx.enqueueWork(() -> ShardClientBridge.fx(m)));
+        r.playToClient(BeltMsg.TYPE, BeltMsg.CODEC, (m, ctx) -> ctx.enqueueWork(() -> ShardClientBridge.belt(m)));
+        r.playToClient(BurstMsg.TYPE, BurstMsg.CODEC, (m, ctx) -> ctx.enqueueWork(() -> ShardClientBridge.burst(m)));
     }
 
     // ---------------------------------------------------------------- server actions
@@ -198,6 +226,7 @@ public final class ShardNet {
         if (!(event.getEntity() instanceof ServerPlayer p) || p.tickCount % 10 != 5) return;
         if (!ShardRegistry.everCreated && !LAST.containsKey(p.getUUID())) return;
         syncWheel(p, false);
+        ShardBelt.sync(p);
     }
 
     @SubscribeEvent

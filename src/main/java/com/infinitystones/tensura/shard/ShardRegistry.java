@@ -184,7 +184,7 @@ public final class ShardRegistry extends SavedData {
     @SubscribeEvent
     public static void tick(ServerTickEvent.Post event) {
         MinecraftServer s = event.getServer();
-        if (s != server || s.getTickCount() % 20 != 7 || !everCreated) return;
+        if (s != server || !everCreated || activeCount == 0) return;
         ShardRegistry r = get();
         if (r == null || r.shards.isEmpty()) return;
         long now = now();

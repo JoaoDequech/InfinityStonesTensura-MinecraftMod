@@ -1,7 +1,7 @@
 """Generates the mini gem art: 6 stones x 3 decay stages of animated 16x16 pixel art plus the item models.
 
 Design: tiny bionic frame (steel brackets, rivets, a status LED) holding a translucent holographic crystal tinted per
-stone; a scanline sweeps the core and it flickers/glitches; cracks appear as the life runs out.
+stone; a scanline sweeps the core and it flickers/glitches; cracks appear as the life runs out; stages 3-5 are the last 10 seconds (property infinity:final).
 Run from the repo root: python tools/gen-shard-art.py
 """
 import json
@@ -45,6 +45,8 @@ LED = [(7, 15), (8, 0)]
 CRACK1 = [(9, 4), (9, 5), (8, 6), (8, 7), (7, 8)]
 CRACK2 = [(6, 3), (6, 4), (5, 5), (5, 6), (6, 7), (8, 9), (9, 10), (10, 9)]
 HOLES2 = [(10, 6), (5, 9), (9, 11)]
+CRACK3 = [(7, 3), (7, 4), (6, 5), (7, 6), (6, 8), (5, 9), (9, 7), (10, 8), (9, 9), (8, 10), (7, 11), (6, 10)]
+HOLES3 = [(9, 5), (6, 6), (8, 8), (7, 9), (10, 7), (5, 7), (8, 4), (9, 8)]
 
 
 def frame_image(color, stage, f, rnd):
@@ -54,14 +56,14 @@ def frame_image(color, stage, f, rnd):
     px = img.load()
     pal = {"D": STEEL_D, "M": STEEL_M, "L": STEEL_L, "H": STEEL_H}
     for (x, y), k in FRAME.items():
-        if stage == 2 and (x, y) in ((12, 4), (11, 4), (12, 5), (11, 5), (11, 3), (13, 7), (13, 8)):
+        if stage >= 2 and (x, y) in ((12, 4), (11, 4), (12, 5), (11, 5), (11, 3), (13, 7), (13, 8)):
             continue  # a bracket has broken off
         px[x, y] = pal[k] + (255,)
     for x, y in RIVETS:
         if px[x, y][3]:
             px[x, y] = STEEL_H + (255,)
     scan = (f * 2) % 18 - 2          # scanline row sweeping top to bottom
-    flick = stage == 0 and f in (3,) or stage == 1 and f in (2, 5) or stage == 2 and f in (1, 2, 5, 6)
+    flick = stage == 0 and f in (3,) or stage == 1 and f in (2, 5) or stage == 2 and f in (1, 2, 5, 6) or stage == 3 and f % 2 == 1 or stage >= 4 and f % 3 != 0
     glitch_row = 4 + (f * 3) % 7
     for y, hw in HALF.items():
         for x in range(8 - hw - 1, 8 + hw):
@@ -96,16 +98,32 @@ def frame_image(color, stage, f, rnd):
             if px[x + 1, y][3] and (x + y) % 2 == 0:
                 px[x + 1, y] = mix(light, (255, 255, 255), 0.6) + (255,)
     if stage >= 2:
-        for x, y in CRACK2:
+        for x, y in CRACK2[:4 if stage == 3 else 8]:
             px[x, y] = (8, 8, 14, 245)
-        for x, y in HOLES2:
+        for x, y in (HOLES2 if stage != 3 else HOLES2[:1]):
             px[x, y] = (0, 0, 0, 0)
         for (x, y) in [(8, 6), (6, 5), (9, 10)]:
             if px[x, y][3]:
                 px[x, y] = (255, 255, 255, 255)
+    if stage >= 4:
+        for x, y in CRACK3[:8 if stage == 4 else 12]:
+            px[x, y] = (8, 8, 14, 250)
+        for x, y in HOLES3[:4 if stage == 4 else 8]:
+            px[x, y] = (0, 0, 0, 0)
+        for (x, y) in [(7, 5), (8, 7), (6, 9), (9, 6), (7, 10)][: 3 if stage == 4 else 5]:
+            if px[x, y][3]:
+                px[x, y] = (255, 255, 255, 255)
+    if stage == 5 and f % 2 == 0:
+        for y in range(2, 13):                              # digital tear: the whole crystal jitters apart
+            if (y + f) % 3 == 0:
+                for x in range(16):
+                    if px[x, y][3] and 5 <= x <= 9:
+                        px[min(15, x + 1), y] = px[x, y]
     # status LED: blinks, turns red when dying
     on = f % 4 < 2 if stage < 2 else f % 2 == 0
     led = base if stage == 0 else (255, 160, 60) if stage == 1 else (255, 50, 40)
+    if stage >= 3:
+        on = f % 2 == 0
     for x, y in LED:
         px[x, y] = (led if on else mix(led, (0, 0, 0), 0.6)) + (255,)
     return img
@@ -116,7 +134,7 @@ def main():
     os.makedirs(MOD, exist_ok=True)
     rnd = random.Random(7)
     overrides = []
-    for stage, thr in ((0, None), (1, 0.55), (2, 0.85)):
+    for stage, thr in ((0, None), (1, 0.55), (2, 0.85), (3, 0.0001), (4, 0.4), (5, 0.75)):
         for idx, (name, color) in enumerate(STONES):
             strip = Image.new("RGBA", (16, 16 * FRAMES), (0, 0, 0, 0))
             for f in range(FRAMES):
@@ -124,12 +142,12 @@ def main():
             tex = f"{name}_{stage}"
             strip.save(os.path.join(TEX, tex + ".png"))
             with open(os.path.join(TEX, tex + ".png.mcmeta"), "w") as fh:
-                json.dump({"animation": {"frametime": 2 if stage == 2 else 3, "interpolate": False}}, fh, indent=2)
+                json.dump({"animation": {"frametime": 1 if stage >= 3 else 2 if stage == 2 else 3, "interpolate": False}}, fh, indent=2)
             with open(os.path.join(MOD, tex + ".json"), "w") as fh:
                 json.dump({"parent": "minecraft:item/generated", "textures": {"layer0": f"infinity:item/mini_joia/{tex}"}}, fh, indent=2)
             pred = {"custom_model_data": idx + 1}
             if thr is not None:
-                pred["infinity:decay"] = thr
+                pred["infinity:final" if stage >= 3 else "infinity:decay"] = thr
             overrides.append({"predicate": pred, "model": f"infinity:item/mini_joia/{tex}"})
     with open(os.path.join(ROOT, "models", "item", "mini_joia.json"), "w") as fh:
         json.dump({"parent": "minecraft:item/generated", "textures": {"layer0": "infinity:item/mini_joia/mind_0"}, "overrides": overrides}, fh, indent=2)

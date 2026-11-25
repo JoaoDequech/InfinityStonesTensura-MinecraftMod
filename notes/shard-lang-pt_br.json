@@ -45,5 +45,6 @@
   "infinity.shard.power": "Fragmento Emprestado",
   "infinity.shard.power.kind": "Criar / apagar mini joias",
   "infinity.shard.power.desc": "Cria uma mini joia temporária: uma cópia holográfica de uma das suas joias com os poderes que você escolher. Ela vai direto para o seu inventário e se vincula ao primeiro jogador que a receber; quem a carregar ganha uma página na roda com exatamente esses poderes, cada um com recarga e custo de magícula próprios. Você define a duração, mantém até 6 ativas e pode apagá-las quando quiser.",
-  "infinity.shard.power.hint": "[Botão esquerdo] abrir o menu"
+  "infinity.shard.power.hint": "[Botão esquerdo] abrir o menu",
+  "item.infinity.mini_joia.final": "Desintegrando em %ss!"
 }

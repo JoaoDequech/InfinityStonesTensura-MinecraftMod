@@ -123,6 +123,132 @@
         "infinity:decay": 0.85
       },
       "model": "infinity:item/mini_joia/time_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/mind_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/power_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/space_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/reality_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/soul_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6,
+        "infinity:final": 0.0001
+      },
+      "model": "infinity:item/mini_joia/time_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/mind_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/power_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/space_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/reality_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/soul_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6,
+        "infinity:final": 0.4
+      },
+      "model": "infinity:item/mini_joia/time_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/mind_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/power_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/space_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/reality_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/soul_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6,
+        "infinity:final": 0.75
+      },
+      "model": "infinity:item/mini_joia/time_5"
     }
   ]
 }
