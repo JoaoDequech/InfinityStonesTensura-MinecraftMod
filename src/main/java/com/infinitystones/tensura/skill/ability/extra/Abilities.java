@@ -62,6 +62,7 @@ public final class Abilities {
         r("infinity:alternate_timeline", com.infinitystones.tensura.skill.ability.extra.time.AlternateTimeline.INSTANCE);
         r("infinity:creation_chest", com.infinitystones.tensura.skill.ability.extra.reality.CreationChest.INSTANCE);
         r("infinity:spiritual_gathering", com.infinitystones.tensura.skill.ability.extra.space.SpiritualGathering.INSTANCE);
+        r("infinity:fear_exit", com.infinitystones.tensura.skill.ability.extra.fear.FearExit.INSTANCE);
         com.infinitystones.tensura.skill.ability.extra.v2a.V2A.register(Abilities::r);
         com.infinitystones.tensura.skill.ability.extra.v2b.V2B.register(Abilities::r);
         com.infinitystones.tensura.skill.ability.extra.v2c.V2C.register(Abilities::r);

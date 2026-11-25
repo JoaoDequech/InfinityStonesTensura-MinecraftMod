@@ -37,11 +37,12 @@ final class FearDirector {
         if (live.next == 0) live.next = live.age + 40;
         if (live.age < live.next) return;
         RandomSource r = v.getRandom();
-        float k = Mth.clamp((live.age - GRACE) / 3000F, 0F, 1F);
+        float k = live.intensity >= 0 ? live.intensity / 100F * Mth.clamp((live.age - GRACE) / 1200F, 0.15F, 1F) : Mth.clamp((live.age - GRACE) / 3000F, 0F, 1F);
         int kind = pick(live, r, k);
+        if (kind == -1) { live.next = live.age + 100; return; }
         if (kind == 0) apparition(live, v, null);
         else fire(live, v, kind);
-        live.next = live.age + Math.max(45, (int) (160 - 100 * k) + r.nextInt(60));
+        live.next = live.age + Math.max(30, (int) ((Math.max(45, (int) (160 - 100 * k) + r.nextInt(60))) * 100F / Math.max(10, live.freq)));
     }
 
     private static int pick(FearLive live, RandomSource r, float k) {
@@ -54,13 +55,26 @@ final class FearDirector {
         if (k > 0.28F) w.add(new int[]{FearNet.DOPPEL, 2});
         if (k > 0.33F && live.age - live.lastHeavy > 420) {
             int[] heavy = {FearNet.JUMPSCARE, FearNet.JUMPSCARE, FearNet.FAKE_DEATH, FearNet.FAKE_LAVA, FearNet.VOID_FALL, FearNet.FLIP, FearNet.LOST, FearNet.INV_EMPTY};
-            if (r.nextFloat() < 0.35F + k * 0.4F) { live.lastHeavy = live.age; return heavy[r.nextInt(heavy.length)]; }
+            if ((live.cats & 8) != 0 && r.nextFloat() < 0.35F + k * 0.4F) { live.lastHeavy = live.age; return heavy[r.nextInt(heavy.length)]; }
         }
+        w.removeIf(e -> !allowed(live, e[0]));
+        if (w.isEmpty()) return -1;
         int total = 0;
         for (int[] e : w) total += e[1];
         int roll = r.nextInt(total);
         for (int[] e : w) { roll -= e[1]; if (roll < 0) return e[0]; }
         return FearNet.WHISPER;
+    }
+
+    /** Effect categories of a preset: 1 sounds, 2 visual, 4 apparitions, 8 heavy. */
+    private static boolean allowed(FearLive live, int kind) {
+        int c = live.cats;
+        return switch (kind) {
+            case 0 -> (c & 4) != 0;
+            case FearNet.FOOTSTEPS, FearNet.WHISPER, FearNet.FAKE_CHAT, FearNet.CREEPER, FearNet.LOUD, FearNet.HEARTBEAT -> (c & 1) != 0;
+            case FearNet.FLASH_FLICKER, FearNet.PULSE, FearNet.SCREEN_TEAR, FearNet.EYES, FearNet.FLASH_OFF, FearNet.LIGHTNING, FearNet.BLACKOUT, FearNet.DOPPEL, FearNet.LIGHTS_OUT -> (c & 2) != 0;
+            default -> (c & 8) != 0;
+        };
     }
 
     // ------------------------------------------------------------------ apparitions (made by the creatures part)
@@ -85,10 +99,11 @@ final class FearDirector {
         if (live.state != FearLive.ACTIVE || v.level().dimension() != FearRealm.DIM) return;
         RandomSource r = v.getRandom();
         switch (kind) {
-            case FearNet.JUMPSCARE -> { live.scare(35F); FearNet.send(v, kind, r.nextInt(3), 0); }
+            case FearNet.JUMPSCARE -> { live.scare(35F); live.rec.mark("jump", live.total); FearNet.send(v, kind, r.nextInt(3), 0); }
             case FearNet.LOUD -> { live.scare(14F); FearNet.send(v, kind, r.nextInt(6), 0); }
             case FearNet.FAKE_DEATH -> {
                 live.fakeDeadUntil = live.age + 900;
+                live.rec.mark("fake", live.total);
                 live.scare(30F);
                 FearNet.send(v, kind, 0, 0);
             }

@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "id": "fear_exit",
+      "tier": 2,
+      "original_type": "infinity:fear_exit",
+      "title": "@ability.infinity.mind_stone.fear_exit.title",
+      "description": "@ability.infinity.mind_stone.fear_exit.description",
+      "icon": "minecraft:wither_skeleton_skull",
+      "parents": [],
+      "requires_stones": [],
+      "activation": "press",
+      "cooldown_ticks": 0,
+      "in_tree": false,
+      "in_bar": true,
+      "page": 2,
+      "aim": false,
+      "commands": [],
+      "first_tick_commands": [],
+      "last_tick_commands": []
+    }
+  ]
+}

@@ -53,18 +53,25 @@ import java.util.UUID;
 public final class FearSessions {
     private static final String NODE = "nightmare";
     static final int POV = 1, ORBIT = 2;
-    private static final int[] FOG_RANGE = {0, 100};
 
     private static final class Watch {
         final UUID victim; final int mode; int age;
         Watch(UUID victim, int mode) { this.victim = victim; this.mode = mode; }
     }
 
-    private static final Map<UUID, FearLive> LIVE = new HashMap<>();
+    static final Map<UUID, FearLive> LIVE = new HashMap<>();
     private static final Map<UUID, Watch> WATCH = new HashMap<>();
     private static final Set<UUID> PANEL = new HashSet<>();
     private static final List<UUID> KILLS = new ArrayList<>();
     private static MinecraftServer server;
+
+    record WatchView(UUID victim, int mode) {}
+
+    static @Nullable WatchView watchOf(UUID who) { Watch w = WATCH.get(who); return w == null ? null : new WatchView(w.victim, w.mode); }
+
+    static boolean isWatching(UUID who) { return WATCH.containsKey(who); }
+
+    static void resumeWatch(UUID who) { Watch w = WATCH.get(who); if (w != null) w.age = 0; }
 
     // ------------------------------------------------------------------ permissions / api for the other parts
 
@@ -96,10 +103,26 @@ public final class FearSessions {
 
     // ------------------------------------------------------------------ control room
 
+    /** True while the caster is inside as his own victim: every stone power is locked except leaving. */
+    public static boolean selfLocked(Player p) {
+        FearLive l = LIVE.get(p.getUUID());
+        return l != null && l.self;
+    }
+
+    /** The single unlocked power while inside: "Sair da Dimensão do Medo". */
+    public static boolean selfExit(ServerPlayer p) {
+        FearLive l = LIVE.get(p.getUUID());
+        if (l == null || !l.self) return false;
+        release(p.server, p.getUUID(), true);
+        return true;
+    }
+
     static void request(ServerPlayer p, boolean open) {
         if (!open) { PANEL.remove(p.getUUID()); return; }
         if (!canCast(p)) return;
+        if (selfLocked(p)) { sendPanel(p); return; }
         PANEL.add(p.getUUID());
+        FearPresets.send(p);
         sendPanel(p);
     }
 
@@ -110,12 +133,14 @@ public final class FearSessions {
         int fog = 50, dark = 85, sky = 0, weather = 0;
         boolean auto = true;
         boolean first = true;
+        List<FearNet.Hl> hl = new ArrayList<>();
         for (FearLive l : LIVE.values()) {
             if (!l.caster.equals(c.getUUID())) continue;
             ServerPlayer v = player(s, l.victim);
             if (v == null) continue;
             int flags = (l.flash ? 1 : 0) | (l.frozen ? 2 : 0) | (l.hunt ? 4 : 0) | (w != null && w.victim.equals(l.victim) ? 8 : 0);
-            vs.add(new FearNet.VInfo(l.victim, v.getGameProfile().getName(), v.getHealth(), (int) l.fear, l.scene, l.total / 20, flags));
+            vs.add(new FearNet.VInfo(l.victim, v.getGameProfile().getName(), v.getHealth(), (int) l.fear, l.scene, l.total / 20, flags, (int) l.battery, l.hud, l.slot));
+            for (int i = 0; i < l.rec.list.size(); i++) hl.add(new FearNet.Hl(l.victim, i, l.rec.list.get(i).label, Math.max(0, (l.total - l.rec.list.get(i).at) / 20)));
             if (first || (w != null && w.victim.equals(l.victim))) { fog = l.fog; dark = l.dark; sky = l.sky; weather = l.weather; auto = l.auto; first = false; }
         }
         List<FearNet.Cand> cs = new ArrayList<>();
@@ -123,13 +148,30 @@ public final class FearSessions {
             if (o != c && !LIVE.containsKey(o.getUUID()) && o.level().dimension() != FearRealm.DIM) cs.add(new FearNet.Cand(o.getUUID(), o.getGameProfile().getName()));
         FearApi.Scenes sc = FearApi.scenes();
         FearApi.Creatures cr = FearApi.creatures();
+        List<FearNet.Cand> au = new ArrayList<>();
+        for (Map.Entry<UUID, Watch> en : WATCH.entrySet()) {
+            if (en.getValue().mode != 3 || !FearExtras.isAudience(en.getKey(), c.getUUID())) continue;
+            ServerPlayer a = player(s, en.getKey());
+            if (a != null) au.add(new FearNet.Cand(a.getUUID(), a.getGameProfile().getName()));
+        }
         PacketDistributor.sendToPlayer(c, new FearNet.Panel(vs, cs, auto, sc == null ? List.of() : sc.ids(), cr == null ? List.of() : cr.ids(),
-                cr == null ? List.of() : cr.apparitionKinds(), fog, dark, sky, weather));
+                cr == null ? List.of() : cr.apparitionKinds(), fog, dark, sky, weather, hl.size() > 24 ? hl.subList(hl.size() - 24, hl.size()) : hl, au));
     }
 
     static void cmd(ServerPlayer c, FearNet.Cmd m) {
         if (m.action() == FearNet.STOP_WATCH) { stopWatch(c); return; }
-        if (!canCast(c) || m.arg().length() > 40) return;
+        if (m.action() == FearNet.ACCEPT || m.action() == FearNet.DECLINE) { FearExtras.answer(c, m.action() == FearNet.ACCEPT); return; }
+        if (!canCast(c) || m.arg().length() > 60) return;
+        FearLive mine = LIVE.get(c.getUUID());
+        if (mine != null && mine.self) {
+            boolean ok = c.getUUID().equals(m.target()) && switch (m.action()) {
+                case FearNet.AUTO, FearNet.FX, FearNet.SCENE, FearNet.MODE, FearNet.SPAWN, FearNet.DESPAWN, FearNet.ENV, FearNet.PULL, FearNet.APPARITION -> true;
+                default -> false;
+            };
+            if (!ok) return;
+        }
+        if (m.action() == FearNet.PRESET_DELETE) { FearPresets.delete(c, m.arg()); return; }
+        if (m.action() == FearNet.SELF_ENTER) { FearPresets.enter(c, m.arg()); return; }
         MinecraftServer s = c.server;
         ServerPlayer v = player(s, m.target());
         FearLive live = own(c, m.target());
@@ -137,6 +179,13 @@ public final class FearSessions {
         switch (m.action()) {
             case FearNet.SEND -> { if (v != null) send(c, v, m.arg()); }
             case FearNet.RELEASE_ALL -> releaseAllOf(s, c.getUUID());
+            case FearNet.BOOTH -> FearBooth.go(c);
+            case FearNet.INVITE -> {
+                if (v != null) {
+                    try { FearExtras.invite(c, v, UUID.fromString(m.arg())); } catch (IllegalArgumentException ignored) { }
+                }
+            }
+            case FearNet.KICK_AUDIENCE -> { if (v != null && FearExtras.isAudience(v.getUUID(), c.getUUID())) stopWatch(v); }
             default -> {
                 if (live == null || v == null) break;
                 switch (m.action()) {
@@ -170,6 +219,17 @@ public final class FearSessions {
                         if (!live.frozen) { v.removeEffect(MobEffects.MOVEMENT_SLOWDOWN); v.removeEffect(MobEffects.JUMP); }
                     }
                     case FearNet.PULL -> release(s, m.target(), true);
+                    case FearNet.VOICE -> FearExtras.voice(live, v, m.arg());
+                    case FearNet.BATTERY -> FearExtras.battery(live, v, m.num());
+                    case FearNet.HUD -> FearExtras.hud(live, v, m.arg(), m.num() != 0);
+                    case FearNet.REPLAY -> FearExtras.replay(c, live, m.num());
+                    case FearNet.SPLIT -> FearExtras.split(c, live);
+                    case FearNet.JOIN -> {
+                        try {
+                            FearLive other = own(c, UUID.fromString(m.arg()));
+                            if (other != null) FearExtras.join(c, live, other);
+                        } catch (IllegalArgumentException ignored) { }
+                    }
                     default -> { }
                 }
             }
@@ -179,6 +239,7 @@ public final class FearSessions {
 
     private static void env(FearLive live, String what, int v) {
         switch (what) {
+            case "intensity" -> live.intensity = Mth.clamp(v, 0, 100);
             case "fog" -> live.fog = Mth.clamp(v, 0, 100);
             case "dark" -> live.dark = Mth.clamp(v, 0, 100);
             case "sky" -> live.sky = Mth.clamp(v, 0, 3);
@@ -189,7 +250,7 @@ public final class FearSessions {
 
     static void flash(ServerPlayer v, boolean on) {
         FearLive l = LIVE.get(v.getUUID());
-        if (l != null) l.flash = on;
+        if (l != null) l.flash = on && l.battery > 0F;
     }
 
     static void respawn(ServerPlayer v) {
@@ -238,20 +299,30 @@ public final class FearSessions {
     private static void startScene(FearLive live, ServerPlayer v, String scene) {
         FearApi.Scenes sc = FearApi.scenes();
         if (sc == null || !sc.ids().contains(scene)) return;
-        FearNet.send(v, FearNet.SWAP, 0, 0);
-        live.state = FearLive.ENTERING;
-        live.firstEntry = false;
-        live.timers.clear();
-        live.fallLeft = -1; live.fakeDeadUntil = -1;
         FearApi.Creatures cr = FearApi.creatures();
-        if (cr != null) cr.clear(v.getUUID());
-        live.hunt = false;
         ServerLevel realm = FearRealm.level(v.server);
-        if (realm != null) sc.clear(realm, v.getUUID());
+        if (realm != null) sc.clear(realm, live.owner);
+        for (FearLive m : new ArrayList<>(LIVE.values())) {
+            if (m.slot != live.slot || m.state != FearLive.ACTIVE) continue;
+            ServerPlayer mv = player(v.server, m.victim);
+            if (mv == null) continue;
+            FearNet.send(mv, FearNet.SWAP, 0, 0);
+            m.state = FearLive.ENTERING;
+            m.firstEntry = false;
+            m.timers.clear();
+            m.fallLeft = -1; m.fakeDeadUntil = -1;
+            if (cr != null) cr.clear(m.victim);
+            m.hunt = false;
+            FearExtras.clearCandles(m, mv.serverLevel());
+            m.scene = scene;
+            if (m != live) { m.follow = live.victim; m.owner = live.victim; m.enterAge = 0; }
+        }
+        live.owner = live.victim;
+        live.follow = null;
         beginScene(live, v, scene);
     }
 
-    private static void beginScene(FearLive live, ServerPlayer v, String scene) {
+    static void beginScene(FearLive live, ServerPlayer v, String scene) {
         live.scene = scene;
         live.enterAge = 0;
         live.spawn = null;
@@ -265,7 +336,7 @@ public final class FearSessions {
         }
     }
 
-    private static FearData.Origin origin(ServerPlayer p) {
+    static FearData.Origin origin(ServerPlayer p) {
         return new FearData.Origin(p.level().dimension().location(), p.getX(), p.getY(), p.getZ(), p.getYRot(), p.getXRot(), p.gameMode.getGameModeForPlayer().getId());
     }
 
@@ -289,7 +360,10 @@ public final class FearSessions {
         if (cr != null) cr.clear(victim);
         FearApi.Scenes sc = FearApi.scenes();
         ServerLevel realm = FearRealm.level(s);
-        if (sc != null && realm != null && (live != null || rec != null)) sc.clear(realm, victim);
+        if (live != null && realm != null) { ServerPlayer lv = player(s, victim); FearExtras.clearCandles(live, lv != null ? lv.serverLevel() : realm); }
+        if (sc != null && realm != null && live != null && !sharesSlot(live)) sc.clear(realm, live.owner);
+        else if (sc != null && realm != null && live == null && rec != null) sc.clear(realm, victim);
+        FearExtras.cleanup(victim);
         for (Map.Entry<UUID, Watch> en : new ArrayList<>(WATCH.entrySet())) {
             if (!en.getValue().victim.equals(victim)) continue;
             ServerPlayer c = player(s, en.getKey());
@@ -310,6 +384,18 @@ public final class FearSessions {
         FearNet.send(v, FearNet.EXIT, 0, 0);
     }
 
+    private static boolean sharesSlot(FearLive l) {
+        for (FearLive o : LIVE.values()) if (o != l && o.slot == l.slot) return true;
+        return false;
+    }
+
+    /** The victim leaves a shared arena: the scene is only cleared when nobody else is in it. */
+    static void leaveSlot(FearLive l, ServerPlayer v) {
+        FearApi.Scenes sc = FearApi.scenes();
+        ServerLevel realm = FearRealm.level(v.server);
+        if (sc != null && realm != null && !sharesSlot(l)) sc.clear(realm, l.owner);
+    }
+
     private static void releaseAllOf(MinecraftServer s, UUID caster) {
         FearData d = FearData.get(s);
         List<UUID> ids = new ArrayList<>();
@@ -319,13 +405,15 @@ public final class FearSessions {
     }
 
     private static void kill(MinecraftServer s, ServerPlayer v) {
+        FearLive l = LIVE.get(v.getUUID());
+        if (l != null) l.rec.markNow("death", l.total);
         release(s, v.getUUID(), true);
         Executions.kill(v);
     }
 
     // ------------------------------------------------------------------ watching
 
-    private static void startWatch(ServerPlayer c, ServerPlayer v, int mode) {
+    static void startWatch(ServerPlayer c, ServerPlayer v, int mode) {
         MinecraftServer s = c.server;
         ServerLevel realm = FearRealm.level(s);
         if (realm == null || v.level().dimension() != FearRealm.DIM) return;
@@ -343,7 +431,7 @@ public final class FearSessions {
         WATCH.put(c.getUUID(), new Watch(v.getUUID(), mode));
         PacketDistributor.sendToPlayer(c, new FearNet.Watch(mode, v.getId(), v.getGameProfile().getName()));
         FearLive l = LIVE.get(v.getUUID());
-        if (l != null) PacketDistributor.sendToPlayer(c, new FearNet.Env(l.fog, l.dark, l.sky, l.weather, (int) l.fear, l.frozen));
+        if (l != null) PacketDistributor.sendToPlayer(c, envOf(l));
     }
 
     static void stopWatch(ServerPlayer c) {
@@ -369,9 +457,9 @@ public final class FearSessions {
             ServerPlayer v = live == null ? null : player(s, w.victim);
             if (c == null) { WATCH.remove(en.getKey()); continue; }
             if (!c.isAlive() || v == null || c.level().dimension() != FearRealm.DIM) { stopWatch(c); continue; }
-            if (live.state != FearLive.ACTIVE) continue;
+            if (live.state != FearLive.ACTIVE || FearExtras.replaying(en.getKey())) continue;
             w.age++;
-            if (w.mode == POV) {
+            if (w.mode == POV || w.mode == 3) {
                 if (w.age == 6) c.setCamera(v);
                 if (w.age == 40 && c.getCamera() == v) c.connection.send(new ClientboundSetCameraPacket(v));
                 if (w.age > 14 && c.getCamera() != v) stopWatch(c);
@@ -406,14 +494,22 @@ public final class FearSessions {
             KILLS.clear();
         }
         watchTick(s);
+        FearExtras.tick(s);
+        if (s.getTickCount() % 10 == 0) for (ServerPlayer c : s.getPlayerList().getPlayers()) {
+            if (c.level().dimension() == FearRealm.DIM && !PANEL.contains(c.getUUID()) && FearBooth.inside(c.getX(), c.getY(), c.getZ()) && canCast(c) && !selfLocked(c)) sendPanel(c);
+        }
         if (s.getTickCount() % 10 == 0) for (UUID id : new ArrayList<>(PANEL)) {
             ServerPlayer c = player(s, id);
             if (c == null || !canCast(c)) PANEL.remove(id); else sendPanel(c);
         }
     }
 
+    private static FearNet.Env envOf(FearLive l) {
+        return new FearNet.Env(l.fog, l.dark, l.sky, l.weather, (int) l.fear, l.hud | (l.frozen ? FearNet.F_FROZEN : 0), (int) l.battery, l.lit, l.candles.isEmpty() ? 0 : 5);
+    }
+
     private static void pushEnv(MinecraftServer s, FearLive live, ServerPlayer v) {
-        FearNet.Env env = new FearNet.Env(live.fog, live.dark, live.sky, live.weather, (int) live.fear, live.frozen);
+        FearNet.Env env = envOf(live);
         PacketDistributor.sendToPlayer(v, env);
         for (Map.Entry<UUID, Watch> en : WATCH.entrySet()) {
             if (!en.getValue().victim.equals(live.victim)) continue;
@@ -424,7 +520,12 @@ public final class FearSessions {
 
     private static void enter(MinecraftServer s, FearLive live, ServerPlayer v) {
         live.enterAge++;
-        int min = live.firstEntry ? 76 : 56;
+        if (live.follow != null) {
+            FearLive o = LIVE.get(live.follow);
+            if (o != null && o.spawn != null && o.state == FearLive.ENTERING) live.spawn = o.spawn;
+            else if (o == null) live.follow = null;
+        }
+        int min = live.firstEntry ? 96 : 56;
         if (live.spawn == null && live.enterAge > 700) live.spawn = live.origin().above();
         if (live.enterAge < min || live.spawn == null) return;
         ServerLevel realm = FearRealm.level(s);
@@ -438,18 +539,53 @@ public final class FearSessions {
         v.fallDistance = 0F;
         live.state = FearLive.ACTIVE;
         live.age = 0;
+        v.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 95, 9, true, false, false));
+        v.addEffect(new MobEffectInstance(MobEffects.JUMP, 95, 128, true, false, false));
         FearNet.send(v, FearNet.LAND, 0, 0);
         FearApi.Creatures cr = FearApi.creatures();
-        if (cr != null) {
-            String id = cr.forScene(live.scene);
-            if (id != null) cr.spawn(realm, id, v, nearby(v, 14), FearApi.SCARE);
+        if (cr != null && live.follow == null) {
+            if (!live.creatureList.isEmpty()) {
+                int i = 0;
+                for (String e : live.creatureList) {
+                    int colon = e.lastIndexOf(':');
+                    String id = colon > 0 ? e.substring(0, colon) : e;
+                    int mode = colon > 0 && e.endsWith(":" + FearApi.HUNT) ? FearApi.HUNT : FearApi.SCARE;
+                    cr.spawn(realm, id, v, nearby(v, 14 + 3 * i++), mode);
+                }
+            } else {
+                String id = cr.forScene(live.scene);
+                if (id != null) cr.spawn(realm, id, v, nearby(v, 14), FearApi.SCARE);
+            }
         }
+        if (!live.pendingInvites.isEmpty()) {
+            for (UUID id : live.pendingInvites) {
+                ServerPlayer who = player(s, id);
+                if (who != null) FearExtras.invite(v, who, live.victim);
+            }
+            live.pendingInvites.clear();
+        }
+        if ((live.hud & FearNet.F_REAL) != 0) FearExtras.placeCandles(live, v);
     }
 
     private static void active(MinecraftServer s, FearLive live, ServerPlayer v) {
         if (v.level().dimension() != FearRealm.DIM) { release(s, live.victim, false); return; }
         live.age++;
         v.clearFire();
+        if (live.flash) {
+            live.battery -= 0.0208F;
+            if (live.battery <= 0F) { live.battery = 0F; live.flash = false; }
+        }
+        live.rec.tick(v, live.total, live.fear);
+        if (live.duration > 0 && live.total > live.duration) { release(s, live.victim, true); return; }
+        if (live.sceneSeq.size() > 1) {
+            if (live.nextSceneAt == 0) live.nextSceneAt = live.age + 3600;
+            else if (live.age >= live.nextSceneAt) {
+                live.nextSceneAt = 0;
+                live.seqIdx = (live.seqIdx + 1) % live.sceneSeq.size();
+                startScene(live, v, live.sceneSeq.get(live.seqIdx));
+                return;
+            }
+        }
         if (live.frozen && live.total % 10 == 0) {
             v.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 9, true, false, false));
             v.addEffect(new MobEffectInstance(MobEffects.JUMP, 30, 128, true, false, false));
@@ -567,6 +703,7 @@ public final class FearSessions {
         WATCH.clear();
         PANEL.clear();
         KILLS.clear();
+        FearExtras.reset();
         server = null;
     }
 

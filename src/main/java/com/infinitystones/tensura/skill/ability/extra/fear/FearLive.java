@@ -13,11 +13,24 @@ final class FearLive {
     static final int ENTERING = 0, ACTIVE = 1;
 
     final UUID victim, caster;
-    final int slot;
+    int slot;
+    /** The victim the scene was built for (its key in the scenes provider); followers wait for the owner's spawn. */
+    UUID owner, follow;
     int state = ENTERING, age, enterAge, total;
     String scene = "";
     BlockPos spawn;
     boolean auto = true, flash = true, frozen, hunt, firstEntry = true;
+    float battery = 100F;
+    int hud = FearNet.F_METER;
+    final List<BlockPos> candles = new ArrayList<>();
+    int lit;
+    final FearRecorder rec = new FearRecorder();
+
+    // self-experience mode
+    boolean self;
+    final List<String> sceneSeq = new ArrayList<>(), creatureList = new ArrayList<>();
+    final List<UUID> pendingInvites = new ArrayList<>();
+    int cats = 15, intensity = -1, freq = 100, duration, seqIdx, nextSceneAt;
     float fear;
     int fog = 50, dark = 85, sky = 0, weather = 0;
 
@@ -31,7 +44,7 @@ final class FearLive {
         Timed(int at, Consumer<ServerPlayer> run) { this.at = at; this.run = run; }
     }
 
-    FearLive(UUID victim, UUID caster, int slot) { this.victim = victim; this.caster = caster; this.slot = slot; }
+    FearLive(UUID victim, UUID caster, int slot) { this.victim = victim; this.caster = caster; this.slot = slot; this.owner = victim; }
 
     void after(int ticks, Consumer<ServerPlayer> run) { timers.add(new Timed(age + ticks, run)); }
 

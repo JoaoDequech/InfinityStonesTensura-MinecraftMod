@@ -43,6 +43,8 @@ public final class FearData extends SavedData {
     public final Map<UUID, Integer> slots = new HashMap<>();
     /** Casters currently watching: caster -> where they stood before. */
     public final Map<UUID, Origin> watchers = new HashMap<>();
+    /** Self-experience presets per caster. */
+    public final Map<UUID, java.util.List<CompoundTag>> presets = new HashMap<>();
 
     public static FearData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(new SavedData.Factory<>(FearData::new, FearData::load, null), NAME);
@@ -74,6 +76,12 @@ public final class FearData extends SavedData {
             CompoundTag t = (CompoundTag) e;
             d.watchers.put(t.getUUID("c"), Origin.load(t.getCompound("o")));
         }
+        for (Tag e : tag.getList("presets", Tag.TAG_COMPOUND)) {
+            CompoundTag t = (CompoundTag) e;
+            java.util.List<CompoundTag> l = new java.util.ArrayList<>();
+            for (Tag x : t.getList("l", Tag.TAG_COMPOUND)) l.add((CompoundTag) x);
+            d.presets.put(t.getUUID("c"), l);
+        }
         return d;
     }
 
@@ -95,7 +103,16 @@ public final class FearData extends SavedData {
             t.putUUID("c", id); t.put("o", o.save());
             w.add(t);
         });
-        tag.put("victims", v); tag.put("slots", s); tag.put("watch", w);
+        ListTag pr = new ListTag();
+        presets.forEach((id, l) -> {
+            CompoundTag t = new CompoundTag();
+            t.putUUID("c", id);
+            ListTag ll = new ListTag();
+            ll.addAll(l);
+            t.put("l", ll);
+            pr.add(t);
+        });
+        tag.put("victims", v); tag.put("slots", s); tag.put("watch", w); tag.put("presets", pr);
         return tag;
     }
 }
