@@ -96,7 +96,7 @@ public final class Claims extends Scene {
                 for (int dx = -hw; dx < hw; dx++) {
                     int sx = center.getX() + dx, sz = center.getZ() + dz;
                     LevelChunk ch = src.getChunk(sx >> 4, sz >> 4);
-                    BlockState bs = ch.getBlockState(sx & 15, sy, sz & 15);
+                    BlockState bs = ch.getBlockState(new BlockPos(sx & 15, sy, sz & 15));
                     if (bs.isAir()) continue;
                     if (!bs.canSurvive(src, new BlockPos(sx, sy, sz))) continue;
                     a.set(dx, dy, dz, bs);

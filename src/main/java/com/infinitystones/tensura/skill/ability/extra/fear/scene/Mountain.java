@@ -1,6 +1,7 @@
 package com.infinitystones.tensura.skill.ability.extra.fear.scene;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
@@ -66,7 +67,7 @@ public final class Mountain extends Scene {
             for (int z = -8; z <= 8; z += 2)
                 if (r.nextInt(3) == 0) {
                     int len = 1 + r.nextInt(4);
-                    for (int k = 0; k < len; k++) a.setIfAir(cx - 1, y - k, cz + z, Blocks.POINTED_DRIPSTONE.defaultBlockState().setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.VERTICAL_DIRECTION, net.minecraft.world.level.block.state.properties.VerticalDirection.DOWN));
+                    for (int k = 0; k < len; k++) a.setIfAir(cx - 1, y - k, cz + z, Blocks.POINTED_DRIPSTONE);
                 }
     }
 

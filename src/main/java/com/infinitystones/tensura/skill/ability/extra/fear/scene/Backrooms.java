@@ -79,7 +79,7 @@ public final class Backrooms extends Scene {
         for (int bx = -48; bx < 48; bx += CELL) for (int bz = -48; bz < 48; bz += CELL) {
             // align to the real cell grid: walls sit on multiples of 8
             int cx = cell(bx), cy = cell(bz);
-            Random r = new Random(Noise.hash(cx, cy, 1234) * 1_000_000L + cx * 31L + cy);
+            Random r = new Random((long)(Noise.hash(cx, cy, 1234) * 1_000_000f) + cx * 31L + cy);
             int x0 = bx + 1, z0 = bz + 1;
             int roll = r.nextInt(30);
             if (roll == 0) { // abandoned desk
