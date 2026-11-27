@@ -64,7 +64,11 @@ public final class DestinationScreen extends Screen {
     @Override protected void init() {
         dims.clear();
         if (minecraft != null && minecraft.getConnection() != null) {
-            for (ResourceKey<Level> k : minecraft.getConnection().levels()) dims.add(k.location());
+            boolean fearTier = minecraft.player != null && (com.infinitystones.tensura.skill.StoneTier.has(minecraft.player, com.infinitystones.tensura.skill.Stone.MIND) || com.infinitystones.tensura.skill.StoneTier.has(minecraft.player, com.infinitystones.tensura.skill.Stone.SPACE));
+            for (ResourceKey<Level> k : minecraft.getConnection().levels()) {
+                if (!fearTier && k.location().equals(com.infinitystones.tensura.skill.ability.extra.fear.FearRealm.DIM.location())) continue;
+                dims.add(k.location());
+            }
         }
         dims.sort(Comparator.comparingInt(DestinationScreen::rank).thenComparing(ResourceLocation::toString));
         ResourceLocation want = lastDim != null ? lastDim : Level.END.location();

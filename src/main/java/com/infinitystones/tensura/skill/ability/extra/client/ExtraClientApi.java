@@ -18,9 +18,18 @@ public final class ExtraClientApi {
     /** v2d: the right click of these opens the menu. */
     private static final Set<String> MENU_POWERS_V2D = Set.of("time.time_race", "reality.reincarnate_pet");
 
-    public static boolean hasMenu(String modeId) { return MENU_POWERS.contains(modeId) || MENU_POWERS_V2D.contains(modeId); }
+    public static boolean hasMenu(String modeId) {
+        return MENU_POWERS.contains(modeId) || MENU_POWERS_V2D.contains(modeId)
+                || ("mind.nightmare".equals(modeId) || "mind.fear_exit".equals(modeId)) && com.infinitystones.tensura.skill.ability.extra.fear.client.FearClient.available();
+    }
 
-    public static void requestMenu(int stone, String node) { PacketDistributor.sendToServer(new MenuNet.Pick(stone, node, -1)); }
+    public static void requestMenu(int stone, String node) {
+        if ("nightmare".equals(node) || "fear_exit".equals(node)) {
+            if (com.infinitystones.tensura.skill.ability.extra.fear.client.FearClient.available()) com.infinitystones.tensura.skill.ability.extra.fear.client.FearClient.open();
+            return;
+        }
+        PacketDistributor.sendToServer(new MenuNet.Pick(stone, node, -1));
+    }
 
     public static void open(MenuNet.Open msg) { Minecraft.getInstance().setScreen(new MenuScreen(msg)); }
 

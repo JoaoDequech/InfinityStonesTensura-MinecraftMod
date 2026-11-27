@@ -1,0 +1,10 @@
+{
+  "type": "infinity:fear_realm",
+  "generator": {
+    "type": "infinity:fear",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "infinity:fear_realm"
+    }
+  }
+}

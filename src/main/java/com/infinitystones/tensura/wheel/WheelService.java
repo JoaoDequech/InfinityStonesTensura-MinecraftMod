@@ -68,6 +68,7 @@ public final class WheelService {
         }
         if (stoneOrdinal >= Stone.values().length) return;
         Stone stone = Stone.values()[stoneOrdinal];
+        if (com.infinitystones.tensura.skill.ability.extra.fear.FearSessions.selfLocked(p) && !(stone == Stone.MIND && com.infinitystones.tensura.skill.ability.extra.fear.FearExit.NODE.equals(nodeId))) return;
         StoneTree.Node node = StoneTree.of(stone).nodes.get(nodeId);
         if (node == null || !(node.isActive() || node.isPassiveToggle()) || StoneTree.HIDDEN_IN_WHEEL.contains(node.modeId())) return;
         if (StoneTier.hidden(p, node)) return;
@@ -122,14 +123,14 @@ public final class WheelService {
     /** Middle-click destination use: same validation as a normal use, then moves the target (or the caster). */
     public static void handleDestination(ServerPlayer p, WheelPayloads.Destination d) {
         if (com.infinitystones.tensura.skill.ability.extra.space.SpiritualGathering.isTrapped(p)) return;
-        if (d.stone() < 0 || d.stone() >= Stone.values().length) return;
+        if (d.stone() < 0 || d.stone() >= Stone.values().length || com.infinitystones.tensura.skill.ability.extra.fear.FearSessions.selfLocked(p)) return;
         Stone stone = Stone.values()[d.stone()];
         StoneTree.Node node = StoneTree.of(stone).nodes.get(d.node());
         if (node == null || !DualModes.hasDestination(node.modeId()) || StoneTier.hidden(p, node)) return;
         if (!stone.isHeldBy(p) || !StoneProgress.isUnlocked(p, stone, node.id())) { deny(p, "infinity.wheel.locked"); return; }
         ResourceLocation dimId = ResourceLocation.tryParse(d.dimension());
         ServerLevel level = dimId == null ? null : p.server.getLevel(ResourceKey.create(Registries.DIMENSION, dimId));
-        if (level == null) { deny(p, "infinity.dest.unknown_dimension"); return; }
+        if (level == null || (level.dimension() == com.infinitystones.tensura.skill.ability.extra.fear.FearRealm.DIM && !(StoneTier.has(p, Stone.MIND) || StoneTier.has(p, Stone.SPACE)))) { deny(p, "infinity.dest.unknown_dimension"); return; }
         if (!Double.isFinite(d.x()) || !Double.isFinite(d.z()) || (!d.autoY() && !Double.isFinite(d.y()))) return;
 
         Entity target = DualModes.movesTarget(node.modeId()) ? SpatialBanishment.aimedTarget(p) : p;
