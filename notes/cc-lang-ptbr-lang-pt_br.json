@@ -1,0 +1,20 @@
+{
+  "block.infinity.dwarf_star_alloy_block": "Bloco de Liga de Estrela Anã",
+  "block.infinity.gold_titanium_alloy_block": "Bloco de Titânio-Ouro",
+  "block.infinity.titanium_block": "Bloco de Titânio",
+  "block.infinity.uru_block": "Bloco de Uru",
+  "item.infinity.gold_titanium_alloy_nugget": "Pepitas de Titânio-Ouro",
+  "item.infinity.uru_dust": "Pó de Uru",
+  "item.infinity.uru_nugget": "Pepitas de Uru",
+  "ability.infinity.gauntlet.blaze_inc_gauntlet.description": "Desbloqueie clicando com o botão direito com um Quartz Flux Capacitor na mão principal. Dedicada à Blaze Inc, esta aparência da manopla homenageia as contribuições deles para a comunidade :)",
+  "ability.infinity.gauntlet.dragon_gauntlet.description": "Desbloqueie clicando com o botão direito com uma Cabeça de Dragão na mão principal.",
+  "ability.infinity.gauntlet.cosmi-rod_desc.description": "Para colocar uma joia, segure o Cosmi-Rod na mão principal e clique com o botão direito com a joia na outra mão.",
+  "ability.infinity.gauntlet.cosmi-rod_desc2.description": "Para tirar uma joia, segure o Cosmi-Rod na mão principal e clique com o botão direito agachado (Shift).",
+  "ability.infinity.orb.reset_progress.description": "Zera o progresso de desbloqueio do Orbe, para você poder desbloqueá-lo de novo se quiser.",
+  "item.infinity.uru_blade": "Lâmina de Uru",
+  "item.infinity.single_edged_sword": "Espada de Um Gume",
+  "infinity.dest.dim.the_end": "O Fim",
+  "infinity.fear.obj.real.title": "Fuga",
+  "infinity.fear.watch.replay": "▶ REPETIR",
+  "infinity.extra.v2b.link.bubble.loot": "Saque"
+}
