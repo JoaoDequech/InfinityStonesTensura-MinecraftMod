@@ -1,0 +1,20 @@
+{
+  "entity.infinity.fear_doppelganger": "Doppelgänger",
+  "entity.infinity.fear_mascot": "Mascote",
+  "entity.infinity.fear_ap_bride": "Noiva",
+  "entity.infinity.fear_ap_crawler": "Rastejante",
+  "entity.infinity.fear_smiler": "Sorridente",
+  "entity.infinity.fear_surgeon": "Cirurgião",
+  "entity.infinity.fear_priest": "Sacerdote",
+  "entity.infinity.fear_ap_screamer": "Gritador",
+  "entity.infinity.fear_ap_child": "Criança",
+  "entity.infinity.fear_ap_shadow": "Sombra",
+  "entity.infinity.fear_lady": "Dama",
+  "entity.infinity.fear_gravekeeper": "Coveiro",
+  "entity.infinity.fear_frostgiant": "Gigante de Gelo",
+  "entity.infinity.fear_wendigo": "Wendigo",
+  "entity.infinity.fear_ap_rusher": "Aparição",
+  "entity.infinity.fear_ap_hanging": "Enforcado",
+  "entity.infinity.fear_drowned": "Afogado",
+  "entity.infinity.fear_stalker": "Perseguidor"
+}
