@@ -1,5 +1,6 @@
 package com.infinitystones.tensura.skill.ability.extra.fear.scene;
 
+import com.infinitystones.tensura.InfinityStones;
 import com.infinitystones.tensura.skill.ability.extra.Tasks;
 import com.infinitystones.tensura.skill.ability.extra.fear.FearApi;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -21,6 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +42,7 @@ import java.util.function.Consumer;
  * world in batches (at most {@link #BUDGET} blocks per tick, no neighbour updates), then kept alive by one task that runs the
  * flickering lights, the teleport triggers and the scene behaviours. Nothing here logs or talks to anybody.
  */
+@EventBusSubscriber(modid = InfinityStones.MOD_ID)
 public final class FearScenes implements FearApi.Scenes {
     private static final int BUDGET = 3000;
     private static final long GEN_NANOS = 8_000_000L;
@@ -54,6 +59,17 @@ public final class FearScenes implements FearApi.Scenes {
     private static int budgetTick = -1, budgetUsed;
 
     public static void register() { FearApi.scenes(new FearScenes()); }
+
+    /**
+     * A session caught mid-clear by a shutdown is never ticked again but stayed in SESSIONS, so the next world opened in the
+     * same game queued its scene behind it forever. Statics outlive the server in singleplayer: drop them all.
+     */
+    @SubscribeEvent
+    public static void stopped(ServerStoppedEvent e) {
+        SESSIONS.clear();
+        CLEAN.clear();
+        SOURCES.clear();
+    }
 
     /**
      * Tells the scenes where the victim really was (used by "home" and "claims"). Only needed when the victim was already
