@@ -51,9 +51,9 @@ jobs:
           awk '/^## /{n++} n==1' CHANGELOG.md > notes.md
           printf '\nPut the jar in the mods folder of the client and the server (remove the previous version).\n' >> notes.md
           gh release delete latest --yes --cleanup-tag || true
+          # A published release is never overwritten: bump mod_version to publish a new one.
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "${{ steps.jar.outputs.path }}" --clobber
-            gh release edit "$TAG" --notes-file notes.md
+            echo "Release $TAG already exists: kept as is (bump mod_version to publish a new release)."
           else
             gh release create "$TAG" "${{ steps.jar.outputs.path }}" \
               --target "$GITHUB_SHA" --latest \
