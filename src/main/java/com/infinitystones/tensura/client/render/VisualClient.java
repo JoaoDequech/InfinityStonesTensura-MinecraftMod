@@ -48,7 +48,10 @@ public final class VisualClient {
     public static void layers(EntityRenderersEvent.AddLayers event) {
         for (PlayerSkin.Model skin : event.getSkins()) {
             EntityRenderer<? extends Player> r = event.getSkin(skin);
-            if (r instanceof PlayerRenderer pr) pr.addLayer(new GauntletLayer(pr));
+            if (r instanceof PlayerRenderer pr) {
+                pr.addLayer(new GauntletLayer(pr));
+                pr.addLayer(new com.infinitystones.tensura.shard.client.ShardBeltLayer(pr));
+            }
         }
     }
 

@@ -72,6 +72,7 @@ public final class StoneProgress {
         if (depth > 32) return false;
         StoneTree.Node node = StoneTree.of(stone).nodes.get(nodeId);
         if (node == null) return false;
+        if (depth == 0 && com.infinitystones.tensura.shard.ShardGrants.grants(player, stone, nodeId)) return true; // lent by a mini gem
         boolean veiled = StoneTier.hidden(player, node);
         if (veiled && depth == 0) return false;
         Optional<ManasSkillInstance> inst = instance(player, stone);
@@ -93,7 +94,7 @@ public final class StoneProgress {
         StoneTree.Node node = StoneTree.of(stone).nodes.get(nodeId);
         if (node == null || StoneTier.hidden(player, node)) return BuyResult.UNKNOWN_NODE;
         if (node.cost() == null) return BuyResult.NOT_BUYABLE;
-        if (!stone.isHeldBy(player)) return BuyResult.NEED_STONE;
+        if (!stone.ownedBy(player)) return BuyResult.NEED_STONE;
         Optional<ManasSkillInstance> inst = instance(player, stone);
         if (inst.isEmpty()) return BuyResult.NEED_STONE;
         if (bought(inst.get()).contains(nodeId)) return BuyResult.ALREADY_OWNED;
@@ -101,7 +102,7 @@ public final class StoneProgress {
         for (String parent : node.parents()) if (!parentOk(player, stone, parent, held)) return BuyResult.LOCKED_PARENT;
         for (String power : node.requiresPowers()) {
             Stone other = Stone.byOriginalPower(power);
-            if (other != null && !other.isHeldBy(player)) return BuyResult.NEED_OTHER_STONES;
+            if (other != null && !other.ownedBy(player)) return BuyResult.NEED_OTHER_STONES;
         }
         if (!pay(player, node.cost())) return BuyResult.NOT_ENOUGH;
         CompoundTag tag = inst.get().getOrCreateTag();
