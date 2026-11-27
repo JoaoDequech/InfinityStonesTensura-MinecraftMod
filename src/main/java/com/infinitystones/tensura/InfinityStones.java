@@ -31,7 +31,8 @@ public final class InfinityStones {
         ModMisc.POI.register(modBus);
         ModMisc.PROFESSIONS.register(modBus);
         ModMisc.TABS.register(modBus);
-        com.infinitystones.tensura.skill.ability.extra.fear.FearRealm.GENERATORS.register(modBus);
+com.infinitystones.tensura.skill.ability.extra.fear.FearRealm.GENERATORS.register(modBus);
+        com.infinitystones.tensura.skill.ability.extra.fear.mob.FearMobs.init(modBus);
         LOGGER.info("Infinity Stones (Tensura edition) registries attached");
     }
 
